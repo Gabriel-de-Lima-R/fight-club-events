@@ -1,0 +1,39 @@
+# Dependências
+node_modules/
+vendor/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Builds e saídas
+dist/
+build/
+out/
+.next/
+coverage/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Variáveis de ambiente e segredos
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores / IDEs
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+
+# Configurações locais do Claude Code
+.claude/settings.local.json
