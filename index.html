@@ -27,7 +27,17 @@
     </section>
 
     <section id="painel-calendario" role="tabpanel" aria-labelledby="aba-calendario" hidden>
-      <p class="mensagem">O calendário mensal chega em breve.</p>
+      <p class="mensagem" id="calendario-status">Carregando calendário…</p>
+      <div id="calendario" hidden>
+        <div class="cal-cabecalho">
+          <button class="cal-botao" id="cal-anterior" type="button" aria-label="Mês anterior">‹</button>
+          <h2 class="cal-titulo" id="cal-titulo" aria-live="polite"></h2>
+          <button class="cal-botao" id="cal-proximo" type="button" aria-label="Próximo mês">›</button>
+        </div>
+        <div class="cal-grade" id="cal-grade"></div>
+        <button class="cal-botao-hoje" id="cal-hoje" type="button">Hoje</button>
+        <div class="cal-detalhe" id="cal-detalhe"></div>
+      </div>
     </section>
   </main>
 
@@ -39,5 +49,6 @@
   </footer>
 
   <script src="js/app.js"></script>
+  <script src="js/calendario.js"></script>
 </body>
 </html>

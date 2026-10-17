@@ -109,6 +109,7 @@ function montarFonte(sourceUrl) {
   return dd;
 }
 
+// Também usado pelo calendário (js/calendario.js).
 function montarEvento(evento, fuso) {
   const item = el('li', 'evento');
 
@@ -151,14 +152,17 @@ function mostrarAgenda(dados) {
 }
 
 async function carregarEventos() {
-  const status = document.getElementById('agenda-status');
   try {
     const resposta = await fetch('data/eventos.json', { cache: 'no-store' });
     if (!resposta.ok) throw new Error(`HTTP ${resposta.status}`);
-    mostrarAgenda(await resposta.json());
+    const dados = await resposta.json();
+    mostrarAgenda(dados);
+    montarCalendario(dados); // definido em js/calendario.js
   } catch (erro) {
     console.error('Erro ao carregar eventos:', erro);
-    status.textContent = 'Não foi possível carregar os eventos. Tente recarregar a página.';
+    const mensagem = 'Não foi possível carregar os eventos. Tente recarregar a página.';
+    document.getElementById('agenda-status').textContent = mensagem;
+    document.getElementById('calendario-status').textContent = mensagem;
   }
 }
 
