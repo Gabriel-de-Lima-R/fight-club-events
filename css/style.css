@@ -1,0 +1,254 @@
+/* Fight Club — estilos (mobile-first) */
+
+:root {
+  --fundo: #f6f5f2;
+  --superficie: #ffffff;
+  --texto: #1c1b19;
+  --texto-suave: #5f5c56;
+  --borda: #e2dfd8;
+  --destaque: #c8102e;
+  --destaque-suave: #fbe9ec;
+  --aviso: #8a5a00;
+  --aviso-fundo: #fff3d6;
+  --raio: 12px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fundo: #121212;
+    --superficie: #1d1d1c;
+    --texto: #f1efea;
+    --texto-suave: #a9a59d;
+    --borda: #33322f;
+    --destaque: #ff4d5e;
+    --destaque-suave: #3a1a1f;
+    --aviso: #ffcf66;
+    --aviso-fundo: #3a2e12;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--fundo);
+  color: var(--texto);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.container {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* Cabeçalho */
+.topo {
+  padding: 24px 0 12px;
+}
+
+.marca {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--destaque);
+}
+
+.subtitulo {
+  margin: 4px 0 0;
+  color: var(--texto-suave);
+  font-size: 0.95rem;
+}
+
+/* Abas */
+.abas {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--borda);
+}
+
+.aba {
+  flex: 1;
+  padding: 12px 8px;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: none;
+  color: var(--texto-suave);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.aba[aria-selected="true"] {
+  color: var(--texto);
+  border-bottom-color: var(--destaque);
+}
+
+.aba:focus-visible {
+  outline: 2px solid var(--destaque);
+  outline-offset: -2px;
+}
+
+/* Mensagens (carregando, vazio, erro) */
+.mensagem {
+  padding: 24px 16px;
+  text-align: center;
+  color: var(--texto-suave);
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+}
+
+.mensagem:empty { display: none; }
+
+/* Lista de eventos */
+.lista-eventos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 16px;
+}
+
+.evento {
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  padding: 16px;
+}
+
+.evento-etiquetas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.etiqueta {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--destaque-suave);
+  color: var(--destaque);
+}
+
+.etiqueta-exemplo {
+  background: var(--aviso-fundo);
+  color: var(--aviso);
+}
+
+.evento-nome {
+  margin: 0;
+  font-size: 1.15rem;
+  line-height: 1.3;
+}
+
+.evento-data {
+  margin: 6px 0 0;
+  font-weight: 600;
+}
+
+.evento-local {
+  margin: 2px 0 0;
+  color: var(--texto-suave);
+  font-size: 0.95rem;
+}
+
+/* Luta principal em destaque */
+.luta-principal {
+  margin: 14px 0;
+  padding: 14px;
+  border-radius: 10px;
+  background: var(--destaque-suave);
+}
+
+.luta-rotulo {
+  margin: 0 0 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--destaque);
+}
+
+.luta-confronto {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 8px;
+}
+
+.lutador { min-width: 0; }
+.lutador:last-child { text-align: right; }
+
+.lutador-nome {
+  display: block;
+  font-weight: 700;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.lutador-cartel {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+  font-variant-numeric: tabular-nums;
+}
+
+.versus {
+  font-weight: 800;
+  color: var(--destaque);
+}
+
+.luta-categoria {
+  margin: 10px 0 0;
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+  text-align: center;
+}
+
+/* Detalhes: onde assistir e fonte */
+.evento-detalhes {
+  margin: 0;
+  display: grid;
+  gap: 6px;
+  font-size: 0.95rem;
+}
+
+.evento-detalhes dt {
+  font-weight: 600;
+  color: var(--texto-suave);
+}
+
+.evento-detalhes dd { margin: 0 0 6px; }
+
+a { color: var(--destaque); }
+
+/* Rodapé */
+.rodape {
+  margin-top: 40px;
+  padding: 20px 0 32px;
+  border-top: 1px solid var(--borda);
+  color: var(--texto-suave);
+  font-size: 0.85rem;
+}
+
+.rodape p { margin: 2px 0; }
+
+@media (min-width: 600px) {
+  .marca { font-size: 2.1rem; }
+  .evento { padding: 20px; }
+  .evento-detalhes {
+    grid-template-columns: max-content 1fr;
+    column-gap: 16px;
+  }
+  .evento-detalhes dd { margin: 0; }
+}

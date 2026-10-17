@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fight Club · Agenda do UFC</title>
+  <meta name="description" content="Agenda gratuita dos próximos eventos do UFC, com horários de Brasília e onde assistir.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topo">
+    <div class="container">
+      <h1 class="marca">Fight Club</h1>
+      <p class="subtitulo">Agenda dos próximos eventos do UFC · horários de Brasília</p>
+    </div>
+  </header>
+
+  <nav class="container abas" role="tablist" aria-label="Seções">
+    <button class="aba" role="tab" id="aba-agenda" aria-controls="painel-agenda" aria-selected="true">Agenda</button>
+    <button class="aba" role="tab" id="aba-calendario" aria-controls="painel-calendario" aria-selected="false" tabindex="-1">Calendário</button>
+  </nav>
+
+  <main class="container">
+    <section id="painel-agenda" role="tabpanel" aria-labelledby="aba-agenda">
+      <p class="mensagem" id="agenda-status">Carregando eventos…</p>
+      <ol class="lista-eventos" id="lista-eventos"></ol>
+    </section>
+
+    <section id="painel-calendario" role="tabpanel" aria-labelledby="aba-calendario" hidden>
+      <p class="mensagem">O calendário mensal chega em breve.</p>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <div class="container">
+      <p>Site independente, sem afiliação com o UFC.</p>
+      <p>Dados atualizados em <span id="ultima-atualizacao">—</span>.</p>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
