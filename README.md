@@ -2,6 +2,8 @@
 
 Agenda gratuita e sem login dos próximos eventos do UFC, com horários de Brasília, local, luta principal e onde assistir.
 
+**Acesse:** https://gabriel-de-lima-r.github.io/fight-club-events/
+
 Projeto independente, **sem afiliação com o UFC**. Não tem apostas, odds nem imagens de terceiros.
 
 ## O que o site mostra
@@ -61,3 +63,7 @@ scripts/servidor.js   servidor local para testes
 ```
 
 Feito com HTML, CSS e JavaScript puros, sem framework e sem etapa de build.
+
+## Publicação
+
+O site é publicado de graça pelo GitHub Pages, a partir da branch `main` (pasta raiz). Cada push para a `main` atualiza o site em 1 a 2 minutos. O arquivo `.nojekyll` faz o GitHub servir os arquivos exatamente como estão.
