@@ -10,17 +10,25 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <header class="topo">
-    <div class="container">
-      <h1 class="marca">Fight Club</h1>
-      <p class="subtitulo">Agenda dos próximos eventos do UFC · horários de Brasília</p>
-    </div>
+  <header class="barra">
+    <nav class="barra-interna">
+      <button class="menu-botao" id="menu-botao" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu-esq menu-dir">
+        <span class="menu-barra"></span>
+        <span class="menu-barra"></span>
+        <span class="menu-barra"></span>
+      </button>
+      <div class="barra-esq" id="menu-esq" role="tablist" aria-label="Seções">
+        <button class="aba" role="tab" id="aba-agenda" aria-controls="painel-agenda" aria-selected="true">Eventos</button>
+        <button class="aba" role="tab" id="aba-calendario" aria-controls="painel-calendario" aria-selected="false" tabindex="-1">Calendário</button>
+      </div>
+      <h1 class="marca">
+        <a href="./"><img src="images/logo_fight_club.jpg" alt="Fight Club Events" width="1066" height="297"></a>
+      </h1>
+      <div class="barra-dir" id="menu-dir" role="tablist" aria-label="Informações">
+        <button class="aba" role="tab" id="aba-sobre" aria-controls="painel-sobre" aria-selected="false" tabindex="-1">Sobre o site</button>
+      </div>
+    </nav>
   </header>
-
-  <nav class="container abas" role="tablist" aria-label="Seções">
-    <button class="aba" role="tab" id="aba-agenda" aria-controls="painel-agenda" aria-selected="true">Agenda</button>
-    <button class="aba" role="tab" id="aba-calendario" aria-controls="painel-calendario" aria-selected="false" tabindex="-1">Calendário</button>
-  </nav>
 
   <main class="container">
     <section id="painel-agenda" role="tabpanel" aria-labelledby="aba-agenda">
@@ -45,6 +53,13 @@
         <button class="cal-botao-hoje" id="cal-hoje" type="button">Hoje</button>
         <div class="cal-detalhe" id="cal-detalhe"></div>
       </div>
+    </section>
+
+    <section id="painel-sobre" class="sobre" role="tabpanel" aria-labelledby="aba-sobre" hidden>
+      <h2 class="sobre-titulo">Sobre o site</h2>
+      <p>O Fight Club Events é um site independente, gratuito e sem login que reúne a agenda dos próximos eventos do UFC.</p>
+      <p>Os horários aparecem no horário de Brasília, e cada evento tem o link da fonte oficial. O site não tem apostas, odds nem links de casas de apostas.</p>
+      <p>Este projeto não tem afiliação com o UFC.</p>
     </section>
   </main>
 

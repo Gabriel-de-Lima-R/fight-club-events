@@ -220,5 +220,39 @@ function configurarAbas() {
   });
 }
 
+// Menu hambúrguer (só aparece no celular): abre/fecha a lista de links.
+function configurarMenu() {
+  const botao = document.getElementById('menu-botao');
+  const barra = document.querySelector('.barra-interna');
+
+  function definir(aberto) {
+    barra.classList.toggle('menu-aberto', aberto);
+    botao.setAttribute('aria-expanded', String(aberto));
+  }
+
+  botao.addEventListener('click', () => {
+    definir(botao.getAttribute('aria-expanded') !== 'true');
+  });
+
+  // Escolher um item fecha o menu.
+  document.querySelectorAll('[role="tab"]').forEach((aba) => {
+    aba.addEventListener('click', () => definir(false));
+  });
+
+  // Esc fecha e devolve o foco ao botão.
+  document.addEventListener('keydown', (evento) => {
+    if (evento.key === 'Escape' && barra.classList.contains('menu-aberto')) {
+      definir(false);
+      botao.focus();
+    }
+  });
+
+  // Tocar fora do menu fecha.
+  document.addEventListener('click', (evento) => {
+    if (!barra.contains(evento.target)) definir(false);
+  });
+}
+
 configurarAbas();
+configurarMenu();
 carregarEventos();
