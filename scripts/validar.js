@@ -48,7 +48,10 @@ function validarLutador(lutador, onde) {
     return;
   }
   if (!textoPreenchido(lutador.name)) erros.push(`${onde}: o campo name está vazio`);
-  if (!textoPreenchido(lutador.nationality)) erros.push(`${onde}: o campo nationality está vazio`);
+  // nationality pode ser null quando a fonte oficial não informa.
+  if (lutador.nationality !== null && !textoPreenchido(lutador.nationality)) {
+    erros.push(`${onde}: o campo nationality precisa ser um texto ou null`);
+  }
 
   if (!ehObjeto(lutador.record)) {
     erros.push(`${onde}: o campo record está faltando`);
@@ -56,6 +59,8 @@ function validarLutador(lutador, onde) {
   }
   for (const campo of CAMPOS_RECORD) {
     const valor = lutador.record[campo];
+    // no_contests pode ser null: o site oficial mostra o cartel só como V-D-E.
+    if (campo === 'no_contests' && valor === null) continue;
     if (!Number.isInteger(valor) || valor < 0) {
       erros.push(`${onde}: o campo record.${campo} precisa ser um número inteiro, 0 ou mais`);
     }

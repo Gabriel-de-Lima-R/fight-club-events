@@ -66,8 +66,8 @@ Cada luta:
 
 Cada lutador:
 - name
-- nationality: nacionalidade, em português (ex.: "Brasileiro", "Canadense")
-- record: wins, losses, draws, no_contests (números inteiros, 0 ou mais)
+- nationality: nacionalidade, em português (ex.: "Brasileiro", "Canadense"); null quando a fonte oficial não informar
+- record: wins, losses, draws, no_contests (números inteiros, 0 ou mais; no_contests pode ser null, pois o site oficial mostra só V-D-E)
 - height_ft e reach_in: opcionais, podem ser null
 
 Regras dos dados:
