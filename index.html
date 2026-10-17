@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Fight Club · Agenda do UFC</title>
   <meta name="description" content="Agenda gratuita dos próximos eventos do UFC, com horários de Brasília e onde assistir.">
+  <meta name="theme-color" content="#c8102e">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23c8102e'/%3E%3Ctext x='32' y='46' font-family='Arial,sans-serif' font-size='40' font-weight='700' fill='%23fff' text-anchor='middle'%3EF%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -22,6 +24,11 @@
 
   <main class="container">
     <section id="painel-agenda" role="tabpanel" aria-labelledby="aba-agenda">
+      <div class="filtros" id="filtros" role="group" aria-label="Filtrar por tipo de evento" hidden>
+        <button class="filtro" type="button" data-filtro="todos" aria-pressed="true">Todos</button>
+        <button class="filtro" type="button" data-filtro="numerado" aria-pressed="false" title="Eventos numerados, como UFC 333">Numerados</button>
+        <button class="filtro" type="button" data-filtro="fight-night" aria-pressed="false">Fight Night</button>
+      </div>
       <p class="mensagem" id="agenda-status">Carregando eventos…</p>
       <ol class="lista-eventos" id="lista-eventos"></ol>
     </section>

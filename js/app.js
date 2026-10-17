@@ -135,9 +135,17 @@ function montarEvento(evento, fuso) {
   return item;
 }
 
+// "UFC 333: ..." é evento numerado; os demais (UFC Fight Night, UFC Edmonton...) contam como Fight Night.
+function tipoDoEvento(evento) {
+  return /^UFC \d+\b/.test(evento.name) ? 'numerado' : 'fight-night';
+}
+
+let filtroAtual = 'todos';
+
 function mostrarAgenda(dados) {
   const status = document.getElementById('agenda-status');
   const lista = document.getElementById('lista-eventos');
+  const filtros = document.getElementById('filtros');
   const fuso = dados.display_timezone || FUSO_PADRAO;
   const agora = Date.now();
 
@@ -147,8 +155,29 @@ function mostrarAgenda(dados) {
     .filter((evento) => eventoVisivel(evento, agora))
     .sort((a, b) => new Date(a.starts_at) - new Date(b.starts_at));
 
-  lista.replaceChildren(...proximos.map((evento) => montarEvento(evento, fuso)));
-  status.textContent = proximos.length === 0 ? 'Nenhum evento futuro na agenda no momento.' : '';
+  if (proximos.length === 0) {
+    filtros.hidden = true;
+    lista.replaceChildren();
+    status.textContent = 'Nenhum evento futuro na agenda no momento. Volte em breve: a agenda é revisada com frequência.';
+    return;
+  }
+
+  const filtrados = proximos.filter((evento) => filtroAtual === 'todos' || tipoDoEvento(evento) === filtroAtual);
+  filtros.hidden = false;
+  filtros.querySelectorAll('[data-filtro]').forEach((botao) => {
+    botao.setAttribute('aria-pressed', String(botao.dataset.filtro === filtroAtual));
+  });
+  lista.replaceChildren(...filtrados.map((evento) => montarEvento(evento, fuso)));
+  status.textContent = filtrados.length === 0 ? 'Nenhum evento deste tipo na agenda no momento.' : '';
+}
+
+function configurarFiltros(dados) {
+  document.querySelectorAll('#filtros [data-filtro]').forEach((botao) => {
+    botao.addEventListener('click', () => {
+      filtroAtual = botao.dataset.filtro;
+      mostrarAgenda(dados);
+    });
+  });
 }
 
 async function carregarEventos() {
@@ -156,6 +185,7 @@ async function carregarEventos() {
     const resposta = await fetch('data/eventos.json', { cache: 'no-store' });
     if (!resposta.ok) throw new Error(`HTTP ${resposta.status}`);
     const dados = await resposta.json();
+    configurarFiltros(dados);
     mostrarAgenda(dados);
     montarCalendario(dados); // definido em js/calendario.js
   } catch (erro) {
