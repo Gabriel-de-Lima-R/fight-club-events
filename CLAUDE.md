@@ -43,7 +43,7 @@ Site estático, gratuito e sem login que reúne a agenda dos próximos eventos d
 O arquivo tem last_updated (data da última revisão, AAAA-MM-DD), display_timezone ("America/Sao_Paulo") e events (lista de eventos).
 
 Cada evento:
-- id: texto único, sem espaços (eventos de exemplo começam com "exemplo-")
+- id: texto único, sem espaços
 - is_sample: true para dados de teste/exemplo, false para eventos reais conferidos
 - organization: "UFC"
 - name: nome do evento
@@ -81,7 +81,7 @@ Regras dos dados:
 ## Plano do MVP1
 
 - Fase 0: preparação (plano, app, pasta, repositório público no GitHub).
-- Fase 1: fundação (Git conectado, CLAUDE.md, estrutura de pastas, eventos.json com 3 exemplos fictícios, validador).
+- Fase 1: fundação (Git conectado, CLAUDE.md, estrutura de pastas, eventos.json com os 3 eventos de exemplo atuais (is_sample: true), validador).
 - Fase 2: agenda (próximos eventos por data, luta principal em destaque, horário de Brasília, local, onde assistir, link oficial; eventos passados ocultos).
 - Fase 3: calendário mensal (navegação entre meses, dias com evento marcados, clique no dia mostra o evento e onde assistir).
 - Fase 4: dados reais (10 a 15 eventos conferidos em fonte oficial).
