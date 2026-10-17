@@ -1,0 +1,282 @@
+{
+  "last_updated": "2026-10-16",
+  "display_timezone": "America/Sao_Paulo",
+  "events": [
+    {
+      "id": "ufc-fn-2026-10-17-buckley-malott",
+      "is_sample": true,
+      "organization": "UFC",
+      "name": "UFC Fight Night: Buckley vs. Malott",
+      "starts_at": "2026-10-18T00:00:00Z",
+      "status": "scheduled",
+      "venue": {
+        "name": "Rogers Place",
+        "city": "Edmonton",
+        "country": "Canadá"
+      },
+      "broadcast": [
+        { "name": "Paramount+", "type": "streaming", "url": null }
+      ],
+      "source_url": null,
+      "fights": [
+        {
+          "order": 1,
+          "card_section": "main_event",
+          "weight_class": "Peso Meio-médio",
+          "weight_limit_lbs": 170,
+          "fighters": [
+            {
+              "name": "Joaquin Buckley",
+              "nationality": "Estadunidense",
+              "record": { "wins": 21, "losses": 8, "draws": 0, "no_contests": 0 },
+              "reach_in": 76
+            },
+            {
+              "name": "Mike Malott",
+              "nationality": "Canadense",
+              "record": { "wins": 14, "losses": 2, "draws": 1, "no_contests": 0 },
+              "reach_in": 73
+            }
+          ]
+        },
+        {
+          "order": 2,
+          "card_section": "co_main",
+          "weight_class": "Peso Mosca feminino",
+          "weight_limit_lbs": 125,
+          "fighters": [
+            {
+              "name": "Erin Blanchfield",
+              "nationality": "Estadunidense",
+              "record": { "wins": 14, "losses": 2, "draws": 0, "no_contests": 0 }
+            },
+            {
+              "name": "Jasmine Jasudavicius",
+              "nationality": "Canadense",
+              "record": { "wins": 15, "losses": 4, "draws": 0, "no_contests": 0 }
+            }
+          ]
+        },
+        {
+          "order": 3,
+          "card_section": "co_main",
+          "weight_class": "Peso Leve",
+          "weight_limit_lbs": 155,
+          "fighters": [
+            {
+              "name": "Mandel Nallo",
+              "nationality": "Canadense",
+              "record": { "wins": 14, "losses": 4, "draws": 0, "no_contests": 1 }
+            },
+            {
+              "name": "Nate Landwehr",
+              "nationality": "Estadunidense",
+              "record": { "wins": 18, "losses": 8, "draws": 0, "no_contests": 0 }
+            }
+          ]
+        },
+        {
+          "order": 4,
+          "card_section": "main_card",
+          "weight_class": "Peso Leve",
+          "weight_limit_lbs": 155,
+          "fighters": [
+            {
+              "name": "Kyle Nelson",
+              "nationality": "Canadense",
+              "record": { "wins": 17, "losses": 7, "draws": 1, "no_contests": 0 }
+            },
+            {
+              "name": "Cristian Perez",
+              "nationality": "Mexicano",
+              "record": { "wins": 15, "losses": 2, "draws": 0, "no_contests": 0 }
+            }
+          ]
+        },
+        {
+          "order": 5,
+          "card_section": "main_card",
+          "weight_class": "Peso Médio",
+          "weight_limit_lbs": 185,
+          "fighters": [
+            {
+              "name": "Marc-André Barriault",
+              "nationality": "Canadense",
+              "record": { "wins": 17, "losses": 11, "draws": 0, "no_contests": 1 }
+            },
+            {
+              "name": "Kyle Daukaus",
+              "nationality": "Estadunidense",
+              "record": { "wins": 17, "losses": 5, "draws": 0, "no_contests": 1 }
+            }
+          ]
+        },
+        {
+          "order": 6,
+          "card_section": "main_card",
+          "weight_class": "Peso Galo",
+          "weight_limit_lbs": 135,
+          "fighters": [
+            {
+              "name": "Louis Jourdain",
+              "nationality": "Canadense",
+              "record": { "wins": 9, "losses": 3, "draws": 0, "no_contests": 0 }
+            },
+            {
+              "name": "Timmy Cuamba",
+              "nationality": "Estadunidense",
+              "record": { "wins": 10, "losses": 4, "draws": 0, "no_contests": 0 }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "exemplo-ufc-fn-2026-10-17-moreira-tanaka",
+      "is_sample": true,
+      "organization": "UFC",
+      "name": "UFC Fight Night: Moreira vs. Tanaka",
+      "starts_at": "2026-10-17T18:00:00Z",
+      "status": "scheduled",
+      "venue": {
+        "name": "Arena Exemplo",
+        "city": "Rio de Janeiro",
+        "country": "Brasil"
+      },
+      "broadcast": [
+        { "name": "Paramount+", "type": "streaming", "url": null }
+      ],
+      "source_url": null,
+      "fights": [
+        {
+          "order": 1,
+          "card_section": "main_event",
+          "weight_class": "Peso Leve",
+          "weight_limit_lbs": 155,
+          "fighters": [
+            {
+              "name": "Gustavo Moreira",
+              "nationality": "Brasileiro",
+              "record": { "wins": 18, "losses": 4, "draws": 0, "no_contests": 0 }
+            },
+            {
+              "name": "Kenji Tanaka",
+              "nationality": "Japonês",
+              "record": { "wins": 17, "losses": 3, "draws": 0, "no_contests": 0 }
+            }
+          ]
+        },
+        {
+          "order": 2,
+          "card_section": "co_main",
+          "weight_class": "Peso Galo",
+          "weight_limit_lbs": 135,
+          "fighters": [
+            {
+              "name": "Leandro Pires",
+              "nationality": "Brasileiro",
+              "record": { "wins": 14, "losses": 3, "draws": 0, "no_contests": 0 }
+            },
+            {
+              "name": "Marcus Whitfield",
+              "nationality": "Estadunidense",
+              "record": { "wins": 12, "losses": 3, "draws": 0, "no_contests": 0 }
+            }
+          ]
+        },
+        {
+          "order": 3,
+          "card_section": "main_card",
+          "weight_class": "Peso Mosca feminino",
+          "weight_limit_lbs": 125,
+          "fighters": [
+            {
+              "name": "Larissa Freitas",
+              "nationality": "Brasileira",
+              "record": { "wins": 11, "losses": 2, "draws": 0, "no_contests": 0 }
+            },
+            {
+              "name": "Aiko Sato",
+              "nationality": "Japonesa",
+              "record": { "wins": 9, "losses": 3, "draws": 0, "no_contests": 0 }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "exemplo-ufc-999-2026-10-24-duarte-kowalski",
+      "is_sample": true,
+      "organization": "UFC",
+      "name": "UFC 999: Duarte vs. Kowalski",
+      "starts_at": "2026-10-25T02:00:00Z",
+      "status": "scheduled",
+      "venue": {
+        "name": "Arena Exemplo",
+        "city": "Las Vegas",
+        "country": "Estados Unidos"
+      },
+      "broadcast": [
+        { "name": "Paramount+", "type": "streaming", "url": null },
+        { "name": "Canal Exemplo", "type": "tv", "url": null }
+      ],
+      "source_url": null,
+      "fights": [
+        {
+          "order": 1,
+          "card_section": "main_event",
+          "weight_class": "Peso Pesado",
+          "weight_limit_lbs": 265,
+          "fighters": [
+            {
+              "name": "Rafael Duarte",
+              "nationality": "Brasileiro",
+              "record": { "wins": 19, "losses": 3, "draws": 0, "no_contests": 0 }
+            },
+            {
+              "name": "Piotr Kowalski",
+              "nationality": "Polonês",
+              "record": { "wins": 16, "losses": 4, "draws": 0, "no_contests": 0 }
+            }
+          ]
+        },
+        {
+          "order": 2,
+          "card_section": "co_main",
+          "weight_class": "Peso Palha feminino",
+          "weight_limit_lbs": 115,
+          "fighters": [
+            {
+              "name": "Camila Barros",
+              "nationality": "Brasileira",
+              "record": { "wins": 12, "losses": 2, "draws": 0, "no_contests": 0 }
+            },
+            {
+              "name": "Hannah Lindqvist",
+              "nationality": "Sueca",
+              "record": { "wins": 10, "losses": 1, "draws": 0, "no_contests": 0 }
+            }
+          ]
+        },
+        {
+          "order": 3,
+          "card_section": "main_card",
+          "weight_class": "Peso Pena",
+          "weight_limit_lbs": 145,
+          "fighters": [
+            {
+              "name": "Thiago Matos",
+              "nationality": "Brasileiro",
+              "record": { "wins": 15, "losses": 5, "draws": 0, "no_contests": 1 }
+            },
+            {
+              "name": "Daniel Okoro",
+              "nationality": "Nigeriano",
+              "record": { "wins": 13, "losses": 4, "draws": 1, "no_contests": 0 }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

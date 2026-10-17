@@ -1,0 +1,9 @@
+#!/bin/sh
+# Roda o validador antes de cada commit. Se houver erro, o commit é bloqueado.
+
+node scripts/validar.js
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "Commit bloqueado: corrija os erros de data/eventos.json e tente de novo."
+  exit 1
+fi

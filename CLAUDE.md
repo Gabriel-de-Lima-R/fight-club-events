@@ -40,21 +40,25 @@ Site estático, gratuito e sem login que reúne a agenda dos próximos eventos d
 
 ## Formato dos dados (data/eventos.json)
 
-O arquivo tem last_updated (data da última revisão) e events (lista de eventos).
+O arquivo tem last_updated (data da última revisão, AAAA-MM-DD), display_timezone ("America/Sao_Paulo") e events (lista de eventos).
 
 Cada evento:
-- id: texto único, sem espaços
+- id: texto único, sem espaços (eventos de exemplo começam com "exemplo-")
+- is_sample: true para dados de teste/exemplo, false para eventos reais conferidos
 - organization: "UFC"
 - name: nome do evento
-- starts_at: data e hora em UTC, formato ISO 8601
+- starts_at: data e hora em UTC, formato ISO 8601 terminando em Z (ex.: 2026-10-18T00:00:00Z)
 - status: scheduled, live, completed, cancelled ou postponed
 - venue: name, city, country (city e country podem ser null)
-- broadcast: lista de canais ou streamings (pode ser vazia)
-- source_url: link da fonte oficial (pode ser null)
+- broadcast: lista de onde assistir (pode ser vazia). Cada item tem:
+  - name: nome do canal ou streaming
+  - type: streaming ou tv
+  - url: link (pode ser null)
+- source_url: link da fonte oficial (pode ser null só em evento de exemplo; obrigatório quando is_sample é false)
 - fights: lista de lutas
 
 Cada luta:
-- order: posição no card
+- order: posição no card (1, 2, 3... em sequência; a luta 1 é sempre main_event)
 - card_section: main_event, co_main, main_card, prelims ou early_prelims
 - weight_class: categoria de peso
 - weight_limit_lbs: limite de peso em libras
@@ -62,21 +66,24 @@ Cada luta:
 
 Cada lutador:
 - name
-- record: wins, losses, draws
+- nationality: nacionalidade, em português (ex.: "Brasileiro", "Canadense")
+- record: wins, losses, draws, no_contests (números inteiros, 0 ou mais)
 - height_ft e reach_in: opcionais, podem ser null
 
 Regras dos dados:
 - Não guardar idade (muda com o tempo). Se necessário, guardar a data de nascimento.
 - Campos desconhecidos ficam null. Nunca inventar informação.
 - Todo evento real precisa ter source_url com fonte oficial conferida.
+- Eventos com is_sample: true são só para teste e não podem ir ao ar como dados reais.
 - Antes de cada commit, rodar scripts/validar.js. Se falhar, corrigir antes de commitar.
+- O hook de pre-commit (.githooks/pre-commit) roda o validador e bloqueia o commit se houver erro. Em um clone novo, ativar com: git config core.hooksPath .githooks
 
 ## Plano do MVP1
 
 - Fase 0: preparação (plano, app, pasta, repositório público no GitHub).
 - Fase 1: fundação (Git conectado, CLAUDE.md, estrutura de pastas, eventos.json com 3 exemplos fictícios, validador).
 - Fase 2: agenda (próximos eventos por data, luta principal em destaque, horário de Brasília, local, onde assistir, link oficial; eventos passados ocultos).
-- Fase 3: calendário mensal (navegação entre meses, dias com evento marcados, clique no dia mostra o evento).
+- Fase 3: calendário mensal (navegação entre meses, dias com evento marcados, clique no dia mostra o evento e onde assistir).
 - Fase 4: dados reais (10 a 15 eventos conferidos em fonte oficial).
 - Fase 5: acabamento (teste no celular, estado vazio, aviso de site independente, data de atualização; filtro por tipo de evento se houver tempo).
 - Fase 6: publicar no GitHub Pages e testar a URL pública.
@@ -85,7 +92,7 @@ Regras dos dados:
 
 - abre sem login
 - agenda em ordem de data, com a luta principal em destaque
-- calendário mensal funcionando
+- calendário mensal funcionando, mostrando onde assistir cada evento
 - horários em Brasília
 - confortável no celular
 - cada evento tem link para fonte oficial
