@@ -13,6 +13,12 @@ Site estático, gratuito e sem login que reúne a agenda dos próximos eventos d
 7. Não apague arquivos nem reescreva partes grandes do projeto sem me avisar antes.
 8. Não instale dependências pesadas sem explicar por quê.
 
+## Git e commits
+
+- Trabalhar sempre na branch develop. A main só recebe o que está pronto para ir ao ar (GitHub Pages publica a partir dela).
+- Todo commit segue Conventional Commits: tipo, dois pontos e descrição em português (ex.: feat: adiciona filtro por tipo de evento).
+- Tipos: feat, fix, docs, style, refactor, perf, test, build, ci, chore.
+
 ## Restrições do projeto
 
 - 100% gratuito: hospedagem (GitHub Pages) e qualquer serviço futuro precisam ter plano gratuito.
