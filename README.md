@@ -2,7 +2,7 @@
 
 Agenda gratuita e sem login dos próximos eventos do UFC, com horários de Brasília, local, luta principal e onde assistir.
 
-**Acesse:** https://gabriel-de-lima-r.github.io/fight-club-events/
+**Acesse:** https://fight-club-events.vercel.app/
 
 Projeto independente, **sem afiliação com o UFC**. Não tem apostas, odds nem imagens de terceiros.
 
