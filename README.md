@@ -10,6 +10,7 @@ Projeto independente, **sem afiliação com o UFC, a PFL nem a ONE Championship*
 
 - **Agenda:** os próximos eventos em ordem de data, com a luta principal em destaque, o horário de Brasília, o local, onde assistir e o link da fonte oficial. Dá para filtrar por organização (UFC, PFL, ONE), marcando uma ou mais.
 - **Calendário:** a grade do mês com os dias de evento marcados. Ao tocar num dia, aparece o evento e onde assistir.
+- **Guia do MMA:** explicação para quem está começando: o que é MMA, como uma luta termina, categorias de peso, como ler a agenda e um resumo de UFC, PFL e ONE Championship.
 
 ## Como abrir no seu computador
 

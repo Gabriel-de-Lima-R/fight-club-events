@@ -6,8 +6,9 @@
   --texto: #1c1b19;
   --texto-suave: #5f5c56;
   --borda: #e2dfd8;
-  --destaque: #c8102e;
-  --destaque-suave: #fbe9ec;
+  --vermelho-logo: #b82e22; /* vermelho do canguru; usado na barra, que é branca nos dois temas */
+  --destaque: #b82e22;
+  --destaque-suave: #fbebe8;
   --sobre-destaque: #ffffff;
   --aviso: #8a5a00;
   --aviso-fundo: #fff3d6;
@@ -21,9 +22,9 @@
     --texto: #f1efea;
     --texto-suave: #a9a59d;
     --borda: #33322f;
-    --destaque: #ff4d5e;
-    --destaque-suave: #3a1a1f;
-    --sobre-destaque: #1a0b0d;
+    --destaque: #ff6a57;
+    --destaque-suave: #3a1c18;
+    --sobre-destaque: #1a0d0a;
     --aviso: #ffcf66;
     --aviso-fundo: #3a2e12;
   }
@@ -84,7 +85,7 @@ body {
 }
 
 .menu-botao:focus-visible {
-  outline: 2px solid #c8102e;
+  outline: 2px solid var(--vermelho-logo);
   outline-offset: 2px;
 }
 
@@ -150,12 +151,12 @@ body {
 }
 
 .aba[aria-selected="true"] {
-  color: #c8102e;
-  border-left-color: #c8102e;
+  color: var(--vermelho-logo);
+  border-left-color: var(--vermelho-logo);
 }
 
 .aba:focus-visible {
-  outline: 2px solid #c8102e;
+  outline: 2px solid var(--vermelho-logo);
   outline-offset: -2px;
 }
 
@@ -174,12 +175,42 @@ body {
   color: var(--texto-suave);
 }
 
+/* Guia do MMA: reaproveita o painel "Sobre" e acrescenta subtítulos e listas */
+.guia h3 {
+  margin: 24px 0 8px;
+  font-size: 1.05rem;
+}
+
+.guia h4 {
+  margin: 16px 0 4px;
+  font-size: 1rem;
+}
+
+.guia ul {
+  margin: 0 0 12px;
+  padding-left: 20px;
+  color: var(--texto-suave);
+}
+
+.guia li {
+  margin-bottom: 6px;
+}
+
+.guia strong {
+  color: var(--texto);
+}
+
 /* Filtro por tipo de evento */
 .filtros {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 16px;
+}
+
+/* Escondido nas abas Sobre e Guia (ver configurarAbas em js/app.js) */
+.filtros.filtros-oculto {
+  display: none;
 }
 
 .filtro {
@@ -510,7 +541,7 @@ button.cal-dia {
     font-size: 0.85rem;
   }
 
-  .aba[aria-selected="true"] { border-bottom-color: #c8102e; }
+  .aba[aria-selected="true"] { border-bottom-color: var(--vermelho-logo); }
 }
 
 @media (min-width: 600px) {
