@@ -54,6 +54,8 @@ function validarLutador(lutador, onde) {
     erros.push(`${onde}: o campo nationality precisa ser um texto ou null`);
   }
 
+  // record pode ser null quando a fonte oficial não mostra o cartel completo (ex.: ONE).
+  if (lutador.record === null) return;
   if (!ehObjeto(lutador.record)) {
     erros.push(`${onde}: o campo record está faltando`);
     return;

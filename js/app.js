@@ -52,10 +52,9 @@ function eventoVisivel(evento, agora) {
 
 function montarLutador(lutador) {
   const bloco = el('div', 'lutador');
-  bloco.append(
-    el('span', 'lutador-nome', lutador.name),
-    el('span', 'lutador-cartel', formatarCartel(lutador.record)),
-  );
+  bloco.append(el('span', 'lutador-nome', lutador.name));
+  // Sem cartel (record null) quando a fonte oficial não informa o cartel completo.
+  if (lutador.record) bloco.append(el('span', 'lutador-cartel', formatarCartel(lutador.record)));
   return bloco;
 }
 
