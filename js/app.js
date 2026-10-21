@@ -250,6 +250,10 @@ function configurarAbas() {
       outra.tabIndex = ativa ? 0 : -1;
       document.getElementById(outra.getAttribute('aria-controls')).hidden = !ativa;
     });
+    // O filtro por organização só vale para Eventos e Calendário.
+    const painel = aba.getAttribute('aria-controls');
+    const usaFiltro = painel === 'painel-agenda' || painel === 'painel-calendario';
+    document.getElementById('filtros').classList.toggle('filtros-oculto', !usaFiltro);
   }
 
   abas.forEach((aba, i) => {

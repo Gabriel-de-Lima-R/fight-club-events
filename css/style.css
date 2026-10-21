@@ -208,6 +208,11 @@ body {
   margin-bottom: 16px;
 }
 
+/* Escondido nas abas Sobre e Guia (ver configurarAbas em js/app.js) */
+.filtros.filtros-oculto {
+  display: none;
+}
+
 .filtro {
   flex: 1 1 auto;
   min-height: 44px;
