@@ -175,6 +175,31 @@ body {
   color: var(--texto-suave);
 }
 
+/* Guia do MMA: reaproveita o painel "Sobre" e acrescenta subtítulos e listas */
+.guia h3 {
+  margin: 24px 0 8px;
+  font-size: 1.05rem;
+}
+
+.guia h4 {
+  margin: 16px 0 4px;
+  font-size: 1rem;
+}
+
+.guia ul {
+  margin: 0 0 12px;
+  padding-left: 20px;
+  color: var(--texto-suave);
+}
+
+.guia li {
+  margin-bottom: 6px;
+}
+
+.guia strong {
+  color: var(--texto);
+}
+
 /* Filtro por tipo de evento */
 .filtros {
   display: flex;
