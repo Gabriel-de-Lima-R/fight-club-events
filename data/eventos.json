@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-10-17",
+  "last_updated": "2026-10-20",
   "display_timezone": "America/Sao_Paulo",
   "events": [
     {
@@ -522,6 +522,101 @@
       ]
     },
     {
+      "id": "one-fn49-2026-11-06-gabriel-rasulov",
+      "is_sample": false,
+      "organization": "ONE",
+      "name": "ONE Fight Night 49: Gabriel vs. Rasulov",
+      "starts_at": "2026-11-07T02:00:00Z",
+      "status": "scheduled",
+      "venue": {
+        "name": "Lumpinee Stadium",
+        "city": "Bangkok",
+        "country": "Tailândia"
+      },
+      "broadcast": [
+        {
+          "name": "watch.onefc.com",
+          "type": "streaming",
+          "url": "https://watch.onefc.com"
+        }
+      ],
+      "source_url": "https://www.onefc.com/events/onefightnight49/",
+      "fights": [
+        {
+          "order": 1,
+          "card_section": "main_event",
+          "weight_class": "Peso Leve",
+          "weight_limit_lbs": 170,
+          "fighters": [
+            {
+              "name": "Lucas Gabriel",
+              "nationality": "Brasileiro",
+              "record": null
+            },
+            {
+              "name": "Alibeg Rasulov",
+              "nationality": "Turco",
+              "record": null
+            }
+          ]
+        },
+        {
+          "order": 2,
+          "card_section": "main_card",
+          "weight_class": "Peso Palha",
+          "weight_limit_lbs": 125,
+          "fighters": [
+            {
+              "name": "Lee Seung Cheol",
+              "nationality": "Sul-coreano",
+              "record": null
+            },
+            {
+              "name": "Nazareth Lalthazuala",
+              "nationality": "Indiano",
+              "record": null
+            }
+          ]
+        },
+        {
+          "order": 3,
+          "card_section": "main_card",
+          "weight_class": "Peso Átomo feminino",
+          "weight_limit_lbs": 115,
+          "fighters": [
+            {
+              "name": "Victoria Souza",
+              "nationality": "Brasileira",
+              "record": null
+            },
+            {
+              "name": "Magdalena Czaban",
+              "nationality": "Polonesa",
+              "record": null
+            }
+          ]
+        },
+        {
+          "order": 4,
+          "card_section": "main_card",
+          "weight_class": "Peso Galo",
+          "weight_limit_lbs": 145,
+          "fighters": [
+            {
+              "name": "Kalandar Tabarov",
+              "nationality": "Tadjique",
+              "record": null
+            },
+            {
+              "name": "Ilmadi Israilov",
+              "nationality": "Russo",
+              "record": null
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ufc-fn-2026-11-07-bonfim-brady",
       "is_sample": false,
       "organization": "UFC",
@@ -725,6 +820,53 @@
       ]
     },
     {
+      "id": "pfl-dubai-2026-11-14-nemkov-bilostenniy",
+      "is_sample": false,
+      "organization": "PFL",
+      "name": "PFL Dubai",
+      "starts_at": "2026-11-14T18:00:00Z",
+      "status": "scheduled",
+      "venue": {
+        "name": "Coca-Cola Arena",
+        "city": "Dubai",
+        "country": "Emirados Árabes Unidos"
+      },
+      "broadcast": [],
+      "source_url": "https://pflmma.com/event/pfl-returns-to-dubai",
+      "fights": [
+        {
+          "order": 1,
+          "card_section": "main_event",
+          "weight_class": "Peso Pesado · disputa de cinturão",
+          "weight_limit_lbs": 265,
+          "fighters": [
+            {
+              "name": "Vadim Nemkov",
+              "nationality": "Russo",
+              "record": {
+                "wins": 20,
+                "losses": 2,
+                "draws": 0,
+                "no_contests": 1
+              },
+              "reach_in": 76
+            },
+            {
+              "name": "Sergei Bilostenniy",
+              "nationality": "Russo",
+              "record": {
+                "wins": 15,
+                "losses": 4,
+                "draws": 0,
+                "no_contests": null
+              },
+              "reach_in": 75
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ufc-334-2026-11-14-gane-hokit",
       "is_sample": false,
       "organization": "UFC",
@@ -898,6 +1040,41 @@
       ]
     },
     {
+      "id": "one-samurai-5-2026-11-18-pacio-yamakita",
+      "is_sample": false,
+      "organization": "ONE",
+      "name": "ONE SAMURAI 5",
+      "starts_at": "2026-11-18T08:30:00Z",
+      "status": "scheduled",
+      "venue": {
+        "name": "EBARA WAVE Arena Ota",
+        "city": "Tóquio",
+        "country": "Japão"
+      },
+      "broadcast": [],
+      "source_url": "https://www.onefc.com/events/one-samurai-5/",
+      "fights": [
+        {
+          "order": 1,
+          "card_section": "main_event",
+          "weight_class": "Peso Palha · disputa de cinturão",
+          "weight_limit_lbs": 125,
+          "fighters": [
+            {
+              "name": "Joshua Pacio",
+              "nationality": "Filipino",
+              "record": null
+            },
+            {
+              "name": "Keito Yamakita",
+              "nationality": "Japonês",
+              "record": null
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ufc-fn-2026-11-21-prochazka-stirling",
       "is_sample": false,
       "organization": "UFC",
@@ -945,6 +1122,41 @@
                 "no_contests": null
               },
               "reach_in": 79
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "one-samurai-6-2026-12-02-sawada-nikolakakos",
+      "is_sample": false,
+      "organization": "ONE",
+      "name": "ONE SAMURAI 6",
+      "starts_at": "2026-12-02T08:30:00Z",
+      "status": "scheduled",
+      "venue": {
+        "name": "Yokohama Buntai",
+        "city": "Yokohama",
+        "country": "Japão"
+      },
+      "broadcast": [],
+      "source_url": "https://www.onefc.com/events/one-samurai-6/",
+      "fights": [
+        {
+          "order": 1,
+          "card_section": "main_event",
+          "weight_class": "Peso Átomo feminino · disputa de cinturão",
+          "weight_limit_lbs": 115,
+          "fighters": [
+            {
+              "name": "Chihiro Sawada",
+              "nationality": "Japonesa",
+              "record": null
+            },
+            {
+              "name": "Anastasia Nikolakakos",
+              "nationality": "Canadense",
+              "record": null
             }
           ]
         }

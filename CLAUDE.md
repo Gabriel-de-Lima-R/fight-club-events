@@ -1,6 +1,6 @@
 # Fight Club
 
-Site estático, gratuito e sem login que reúne a agenda dos próximos eventos do UFC. Projeto independente, sem afiliação com o UFC.
+Site estático, gratuito e sem login que reúne a agenda dos próximos eventos de MMA (UFC, PFL e ONE Championship). Projeto independente, sem afiliação com o UFC, a PFL nem a ONE Championship.
 
 ## Como trabalhar comigo
 
@@ -25,7 +25,7 @@ Site estático, gratuito e sem login que reúne a agenda dos próximos eventos d
 - Sem login, sem banco de dados e sem backend no MVP1.
 - Sem apostas, odds ou links de casas de apostas.
 - Sem logos, fotos de lutadores ou imagens de terceiros. Usar apenas texto e cores próprias.
-- Rodapé com aviso: site independente, não afiliado ao UFC, e data da última atualização dos dados.
+- Rodapé com aviso: site independente, não afiliado ao UFC, PFL nem ONE Championship, e data da última atualização dos dados.
 
 ## Tecnologia (MVP1)
 
@@ -51,7 +51,7 @@ O arquivo tem last_updated (data da última revisão, AAAA-MM-DD), display_timez
 Cada evento:
 - id: texto único, sem espaços
 - is_sample: true para dados de teste/exemplo, false para eventos reais conferidos
-- organization: "UFC"
+- organization: "UFC", "PFL" ou "ONE"
 - name: nome do evento
 - starts_at: data e hora em UTC, formato ISO 8601 terminando em Z (ex.: 2026-10-18T00:00:00Z)
 - status: scheduled, live, completed, cancelled ou postponed
@@ -73,7 +73,7 @@ Cada luta:
 Cada lutador:
 - name
 - nationality: nacionalidade, em português (ex.: "Brasileiro", "Canadense"); null quando a fonte oficial não informar
-- record: wins, losses, draws, no_contests (números inteiros, 0 ou mais; no_contests pode ser null, pois o site oficial mostra só V-D-E)
+- record: wins, losses, draws, no_contests (números inteiros, 0 ou mais; no_contests pode ser null, pois o site oficial mostra só V-D-E). O record inteiro pode ser null quando a fonte oficial não mostra o cartel completo (ex.: ONE)
 - height_ft e reach_in: opcionais, podem ser null
 
 Regras dos dados:

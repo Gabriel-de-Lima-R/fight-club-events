@@ -1,14 +1,14 @@
 # Fight Club
 
-Agenda gratuita e sem login dos próximos eventos do UFC, com horários de Brasília, local, luta principal e onde assistir.
+Agenda gratuita e sem login dos próximos eventos de MMA (UFC, PFL e ONE Championship), com horários de Brasília, local, luta principal e onde assistir.
 
 **Acesse:** https://fight-club-events.vercel.app/
 
-Projeto independente, **sem afiliação com o UFC**. Não tem apostas, odds nem imagens de terceiros.
+Projeto independente, **sem afiliação com o UFC, a PFL nem a ONE Championship**. Não tem apostas, odds nem imagens de terceiros.
 
 ## O que o site mostra
 
-- **Agenda:** os próximos eventos em ordem de data, com a luta principal em destaque, o horário de Brasília, o local, onde assistir e o link da fonte oficial. Dá para filtrar por eventos numerados (ex.: UFC 333) ou Fight Night.
+- **Agenda:** os próximos eventos em ordem de data, com a luta principal em destaque, o horário de Brasília, o local, onde assistir e o link da fonte oficial. Dá para filtrar por organização (UFC, PFL, ONE), marcando uma ou mais.
 - **Calendário:** a grade do mês com os dias de evento marcados. Ao tocar num dia, aparece o evento e onde assistir.
 
 ## Como abrir no seu computador

@@ -32,16 +32,22 @@ function montarCalendario(dados) {
   const fuso = dados.display_timezone || FUSO_PADRAO;
   const hoje = chaveDoDia(new Date(), fuso);
 
-  // Agrupa os eventos por dia (no horário de Brasília).
-  const eventosPorDia = new Map();
-  dados.events
-    .slice()
-    .sort((a, b) => new Date(a.starts_at) - new Date(b.starts_at))
-    .forEach((evento) => {
-      const chave = chaveDoDia(new Date(evento.starts_at), fuso);
-      if (!eventosPorDia.has(chave)) eventosPorDia.set(chave, []);
-      eventosPorDia.get(chave).push(evento);
-    });
+  let eventosPorDia = new Map();
+
+  // Agrupa os eventos que passam no filtro por dia (no horário de Brasília).
+  function agruparEventos() {
+    eventosPorDia = new Map();
+    dados.events
+      .filter(passaNoFiltro)
+      .sort((a, b) => new Date(a.starts_at) - new Date(b.starts_at))
+      .forEach((evento) => {
+        const chave = chaveDoDia(new Date(evento.starts_at), fuso);
+        if (!eventosPorDia.has(chave)) eventosPorDia.set(chave, []);
+        eventosPorDia.get(chave).push(evento);
+      });
+  }
+
+  agruparEventos();
 
   const estado = {
     ano: Number(hoje.slice(0, 4)),
@@ -136,5 +142,13 @@ function montarCalendario(dados) {
     desenhar();
   });
 
+  // Chamado quando o filtro muda: reagrupa os eventos e redesenha, mantendo o mês exibido.
+  function atualizar() {
+    agruparEventos();
+    if (estado.selecionado && !eventosPorDia.has(estado.selecionado)) estado.selecionado = null;
+    desenhar();
+  }
+
   desenhar();
+  return { atualizar };
 }
