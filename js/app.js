@@ -114,9 +114,10 @@ function montarEvento(evento, fuso) {
   const item = el('li', 'evento');
 
   const etiquetas = el('div', 'evento-etiquetas');
+  etiquetas.append(el('span', 'etiqueta', evento.organization));
   if (NOMES_STATUS[evento.status]) etiquetas.append(el('span', 'etiqueta', NOMES_STATUS[evento.status]));
   if (evento.is_sample) etiquetas.append(el('span', 'etiqueta etiqueta-exemplo', 'Exemplo'));
-  if (etiquetas.childElementCount > 0) item.append(etiquetas);
+  item.append(etiquetas);
 
   item.append(
     el('h2', 'evento-nome', evento.name),
@@ -135,17 +136,23 @@ function montarEvento(evento, fuso) {
   return item;
 }
 
-// "UFC 333: ..." é evento numerado; os demais (UFC Fight Night, UFC Edmonton...) contam como Fight Night.
-function tipoDoEvento(evento) {
-  return /^UFC \d+\b/.test(evento.name) ? 'numerado' : 'fight-night';
+const ORDEM_ORGANIZACOES = ['UFC', 'PFL', 'ONE'];
+
+// Organizações marcadas no filtro. Vazio = mostra todas.
+const organizacoesMarcadas = new Set();
+
+function posicaoOrganizacao(organizacao) {
+  const posicao = ORDEM_ORGANIZACOES.indexOf(organizacao);
+  return posicao === -1 ? ORDEM_ORGANIZACOES.length : posicao;
 }
 
-let filtroAtual = 'todos';
+function passaNoFiltro(evento) {
+  return organizacoesMarcadas.size === 0 || organizacoesMarcadas.has(evento.organization);
+}
 
 function mostrarAgenda(dados) {
   const status = document.getElementById('agenda-status');
   const lista = document.getElementById('lista-eventos');
-  const filtros = document.getElementById('filtros');
   const fuso = dados.display_timezone || FUSO_PADRAO;
   const agora = Date.now();
 
@@ -156,28 +163,66 @@ function mostrarAgenda(dados) {
     .sort((a, b) => new Date(a.starts_at) - new Date(b.starts_at));
 
   if (proximos.length === 0) {
-    filtros.hidden = true;
     lista.replaceChildren();
     status.textContent = 'Nenhum evento futuro na agenda no momento. Volte em breve: a agenda é revisada com frequência.';
     return;
   }
 
-  const filtrados = proximos.filter((evento) => filtroAtual === 'todos' || tipoDoEvento(evento) === filtroAtual);
-  filtros.hidden = false;
-  filtros.querySelectorAll('[data-filtro]').forEach((botao) => {
-    botao.setAttribute('aria-pressed', String(botao.dataset.filtro === filtroAtual));
-  });
+  const filtrados = proximos.filter(passaNoFiltro);
+  atualizarBotoesFiltro();
   lista.replaceChildren(...filtrados.map((evento) => montarEvento(evento, fuso)));
-  status.textContent = filtrados.length === 0 ? 'Nenhum evento deste tipo na agenda no momento.' : '';
+  status.textContent = filtrados.length === 0 ? 'Nenhum evento das organizações selecionadas no momento.' : '';
 }
 
-function configurarFiltros(dados) {
-  document.querySelectorAll('#filtros [data-filtro]').forEach((botao) => {
+// Botões: "Todos" e uma opção por organização presente nos dados.
+function montarBotoesFiltro(dados) {
+  const organizacoes = [...new Set(dados.events.map((evento) => evento.organization))]
+    .sort((a, b) => posicaoOrganizacao(a) - posicaoOrganizacao(b));
+
+  const todos = el('button', 'filtro', 'Todos');
+  todos.dataset.organizacao = 'todos';
+  const botoes = [todos];
+  organizacoes.forEach((organizacao) => {
+    const botao = el('button', 'filtro', organizacao);
+    botao.dataset.organizacao = organizacao;
+    botoes.push(botao);
+  });
+
+  botoes.forEach((botao) => {
+    botao.type = 'button';
     botao.addEventListener('click', () => {
-      filtroAtual = botao.dataset.filtro;
-      mostrarAgenda(dados);
+      const organizacao = botao.dataset.organizacao;
+      if (organizacao === 'todos') {
+        organizacoesMarcadas.clear();
+      } else if (organizacoesMarcadas.has(organizacao)) {
+        organizacoesMarcadas.delete(organizacao);
+      } else {
+        organizacoesMarcadas.add(organizacao);
+      }
+      atualizarAgenda(dados);
     });
   });
+
+  const filtros = document.getElementById('filtros');
+  filtros.replaceChildren(...botoes);
+  filtros.hidden = false;
+}
+
+function atualizarBotoesFiltro() {
+  document.querySelectorAll('#filtros [data-organizacao]').forEach((botao) => {
+    const ativo = botao.dataset.organizacao === 'todos'
+      ? organizacoesMarcadas.size === 0
+      : organizacoesMarcadas.has(botao.dataset.organizacao);
+    botao.setAttribute('aria-pressed', String(ativo));
+  });
+}
+
+// Atualizado em carregarEventos, depois que o calendário é montado.
+let atualizarCalendario = null;
+
+function atualizarAgenda(dados) {
+  mostrarAgenda(dados);
+  if (atualizarCalendario) atualizarCalendario();
 }
 
 async function carregarEventos() {
@@ -185,9 +230,9 @@ async function carregarEventos() {
     const resposta = await fetch('data/eventos.json', { cache: 'no-store' });
     if (!resposta.ok) throw new Error(`HTTP ${resposta.status}`);
     const dados = await resposta.json();
-    configurarFiltros(dados);
+    montarBotoesFiltro(dados);
     mostrarAgenda(dados);
-    montarCalendario(dados); // definido em js/calendario.js
+    atualizarCalendario = montarCalendario(dados).atualizar; // definido em js/calendario.js
   } catch (erro) {
     console.error('Erro ao carregar eventos:', erro);
     const mensagem = 'Não foi possível carregar os eventos. Tente recarregar a página.';

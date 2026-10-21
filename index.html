@@ -31,12 +31,9 @@
   </header>
 
   <main class="container">
+    <div class="filtros" id="filtros" role="group" aria-label="Filtrar por organização" hidden></div>
+
     <section id="painel-agenda" role="tabpanel" aria-labelledby="aba-agenda">
-      <div class="filtros" id="filtros" role="group" aria-label="Filtrar por tipo de evento" hidden>
-        <button class="filtro" type="button" data-filtro="todos" aria-pressed="true">Todos</button>
-        <button class="filtro" type="button" data-filtro="numerado" aria-pressed="false" title="Eventos numerados, como UFC 333">Numerados</button>
-        <button class="filtro" type="button" data-filtro="fight-night" aria-pressed="false">Fight Night</button>
-      </div>
       <p class="mensagem" id="agenda-status">Carregando eventos…</p>
       <ol class="lista-eventos" id="lista-eventos"></ol>
     </section>
