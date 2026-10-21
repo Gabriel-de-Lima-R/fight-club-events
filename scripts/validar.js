@@ -10,6 +10,7 @@ const arquivo = process.argv[2] || path.join(__dirname, '..', 'data', 'eventos.j
 const STATUS = ['scheduled', 'live', 'completed', 'cancelled', 'postponed'];
 const CARD_SECTIONS = ['main_event', 'co_main', 'main_card', 'prelims', 'early_prelims'];
 const BROADCAST_TYPES = ['streaming', 'tv'];
+const ORGANIZACOES = ['UFC', 'PFL', 'ONE'];
 const CAMPOS_RECORD = ['wins', 'losses', 'draws', 'no_contests'];
 const DIAS_MAXIMOS_SEM_ATUALIZAR = 7;
 
@@ -123,7 +124,9 @@ function validarEvento(evento, posicao, idsVistos, agora) {
     avisos.push(`${rotulo}: é um evento de exemplo (is_sample: true). São dados de teste e não podem ir ao ar como dados reais`);
   }
 
-  if (evento.organization !== 'UFC') erros.push(`${rotulo}: o campo organization precisa ser "UFC"`);
+  if (!ORGANIZACOES.includes(evento.organization)) {
+    erros.push(`${rotulo}: o campo organization tem valor inválido (use: ${ORGANIZACOES.join(', ')})`);
+  }
   if (!textoPreenchido(evento.name)) erros.push(`${rotulo}: o campo name está vazio`);
 
   if (!dataHoraUtcValida(evento.starts_at)) {

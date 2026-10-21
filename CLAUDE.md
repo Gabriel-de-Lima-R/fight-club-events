@@ -51,7 +51,7 @@ O arquivo tem last_updated (data da última revisão, AAAA-MM-DD), display_timez
 Cada evento:
 - id: texto único, sem espaços
 - is_sample: true para dados de teste/exemplo, false para eventos reais conferidos
-- organization: "UFC"
+- organization: "UFC", "PFL" ou "ONE"
 - name: nome do evento
 - starts_at: data e hora em UTC, formato ISO 8601 terminando em Z (ex.: 2026-10-18T00:00:00Z)
 - status: scheduled, live, completed, cancelled ou postponed
