@@ -211,7 +211,7 @@
       "organization": "UFC",
       "name": "UFC 333: Volkanovski x Evloev",
       "starts_at": "2026-10-24T18:00:00Z",
-      "status": "scheduled",
+      "status": "completed",
       "venue": {
         "name": "Etihad Arena",
         "city": "Abu Dhabi",
@@ -384,7 +384,7 @@
       "organization": "UFC",
       "name": "UFC Fight Night: Moicano x Nolan",
       "starts_at": "2026-11-01T00:00:00Z",
-      "status": "scheduled",
+      "status": "completed",
       "venue": {
         "name": "Meta APEX",
         "city": "Las Vegas",
@@ -447,15 +447,10 @@
               "reach_in": 78
             },
             {
-              "name": "Carlos Leal",
-              "nationality": "Brasileiro",
-              "record": {
-                "wins": 23,
-                "losses": 7,
-                "draws": 0,
-                "no_contests": null
-              },
-              "reach_in": 74
+              "name": "Jacobe Smith",
+              "nationality": "Estadunidense",
+              "record": null,
+              "reach_in": null
             }
           ]
         },

@@ -22,7 +22,7 @@ Site estático, gratuito e sem login que reúne a agenda dos próximos eventos d
 ## Restrições do projeto
 
 - 100% gratuito: hospedagem (GitHub Pages) e qualquer serviço futuro precisam ter plano gratuito.
-- Sem login, sem banco de dados e sem backend no MVP1.
+- Sem login, sem banco de dados e sem backend no MVP1. O banco de dados (Supabase) entra no MVP2, veja a seção "MVP2".
 - Sem apostas, odds ou links de casas de apostas.
 - Sem logos, fotos de lutadores ou imagens de terceiros. Usar apenas texto e cores próprias.
 - Rodapé com aviso: site independente, não afiliado ao UFC, PFL nem ONE Championship, e data da última atualização dos dados.
@@ -42,6 +42,9 @@ Site estático, gratuito e sem login que reúne a agenda dos próximos eventos d
 - js/calendario.js: grade mensal
 - data/eventos.json
 - scripts/validar.js: confere o JSON antes de cada commit
+- scripts/gerar-sql.js: gera supabase/dados.sql a partir do JSON (MVP2)
+- supabase/schema.sql: tabelas e regras de segurança (RLS) do PostgreSQL (MVP2)
+- supabase/dados.sql: gerado, não editar à mão (MVP2)
 - README.md
 
 ## Formato dos dados (data/eventos.json)
@@ -105,6 +108,16 @@ Regras dos dados:
 - validação do JSON passa
 - site publicado e acessível por URL
 
-## Fora do MVP1 (não implementar sem pedido)
+## MVP2: banco de dados (Supabase)
 
-Atualização automática de dados, card completo detalhado, resultados ao vivo, favoritos, lembretes, notícias, busca por lutador, banco de dados.
+Objetivo: deixar de usar o JSON como fonte da verdade e passar a usar PostgreSQL no Supabase (plano gratuito), mantendo o site estático, sem login e sem backend próprio.
+
+- O site lê os dados pela API pública do Supabase (fetch, sem biblioteca), só leitura. A Project URL e a chave anon/publishable podem ficar no código; a RLS garante que o acesso anônimo só consegue ler.
+- Nunca guardar no repositório nem no chat: senha do banco e chave service_role/secret.
+- Enquanto a migração não termina, data/eventos.json continua sendo editado e supabase/dados.sql é gerado com node scripts/gerar-sql.js e colado no SQL Editor. O JSON também serve de fallback se o banco estiver fora do ar.
+- No plano gratuito o projeto pausa após cerca de 1 semana sem atividade; é preciso tratar isso antes de publicar.
+- Etapas: (1) esquema e importação dos dados (feito); (2) site lendo do Supabase com fallback para o JSON; (3) definir como os dados passam a ser editados no banco e o que acontece com o validador.
+
+## Fora do MVP1 e do MVP2 (não implementar sem pedido)
+
+Atualização automática de dados, card completo detalhado, resultados ao vivo, favoritos, lembretes, notícias, busca por lutador.
