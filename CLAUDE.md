@@ -15,13 +15,13 @@ Site estático, gratuito e sem login que reúne a agenda dos próximos eventos d
 
 ## Git e commits
 
-- Trabalhar sempre na branch develop. A main só recebe o que está pronto para ir ao ar (GitHub Pages publica a partir dela).
+- Trabalhar sempre na branch develop. A main só recebe o que está pronto para ir ao ar (a Vercel publica a partir dela, integrada ao repositório do GitHub).
 - Todo commit segue Conventional Commits: tipo, dois pontos e descrição em português (ex.: feat: adiciona filtro por tipo de evento).
 - Tipos: feat, fix, docs, style, refactor, perf, test, build, ci, chore.
 
 ## Restrições do projeto
 
-- 100% gratuito: hospedagem (GitHub Pages) e qualquer serviço futuro precisam ter plano gratuito.
+- 100% gratuito: hospedagem (Vercel, plano gratuito) e qualquer serviço futuro precisam ter plano gratuito. Não pagar nenhum plano, nem no Supabase. O GitHub Pages não é mais usado.
 - Sem login, sem banco de dados e sem backend no MVP1. O banco de dados (Supabase) entra no MVP2, veja a seção "MVP2".
 - Sem apostas, odds ou links de casas de apostas.
 - Sem logos, fotos de lutadores ou imagens de terceiros. Usar apenas texto e cores próprias.
@@ -95,7 +95,7 @@ Regras dos dados:
 - Fase 3: calendário mensal (navegação entre meses, dias com evento marcados, clique no dia mostra o evento e onde assistir).
 - Fase 4: dados reais (10 a 15 eventos conferidos em fonte oficial).
 - Fase 5: acabamento (teste no celular, estado vazio, aviso de site independente, data de atualização; filtro por tipo de evento se houver tempo).
-- Fase 6: publicar no GitHub Pages e testar a URL pública.
+- Fase 6: publicar na Vercel (deploy automático a partir do GitHub) e testar a URL pública.
 
 ## MVP1 está pronto quando
 
@@ -114,8 +114,8 @@ Objetivo: deixar de usar o JSON como fonte da verdade e passar a usar PostgreSQL
 
 - O site lê os dados pela API pública do Supabase (fetch, sem biblioteca), só leitura. A Project URL e a chave anon/publishable podem ficar no código; a RLS garante que o acesso anônimo só consegue ler.
 - Nunca guardar no repositório nem no chat: senha do banco e chave service_role/secret.
-- Enquanto a migração não termina, data/eventos.json continua sendo editado e supabase/dados.sql é gerado com node scripts/gerar-sql.js e colado no SQL Editor. O JSON também serve de fallback se o banco estiver fora do ar.
-- No plano gratuito o projeto pausa após cerca de 1 semana sem atividade; é preciso tratar isso antes de publicar.
+- data/eventos.json e o banco precisam ficar sempre iguais, porque o JSON é o fallback do site. Fluxo manual: editar o JSON, rodar o validador, rodar node scripts/gerar-sql.js e colar supabase/dados.sql no SQL Editor do Supabase (o arquivo apaga e reinsere tudo, então pode ser rodado de novo). Todo commit que mude o JSON deve incluir o dados.sql regenerado.
+- No plano gratuito o projeto pausa após cerca de 1 semana sem atividade. A pausa não apaga os dados: o projeto fica adormecido e é reativado pelo painel (Restore). O botão de restauração fica disponível por 90 dias após a pausa; depois disso só dá para baixar o backup. Enquanto estiver pausado, o site continua funcionando pelo JSON.
 - Etapas: (1) esquema e importação dos dados (feito); (2) site lendo do Supabase com fallback para o JSON; (3) definir como os dados passam a ser editados no banco e o que acontece com o validador.
 
 ## Fora do MVP1 e do MVP2 (não implementar sem pedido)

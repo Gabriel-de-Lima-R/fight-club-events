@@ -67,4 +67,6 @@ Feito com HTML, CSS e JavaScript puros, sem framework e sem etapa de build.
 
 ## Publicação
 
-O site é publicado de graça pelo GitHub Pages, a partir da branch `main` (pasta raiz). Cada push para a `main` atualiza o site em 1 a 2 minutos. O arquivo `.nojekyll` faz o GitHub servir os arquivos exatamente como estão.
+O site é publicado de graça pela Vercel, integrada ao repositório do GitHub. Cada push na branch de produção (`main`) gera um novo deploy automaticamente.
+
+Os eventos são lidos do Supabase (PostgreSQL, plano gratuito). Se o banco estiver fora do ar ou pausado, o site usa `data/eventos.json` como reserva, por isso os dois precisam ficar iguais. Para sincronizar: `node scripts/gerar-sql.js` e colar `supabase/dados.sql` no SQL Editor do Supabase.
