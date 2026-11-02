@@ -1,4 +1,10 @@
-// Fight Club — carrega data/eventos.json e monta a agenda.
+// Fight Club — carrega os eventos do Supabase (com data/eventos.json de reserva) e monta a agenda.
+
+// A Project URL e a chave publishable são públicas por natureza: a RLS do banco só permite leitura.
+// Nunca colocar aqui a chave secret/service_role nem a senha do banco.
+const SUPABASE_URL = 'https://nrahgicoirktbgqpjmhu.supabase.co';
+const SUPABASE_CHAVE_PUBLICA = 'sb_publishable_LWOVMU_wCebbLb-4Npz2sw_bfKrARA4';
+const SUPABASE_TIMEOUT_MS = 8000;
 
 const FUSO_PADRAO = 'America/Sao_Paulo';
 // Um evento continua na agenda por algumas horas depois do início (o card ainda está acontecendo).
@@ -224,11 +230,79 @@ function atualizarAgenda(dados) {
   if (atualizarCalendario) atualizarCalendario();
 }
 
+async function carregarDoJson() {
+  const resposta = await fetch('data/eventos.json', { cache: 'no-store' });
+  if (!resposta.ok) throw new Error(`HTTP ${resposta.status}`);
+  return resposta.json();
+}
+
+// O cartel só existe se o banco tiver ao menos V-D-E; senão fica null, como no JSON.
+function montarRecord(linha) {
+  if (linha.wins === null || linha.losses === null || linha.draws === null) return null;
+  return { wins: linha.wins, losses: linha.losses, draws: linha.draws, no_contests: linha.no_contests };
+}
+
+// Converte as linhas do banco para o mesmo formato do data/eventos.json.
+function converterEvento(linha) {
+  const lutas = [...linha.fights].sort((a, b) => a.order - b.order).map((luta) => ({
+    order: luta.order,
+    card_section: luta.card_section,
+    weight_class: luta.weight_class,
+    weight_limit_lbs: luta.weight_limit_lbs,
+    fighters: [...luta.fight_fighters].sort((a, b) => a.position - b.position).map((lutador) => ({
+      name: lutador.name,
+      nationality: lutador.nationality,
+      record: montarRecord(lutador),
+      height_ft: lutador.height_ft,
+      reach_in: lutador.reach_in,
+    })),
+  }));
+
+  return {
+    id: linha.id,
+    is_sample: linha.is_sample,
+    organization: linha.organization,
+    name: linha.name,
+    starts_at: new Date(linha.starts_at).toISOString(),
+    status: linha.status,
+    venue: { name: linha.venue_name, city: linha.venue_city, country: linha.venue_country },
+    broadcast: linha.event_broadcasts.map(({ name, type, url }) => ({ name, type, url })),
+    source_url: linha.source_url,
+    fights: lutas,
+  };
+}
+
+async function carregarDoSupabase() {
+  const consulta = 'select=*,event_broadcasts(*),fights(*,fight_fighters(*))&order=starts_at';
+  const resposta = await fetch(`${SUPABASE_URL}/rest/v1/events?${consulta}`, {
+    headers: { apikey: SUPABASE_CHAVE_PUBLICA },
+    signal: AbortSignal.timeout(SUPABASE_TIMEOUT_MS),
+  });
+  if (!resposta.ok) throw new Error(`Supabase HTTP ${resposta.status}`);
+  const linhas = await resposta.json();
+  if (!Array.isArray(linhas) || linhas.length === 0) throw new Error('Supabase devolveu zero eventos');
+
+  // A data de revisão ainda não está no banco: vem do JSON (se ele não carregar, fica sem data).
+  const json = await carregarDoJson().catch(() => ({}));
+  return {
+    last_updated: json.last_updated,
+    display_timezone: json.display_timezone || FUSO_PADRAO,
+    events: linhas.map(converterEvento),
+  };
+}
+
+async function carregarDados() {
+  try {
+    return await carregarDoSupabase();
+  } catch (erro) {
+    console.warn('Supabase indisponível, usando data/eventos.json:', erro);
+    return carregarDoJson();
+  }
+}
+
 async function carregarEventos() {
   try {
-    const resposta = await fetch('data/eventos.json', { cache: 'no-store' });
-    if (!resposta.ok) throw new Error(`HTTP ${resposta.status}`);
-    const dados = await resposta.json();
+    const dados = await carregarDados();
     montarBotoesFiltro(dados);
     mostrarAgenda(dados);
     atualizarCalendario = montarCalendario(dados).atualizar; // definido em js/calendario.js
