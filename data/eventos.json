@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-10-20",
+  "last_updated": "2026-11-02",
   "display_timezone": "America/Sao_Paulo",
   "events": [
     {
@@ -517,10 +517,10 @@
       ]
     },
     {
-      "id": "one-fn49-2026-11-06-gabriel-rasulov",
+      "id": "one-fn49-2026-11-06-gabriel-magomedov",
       "is_sample": false,
       "organization": "ONE",
-      "name": "ONE Fight Night 49: Gabriel vs. Rasulov",
+      "name": "ONE Fight Night 49: Gabriel vs. Magomedov",
       "starts_at": "2026-11-07T02:00:00Z",
       "status": "scheduled",
       "venue": {
@@ -549,8 +549,8 @@
               "record": null
             },
             {
-              "name": "Alibeg Rasulov",
-              "nationality": "Turco",
+              "name": "Magomed Magomedov",
+              "nationality": null,
               "record": null
             }
           ]
