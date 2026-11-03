@@ -1,6 +1,7 @@
 /* Fight Club — estilos (mobile-first) */
 
 :root {
+  color-scheme: light;
   --fundo: #f6f5f2;
   --superficie: #ffffff;
   --texto: #1c1b19;
@@ -17,6 +18,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
+    color-scheme: dark;
     --fundo: #121212;
     --superficie: #1d1d1c;
     --texto: #f1efea;
@@ -41,6 +43,23 @@ body {
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   font-size: 16px;
   line-height: 1.5;
+}
+
+/* Link para pular direto ao conteúdo; só aparece quando recebe foco pelo teclado */
+.pular {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  z-index: 10;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: var(--destaque);
+  color: var(--sobre-destaque);
+  font-weight: 700;
+}
+
+.pular:focus-visible {
+  top: 8px;
 }
 
 .container {
@@ -551,4 +570,29 @@ button.cal-dia {
     column-gap: 16px;
   }
   .evento-detalhes dd { margin: 0; }
+}
+
+/* Hover só em dispositivos com mouse, para não "grudar" no toque */
+@media (hover: hover) {
+  .aba:hover { background: rgba(17, 17, 17, 0.06); }
+
+  .filtro[aria-pressed="false"]:hover {
+    border-color: var(--destaque);
+    color: var(--destaque);
+  }
+
+  .cal-botao:hover,
+  .cal-botao-hoje:hover {
+    border-color: var(--destaque);
+    color: var(--destaque);
+  }
+
+  button.cal-dia.tem-evento:not([aria-pressed="true"]):hover {
+    background: var(--destaque);
+    color: var(--sobre-destaque);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-barra { transition: none; }
 }

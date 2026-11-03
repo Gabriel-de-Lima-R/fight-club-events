@@ -5,12 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Fight Club · Agenda de eventos de MMA</title>
   <meta name="description" content="Agenda gratuita dos próximos eventos de MMA (UFC, PFL e ONE Championship), com horários de Brasília e onde assistir.">
-  <meta name="theme-color" content="#b82e22">
+  <meta name="theme-color" content="#ffffff">
   <link rel="icon" type="image/png" href="images/favicon.png">
   <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
   <header class="barra">
     <nav class="barra-interna">
       <button class="menu-botao" id="menu-botao" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu-esq menu-dir">
@@ -32,16 +33,16 @@
     </nav>
   </header>
 
-  <main class="container">
+  <main class="container" id="conteudo">
     <div class="filtros" id="filtros" role="group" aria-label="Filtrar por organização" hidden></div>
 
     <section id="painel-agenda" role="tabpanel" aria-labelledby="aba-agenda">
-      <p class="mensagem" id="agenda-status">Carregando eventos…</p>
+      <p class="mensagem" id="agenda-status" role="status">Carregando eventos…</p>
       <ol class="lista-eventos" id="lista-eventos"></ol>
     </section>
 
     <section id="painel-calendario" role="tabpanel" aria-labelledby="aba-calendario" hidden>
-      <p class="mensagem" id="calendario-status">Carregando calendário…</p>
+      <p class="mensagem" id="calendario-status" role="status">Carregando calendário…</p>
       <div id="calendario" hidden>
         <div class="cal-cabecalho">
           <button class="cal-botao" id="cal-anterior" type="button" aria-label="Mês anterior">‹</button>
