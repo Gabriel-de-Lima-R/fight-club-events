@@ -268,7 +268,7 @@ main.container {
   color: #d4cdc5;
 }
 
-/* A faixa mostra o destaque na aba Eventos e o texto geral nas outras (ver atualizarFaixa em js/app.js) */
+/* A faixa mostra o destaque na aba Eventos e o texto geral no Calendário; some em Sobre e Guia (ver atualizarFaixa em js/app.js) */
 .hero[data-modo="evento"] #hero-geral { display: none; }
 .hero[data-modo="geral"] #hero-destaque { display: none; }
 
@@ -508,17 +508,44 @@ main.container {
   color: var(--texto);
 }
 
-/* Filtro por tipo de evento */
-.filtros {
+/* Filtro por campeonato: rótulo com ícone + botões */
+.filtros-barra {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  align-items: center;
+  gap: 10px 14px;
   margin-bottom: 20px;
 }
 
 /* Escondido nas abas Sobre e Guia (ver configurarAbas em js/app.js) */
-.filtros.filtros-oculto {
+.filtros-barra.filtros-oculto {
   display: none;
+}
+
+.filtros-rotulo {
+  display: inline-flex;
+  flex: 0 0 100%;
+  align-items: center;
+  gap: 6px;
+  color: var(--texto-suave);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.filtros-icone {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.filtros {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .filtro {
@@ -546,6 +573,25 @@ main.container {
 .filtro:focus-visible {
   outline: 2px solid var(--destaque);
   outline-offset: 2px;
+}
+
+/* Quantidade de eventos no botão */
+.filtro-contagem {
+  display: inline-block;
+  min-width: 1.6em;
+  margin-left: 8px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--borda);
+  color: var(--texto-suave);
+  font-size: 0.75rem;
+  line-height: 1.6;
+  font-variant-numeric: tabular-nums;
+}
+
+.filtro[aria-pressed="true"] .filtro-contagem {
+  background: rgba(0, 0, 0, 0.2);
+  color: inherit;
 }
 
 /* Mensagens (carregando, vazio, erro) */
@@ -848,6 +894,14 @@ button.cal-dia {
   opacity: 1;
 }
 
+/* Dica discreta enquanto nenhum dia está selecionado */
+.cal-dica {
+  margin: 0;
+  color: var(--texto-suave);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
 .cal-detalhe-titulo {
   margin: 0 0 12px;
   font-family: var(--fonte-titulo);
@@ -935,35 +989,54 @@ button.cal-dia {
 
   .filtro {
     flex: 0 0 auto;
-    padding: 8px 24px;
+    padding: 8px 20px;
   }
+
+  /* Computador: rótulo e botões na mesma linha */
+  .filtros-rotulo { flex: 0 0 auto; }
+  .filtros { flex: 0 1 auto; }
 
   .sobre { padding: 40px 48px; }
   .sobre-titulo { font-size: 2.6rem; }
+
+  /* Calendário grande e centralizado; o detalhe do dia aparece embaixo, só depois do clique */
+  #calendario {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .cal-titulo { font-size: 2.2rem; }
+
+  .cal-botao {
+    width: 52px;
+    height: 52px;
+    font-size: 1.8rem;
+  }
+
+  .cal-grade {
+    gap: 8px;
+    padding: 24px;
+  }
+
+  .cal-dia-semana {
+    padding: 6px 0;
+    font-size: 0.85rem;
+  }
+
+  .cal-dia {
+    aspect-ratio: 1.35;
+    min-height: 64px;
+    font-size: 1.2rem;
+  }
+
+  .cal-dia.tem-evento::after {
+    bottom: 10px;
+    width: 7px;
+    height: 7px;
+  }
 }
 
 @media (min-width: 900px) {
-  /* Calendário ao lado do detalhe do dia */
-  #calendario {
-    display: grid;
-    grid-template-columns: minmax(340px, 420px) minmax(0, 1fr);
-    column-gap: 32px;
-    align-items: start;
-  }
-
-  .cal-cabecalho,
-  .cal-grade,
-  .cal-botao-hoje { grid-column: 1; }
-
-  .cal-botao-hoje { margin: 16px auto 0; }
-
-  .cal-detalhe {
-    grid-column: 2;
-    grid-row: 1 / span 3;
-  }
-
-  .cal-detalhe .lista-eventos { grid-template-columns: 1fr; }
-
   /* Destaque: informações à esquerda, luta principal à direita */
   .destaque {
     grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);

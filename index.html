@@ -47,7 +47,13 @@
   </div>
 
   <main class="container" id="conteudo">
-    <div class="filtros" id="filtros" role="group" aria-label="Filtrar por organização" hidden></div>
+    <div class="filtros-barra" id="filtros-barra" hidden>
+      <span class="filtros-rotulo">
+        <svg class="filtros-icone" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path d="M3 4h18l-7 8.5V19l-4 2v-8.5z"/></svg>
+        Campeonato:
+      </span>
+      <div class="filtros" id="filtros" role="group" aria-label="Filtrar por campeonato"></div>
+    </div>
 
     <section id="painel-agenda" role="tabpanel" aria-labelledby="aba-agenda">
       <p class="mensagem" id="agenda-status" role="status">Carregando eventos…</p>

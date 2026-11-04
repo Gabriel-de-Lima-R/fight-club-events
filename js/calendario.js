@@ -32,27 +32,21 @@ function montarCalendario(dados) {
   const fuso = dados.display_timezone || FUSO_PADRAO;
   const hoje = chaveDoDia(new Date(), fuso);
 
-  let eventosPorDia = new Map();
+  // Agrupa todos os eventos por dia (no horário de Brasília). O calendário não usa o filtro por campeonato.
+  const eventosPorDia = new Map();
+  [...dados.events]
+    .sort((a, b) => new Date(a.starts_at) - new Date(b.starts_at))
+    .forEach((evento) => {
+      const chave = chaveDoDia(new Date(evento.starts_at), fuso);
+      if (!eventosPorDia.has(chave)) eventosPorDia.set(chave, []);
+      eventosPorDia.get(chave).push(evento);
+    });
 
-  // Agrupa os eventos que passam no filtro por dia (no horário de Brasília).
-  function agruparEventos() {
-    eventosPorDia = new Map();
-    dados.events
-      .filter(passaNoFiltro)
-      .sort((a, b) => new Date(a.starts_at) - new Date(b.starts_at))
-      .forEach((evento) => {
-        const chave = chaveDoDia(new Date(evento.starts_at), fuso);
-        if (!eventosPorDia.has(chave)) eventosPorDia.set(chave, []);
-        eventosPorDia.get(chave).push(evento);
-      });
-  }
-
-  agruparEventos();
-
+  // Nenhum dia vem selecionado: os eventos só aparecem depois que o usuário clica num dia marcado.
   const estado = {
     ano: Number(hoje.slice(0, 4)),
     mes: Number(hoje.slice(5, 7)) - 1,
-    selecionado: eventosPorDia.has(hoje) ? hoje : null,
+    selecionado: null,
   };
 
   const elTitulo = document.getElementById('cal-titulo');
@@ -113,9 +107,9 @@ function montarCalendario(dados) {
     if (!estado.selecionado) {
       const prefixo = montarChave(estado.ano, estado.mes, 1).slice(0, 8);
       const temEventoNoMes = Array.from(eventosPorDia.keys()).some((chave) => chave.startsWith(prefixo));
-      elDetalhe.replaceChildren(el('p', 'mensagem', temEventoNoMes
-        ? 'Toque num dia marcado para ver o evento e onde assistir.'
-        : 'Nenhum evento neste mês.'));
+      elDetalhe.replaceChildren(temEventoNoMes
+        ? el('p', 'cal-dica', 'Toque num dia marcado para ver o evento e onde assistir.')
+        : el('p', 'mensagem', 'Nenhum evento neste mês.'));
       return;
     }
 
@@ -138,17 +132,9 @@ function montarCalendario(dados) {
   document.getElementById('cal-hoje').addEventListener('click', () => {
     estado.ano = Number(hoje.slice(0, 4));
     estado.mes = Number(hoje.slice(5, 7)) - 1;
-    estado.selecionado = eventosPorDia.has(hoje) ? hoje : null;
+    estado.selecionado = null;
     desenhar();
   });
 
-  // Chamado quando o filtro muda: reagrupa os eventos e redesenha, mantendo o mês exibido.
-  function atualizar() {
-    agruparEventos();
-    if (estado.selecionado && !eventosPorDia.has(estado.selecionado)) estado.selecionado = null;
-    desenhar();
-  }
-
   desenhar();
-  return { atualizar };
 }
