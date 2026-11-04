@@ -79,7 +79,7 @@ body {
 .evento-nome,
 .lutador-nome,
 .versus,
-.sobre-titulo,
+.pagina-titulo,
 .cal-titulo,
 .destaque-nome,
 .destaque-lutador-nome,
@@ -448,64 +448,181 @@ main.container {
   font-variant-numeric: tabular-nums;
 }
 
-/* Seção Sobre */
-.sobre {
-  max-width: 760px;
+/* Páginas Sobre o site e Guia do MMA */
+.pagina {
+  max-width: 960px;
   margin: 0 auto;
-  padding: 24px 20px;
-  background: var(--superficie);
-  border: 1px solid var(--borda);
-  border-radius: var(--raio);
-  box-shadow: var(--sombra);
 }
 
-.sobre-titulo {
-  margin: 0 0 16px;
-  font-size: 2.1rem;
+.pagina-titulo {
+  margin: 0 0 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--borda);
+  font-size: 2.3rem;
   line-height: 1;
   text-wrap: balance;
 }
 
-.sobre p {
-  margin: 0 0 12px;
+.pagina p {
+  margin: 0 0 14px;
   color: var(--texto-suave);
+  text-wrap: pretty;
 }
 
-/* Guia do MMA: reaproveita o painel "Sobre" e acrescenta subtítulos e listas */
-.guia h3 {
-  margin: 28px 0 10px;
+.pagina .pagina-intro {
+  margin-bottom: 24px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.pagina strong { color: var(--texto); }
+
+.pagina .realce { color: var(--destaque); }
+
+/* Títulos de seção do Guia */
+.pagina > h3 {
+  margin: 40px 0 14px;
   padding-left: 12px;
   border-left: 4px solid var(--destaque);
   font-family: var(--fonte-titulo);
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: 0.02em;
   text-transform: uppercase;
 }
 
-.guia h4 {
-  margin: 18px 0 4px;
-  color: var(--destaque);
+.pagina .pagina-nota {
+  margin-top: 40px;
+  font-size: 0.9rem;
+}
+
+/* Cartões (Sobre, "Como uma luta termina" e "Como ler a agenda") e organizações */
+.cartoes {
+  display: grid;
+  gap: 14px;
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+}
+
+.cartao,
+.org {
+  padding: 18px 20px;
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: 14px;
+  box-shadow: var(--sombra);
+}
+
+.cartao p,
+.org p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.cartao-titulo {
+  margin: 0 0 6px;
+  color: var(--aviso);
   font-family: var(--fonte-titulo);
   font-size: 1.25rem;
   font-weight: 700;
+  line-height: 1.15;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
-.guia ul {
-  margin: 0 0 12px;
-  padding-left: 20px;
-  color: var(--texto-suave);
+.cartao-titulo-vermelho { color: var(--destaque); }
+
+/* Numeração dos passos em "Como uma luta termina" */
+.cartoes-numerados { counter-reset: passo; }
+.cartoes-numerados .cartao { counter-increment: passo; }
+.cartoes-numerados .cartao-titulo::before { content: counter(passo) ". "; }
+
+.aviso,
+.dica {
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-left: 4px solid var(--aviso);
+  border-radius: 12px;
 }
 
-.guia li {
+.aviso { padding: 16px 20px; }
+
+.aviso-titulo {
+  margin: 0 0 4px;
+  color: var(--texto);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.aviso p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.dica {
+  padding: 14px 18px;
+  font-size: 0.95rem;
+}
+
+.pagina .dica-rotulo {
+  margin-right: 6px;
+  color: var(--aviso);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Categorias de peso */
+.pilulas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 14px;
+  padding: 0;
+  list-style: none;
+}
+
+.pilula {
+  padding: 6px 14px;
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: 999px;
+  color: var(--texto);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* Organizações: nome à esquerda, link à direita */
+.orgs {
+  display: grid;
+  gap: 14px;
+}
+
+.org-topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 16px;
   margin-bottom: 6px;
 }
 
-.guia strong {
-  color: var(--texto);
+.org-nome {
+  margin: 0;
+  font-family: var(--fonte-titulo);
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.org-link {
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 /* Filtro por campeonato: rótulo com ícone + botões */
@@ -924,6 +1041,24 @@ button.cal-dia {
 
 .rodape p { margin: 2px 0; }
 
+.rodape-interno {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Selo branco: o contorno e os louros do canguru são pretos e sumiriam no tema escuro */
+.rodape-canguru {
+  flex: 0 0 auto;
+  width: 64px;
+  height: 64px;
+  padding: 4px;
+  background: #ffffff;
+  border: 1px solid var(--borda);
+  border-radius: 50%;
+  object-fit: contain;
+}
+
 @media (min-width: 600px) {
   .evento { padding: 28px 24px 24px; }
   .evento-detalhes {
@@ -984,6 +1119,11 @@ button.cal-dia {
   .container { padding: 0 24px; }
   main.container { padding-top: 32px; }
 
+  .rodape-canguru {
+    width: 80px;
+    height: 80px;
+  }
+
   .hero-interno { padding: 56px 24px 60px; }
   .hero-texto { font-size: 1.1rem; }
 
@@ -996,8 +1136,10 @@ button.cal-dia {
   .filtros-rotulo { flex: 0 0 auto; }
   .filtros { flex: 0 1 auto; }
 
-  .sobre { padding: 40px 48px; }
-  .sobre-titulo { font-size: 2.6rem; }
+  .pagina-titulo { font-size: 3rem; }
+
+  .cartoes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cartao-largo { grid-column: 1 / -1; }
 
   /* Calendário grande e centralizado; o detalhe do dia aparece embaixo, só depois do clique */
   #calendario {
