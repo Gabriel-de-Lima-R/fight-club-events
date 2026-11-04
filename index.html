@@ -5,12 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Fight Club · Agenda de eventos de MMA</title>
   <meta name="description" content="Agenda gratuita dos próximos eventos de MMA (UFC, PFL e ONE Championship), com horários de Brasília e onde assistir.">
-  <meta name="theme-color" content="#b82e22">
+  <meta name="theme-color" content="#ffffff">
   <link rel="icon" type="image/png" href="images/favicon.png">
   <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+  <link rel="preload" href="fonts/inter-variavel.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/barlow-condensed-800-italic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
   <header class="barra">
     <nav class="barra-interna">
       <button class="menu-botao" id="menu-botao" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu-esq menu-dir">
@@ -32,16 +35,33 @@
     </nav>
   </header>
 
-  <main class="container">
-    <div class="filtros" id="filtros" role="group" aria-label="Filtrar por organização" hidden></div>
+  <div class="hero" id="hero" data-modo="geral">
+    <div class="hero-interno">
+      <div id="hero-geral">
+        <p class="hero-rotulo">UFC · PFL · ONE</p>
+        <p class="hero-titulo">Toda a agenda do MMA em um só lugar</p>
+        <p class="hero-texto">Gratuito e sem login, com horário de Brasília e onde assistir a cada evento.</p>
+      </div>
+      <section class="destaque" id="hero-destaque" aria-label="Próximo evento" hidden></section>
+    </div>
+  </div>
+
+  <main class="container" id="conteudo">
+    <div class="filtros-barra" id="filtros-barra" hidden>
+      <span class="filtros-rotulo">
+        <svg class="filtros-icone" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path d="M3 4h18l-7 8.5V19l-4 2v-8.5z"/></svg>
+        Campeonato:
+      </span>
+      <div class="filtros" id="filtros" role="group" aria-label="Filtrar por campeonato"></div>
+    </div>
 
     <section id="painel-agenda" role="tabpanel" aria-labelledby="aba-agenda">
-      <p class="mensagem" id="agenda-status">Carregando eventos…</p>
+      <p class="mensagem" id="agenda-status" role="status">Carregando eventos…</p>
       <ol class="lista-eventos" id="lista-eventos"></ol>
     </section>
 
     <section id="painel-calendario" role="tabpanel" aria-labelledby="aba-calendario" hidden>
-      <p class="mensagem" id="calendario-status">Carregando calendário…</p>
+      <p class="mensagem" id="calendario-status" role="status">Carregando calendário…</p>
       <div id="calendario" hidden>
         <div class="cal-cabecalho">
           <button class="cal-botao" id="cal-anterior" type="button" aria-label="Mês anterior">‹</button>
@@ -54,60 +74,131 @@
       </div>
     </section>
 
-    <section id="painel-sobre" class="sobre" role="tabpanel" aria-labelledby="aba-sobre" hidden>
-      <h2 class="sobre-titulo">Sobre o site</h2>
-      <p>O Fight Club Events é um site independente, gratuito e sem login que reúne a agenda dos próximos eventos de MMA, como UFC, PFL e ONE Championship.</p>
-      <p>Os horários aparecem no horário de Brasília, e cada evento tem o link da fonte oficial. O site não tem apostas, odds nem links de casas de apostas.</p>
-      <p>Este projeto não tem afiliação com o UFC, a PFL nem a ONE Championship.</p>
+    <section id="painel-sobre" class="pagina" role="tabpanel" aria-labelledby="aba-sobre" hidden>
+      <h2 class="pagina-titulo">Sobre o site</h2>
+      <p class="pagina-intro">O Fight Club Events é um site <strong class="realce">independente</strong>, <strong class="realce">gratuito</strong> e <strong class="realce">sem login</strong> que reúne a agenda dos próximos eventos de MMA, como UFC, PFL e ONE Championship.</p>
+
+      <div class="cartoes">
+        <article class="cartao">
+          <h3 class="cartao-titulo">Horário de Brasília</h3>
+          <p>Os horários aparecem no horário de Brasília, e cada evento tem o link da fonte oficial.</p>
+        </article>
+        <article class="cartao">
+          <h3 class="cartao-titulo cartao-titulo-vermelho">Sem apostas</h3>
+          <p>O site não tem apostas, odds nem links de casas de apostas.</p>
+        </article>
+      </div>
+
+      <div class="aviso">
+        <h3 class="aviso-titulo">Aviso de não afiliação</h3>
+        <p>Este projeto não tem afiliação com o UFC, a PFL nem a ONE Championship.</p>
+      </div>
     </section>
 
-    <section id="painel-guia" class="sobre guia" role="tabpanel" aria-labelledby="aba-guia" hidden>
-      <h2 class="sobre-titulo">Guia do MMA</h2>
-      <p>Nunca assistiu a uma luta de MMA? Aqui está o básico para você acompanhar a agenda sem se perder.</p>
+    <section id="painel-guia" class="pagina" role="tabpanel" aria-labelledby="aba-guia" hidden>
+      <h2 class="pagina-titulo">Guia do MMA</h2>
+      <p class="pagina-intro">Nunca assistiu a uma luta de MMA? Aqui está o básico para você acompanhar a agenda sem se perder.</p>
 
       <h3>O que é MMA</h3>
       <p>MMA vem do inglês <em>Mixed Martial Arts</em>, ou Artes Marciais Mistas. É um esporte de luta em que vale usar técnicas de várias modalidades: golpes em pé, como no boxe, no muay thai e no kickboxing, e luta agarrada e no chão, como no jiu-jítsu e na luta olímpica (wrestling). Por isso, os lutadores costumam treinar várias dessas artes ao mesmo tempo.</p>
 
       <h3>Como uma luta termina</h3>
-      <ul>
-        <li><strong>Nocaute (KO/TKO):</strong> o lutador fica inconsciente após um golpe, ou o árbitro para a luta porque ele não consegue mais se defender.</li>
-        <li><strong>Finalização:</strong> o lutador desiste, batendo no oponente ou na lona, ao ser preso numa chave de braço ou perna ou num estrangulamento.</li>
-        <li><strong>Decisão dos juízes:</strong> se o tempo acabar, três juízes dão notas a cada round e o vencedor sai da soma dos pontos. Também pode haver empate.</li>
-        <li><strong>Outros casos:</strong> desqualificação por golpe ilegal ou luta sem resultado (NC, do inglês <em>no contest</em>).</li>
-      </ul>
-      <p>Em geral, cada round dura 5 minutos. Lutas comuns têm 3 rounds; lutas principais e disputas de cinturão costumam ter 5. As regras exatas variam conforme a organização e o evento.</p>
+      <ol class="cartoes cartoes-numerados" role="list">
+        <li class="cartao">
+          <h4 class="cartao-titulo cartao-titulo-vermelho">Nocaute (KO/TKO)</h4>
+          <p>O lutador fica inconsciente após um golpe, ou o árbitro para a luta porque ele não consegue mais se defender.</p>
+        </li>
+        <li class="cartao">
+          <h4 class="cartao-titulo cartao-titulo-vermelho">Finalização</h4>
+          <p>O lutador desiste, batendo no oponente ou na lona, ao ser preso numa chave de braço ou perna ou num estrangulamento.</p>
+        </li>
+        <li class="cartao">
+          <h4 class="cartao-titulo cartao-titulo-vermelho">Decisão dos juízes</h4>
+          <p>Se o tempo acabar, 3 juízes dão notas a cada round e o vencedor sai da soma dos pontos. Também pode haver empate.</p>
+        </li>
+        <li class="cartao">
+          <h4 class="cartao-titulo cartao-titulo-vermelho">Outros casos</h4>
+          <p>Desqualificação por golpe ilegal ou luta sem resultado (NC, do inglês <em>no contest</em>).</p>
+        </li>
+      </ol>
+      <p class="dica"><strong class="dica-rotulo">Duração dos rounds</strong> Em geral, cada round dura 5&nbsp;minutos. Lutas comuns têm 3&nbsp;rounds; lutas principais e disputas de cinturão costumam ter 5. As regras exatas variam conforme a organização e o evento.</p>
 
       <h3>Categorias de peso</h3>
-      <p>Lutadores só enfrentam rivais do mesmo peso. Do mais leve ao mais pesado, os nomes mais comuns são: átomo, palha, mosca, galo, pena, leve, meio-médio, médio, meio-pesado e pesado. Nem toda organização usa todas, e há divisões femininas. Neste site, o limite de peso aparece em libras (lb), como nas fontes oficiais.</p>
+      <p>Lutadores só enfrentam rivais do mesmo peso. Do mais leve ao mais pesado, os nomes mais comuns são:</p>
+      <ul class="pilulas" role="list">
+        <li class="pilula">Átomo</li>
+        <li class="pilula">Palha</li>
+        <li class="pilula">Mosca</li>
+        <li class="pilula">Galo</li>
+        <li class="pilula">Pena</li>
+        <li class="pilula">Leve</li>
+        <li class="pilula">Meio-médio</li>
+        <li class="pilula">Médio</li>
+        <li class="pilula">Meio-pesado</li>
+        <li class="pilula">Pesado</li>
+      </ul>
+      <p>Nem toda organização usa todas, e há divisões femininas. Neste site, o limite de peso aparece em libras (lb), como nas fontes oficiais. O limite exato varia conforme a organização e a divisão, por isso cada luta da agenda mostra o seu.</p>
 
       <h3>Como ler a agenda</h3>
-      <ul>
-        <li><strong>Card:</strong> o conjunto de lutas de um evento. Costuma ser dividido em card principal, com as lutas de maior destaque, e preliminares, que começam antes.</li>
-        <li><strong>Luta principal:</strong> a mais importante do evento e a que o site coloca em destaque. A segunda mais importante é a co-principal.</li>
-        <li><strong>Disputa de cinturão:</strong> luta em que um título está em jogo. O campeão defende o cinturão contra um desafiante.</li>
-        <li><strong>Cartel:</strong> o histórico do lutador em vitórias-derrotas-empates. Por exemplo, 20-2-0 são 20 vitórias, 2 derrotas e nenhum empate. Quando a fonte oficial não divulga o cartel completo, o site mostra só o nome.</li>
-        <li><strong>Horário:</strong> sempre o de Brasília. Eventos na Ásia, por exemplo, podem cair de madrugada ou de manhã por aqui.</li>
+      <ul class="cartoes" role="list">
+        <li class="cartao">
+          <h4 class="cartao-titulo">Card</h4>
+          <p>O conjunto de lutas de um evento. Costuma ser dividido em card principal, com as lutas de maior destaque, e preliminares, que começam antes.</p>
+        </li>
+        <li class="cartao">
+          <h4 class="cartao-titulo">Luta principal</h4>
+          <p>A mais importante do evento e a que o site coloca em destaque. A segunda mais importante é a co-principal.</p>
+        </li>
+        <li class="cartao">
+          <h4 class="cartao-titulo">Disputa de cinturão</h4>
+          <p>Luta em que um título está em jogo. O campeão defende o cinturão contra um desafiante.</p>
+        </li>
+        <li class="cartao">
+          <h4 class="cartao-titulo">Cartel</h4>
+          <p>O histórico do lutador em vitórias-derrotas-empates. Por exemplo, 20-2-0 são 20 vitórias, 2 derrotas e nenhum empate. Quando a fonte oficial não divulga o cartel completo, o site mostra só o nome.</p>
+        </li>
+        <li class="cartao cartao-largo">
+          <h4 class="cartao-titulo">Horário</h4>
+          <p>Sempre o de Brasília. Eventos na Ásia, por exemplo, podem cair de madrugada ou de manhã por aqui.</p>
+        </li>
       </ul>
 
       <h3>As organizações</h3>
+      <div class="orgs">
+        <article class="org">
+          <div class="org-topo">
+            <h4 class="org-nome">UFC</h4>
+            <a class="org-link" href="https://www.ufc.com.br/" target="_blank" rel="noopener" aria-label="Site oficial do UFC">Site oficial ↗</a>
+          </div>
+          <p>O UFC (Ultimate Fighting Championship) começou em 1993 e é uma das maiores e mais conhecidas organizações de MMA do mundo, com mais de 40 eventos ao vivo por ano. As lutas acontecem no Octógono, uma área cercada por grade em formato de octógono. Os eventos numerados, como UFC&nbsp;333, costumam ser os de maior destaque; os demais se chamam Fight Night.</p>
+        </article>
+        <article class="org">
+          <div class="org-topo">
+            <h4 class="org-nome">PFL</h4>
+            <a class="org-link" href="https://www.pflmma.com/" target="_blank" rel="noopener" aria-label="Site oficial da PFL">Site oficial ↗</a>
+          </div>
+          <p>A PFL (Professional Fighters League) organiza o MMA como um campeonato de outros esportes: temporada regular, playoffs e final. Também opera o Bellator, outra marca tradicional de MMA. Faz eventos em várias partes do mundo, como Oriente Médio, África e Europa.</p>
+        </article>
+        <article class="org">
+          <div class="org-topo">
+            <h4 class="org-nome">ONE Championship</h4>
+            <a class="org-link" href="https://www.onefc.com/" target="_blank" rel="noopener" aria-label="Site oficial da ONE Championship">Site oficial ↗</a>
+          </div>
+          <p>A ONE tem sede em Singapura e é forte na Ásia. Além de MMA, promove muay thai, kickboxing e grappling (luta agarrada com finalizações), então um mesmo evento pode misturar modalidades. Neste site mostramos só as lutas de MMA.</p>
+        </article>
+      </div>
 
-      <h4>UFC</h4>
-      <p>O UFC (Ultimate Fighting Championship) começou em 1993 e é uma das maiores e mais conhecidas organizações de MMA do mundo, com mais de 40 eventos ao vivo por ano. As lutas acontecem no Octógono, uma área cercada por grade em formato de octógono. Os eventos numerados, como UFC 333, costumam ser os de maior destaque; os demais se chamam Fight Night. <a href="https://www.ufc.com.br/" target="_blank" rel="noopener">Site oficial ↗</a></p>
-
-      <h4>PFL</h4>
-      <p>A PFL (Professional Fighters League) organiza o MMA como um campeonato de outros esportes: temporada regular, playoffs e final. Também opera o Bellator, outra marca tradicional de MMA. Faz eventos em várias partes do mundo, como Oriente Médio, África e Europa. <a href="https://www.pflmma.com/" target="_blank" rel="noopener">Site oficial ↗</a></p>
-
-      <h4>ONE Championship</h4>
-      <p>A ONE tem sede em Singapura e é forte na Ásia. Além de MMA, promove muay thai, kickboxing e grappling (luta agarrada com finalizações), então um mesmo evento pode misturar modalidades. Neste site mostramos só as lutas de MMA. <a href="https://www.onefc.com/" target="_blank" rel="noopener">Site oficial ↗</a></p>
-
-      <p>Este guia é um resumo geral para quem está começando. Regras e formatos mudam com o tempo; para detalhes, consulte o site oficial de cada organização. O Fight Club Events não tem afiliação com elas.</p>
+      <p class="pagina-nota">Este guia é um resumo geral para quem está começando. Regras e formatos mudam com o tempo; para detalhes, consulte o site oficial de cada organização. O Fight Club Events não tem afiliação com elas.</p>
     </section>
   </main>
 
   <footer class="rodape">
-    <div class="container">
-      <p>Site independente, sem afiliação com o UFC, a PFL nem a ONE Championship.</p>
-      <p>Dados atualizados em <span id="ultima-atualizacao">—</span>.</p>
+    <div class="container rodape-interno">
+      <img class="rodape-canguru" src="images/apple-touch-icon.png" alt="" width="180" height="180" loading="lazy">
+      <div>
+        <p>Site independente, sem afiliação com o UFC, a PFL nem a ONE Championship.</p>
+        <p>Dados atualizados em <span id="ultima-atualizacao">—</span>.</p>
+      </div>
     </div>
   </footer>
 

@@ -114,15 +114,22 @@ function montarFonte(sourceUrl) {
   return dd;
 }
 
-// Também usado pelo calendário (js/calendario.js).
-function montarEvento(evento, fuso) {
-  const item = el('li', 'evento');
-
+function montarEtiquetas(evento) {
   const etiquetas = el('div', 'evento-etiquetas');
   etiquetas.append(el('span', 'etiqueta', evento.organization));
   if (NOMES_STATUS[evento.status]) etiquetas.append(el('span', 'etiqueta', NOMES_STATUS[evento.status]));
   if (evento.is_sample) etiquetas.append(el('span', 'etiqueta etiqueta-exemplo', 'Exemplo'));
-  item.append(etiquetas);
+  return etiquetas;
+}
+
+function lutaPrincipal(evento) {
+  return evento.fights.find((luta) => luta.card_section === 'main_event') || evento.fights[0];
+}
+
+// Também usado pelo calendário (js/calendario.js).
+function montarEvento(evento, fuso) {
+  const item = el('li', 'evento');
+  item.append(montarEtiquetas(evento));
 
   item.append(
     el('h2', 'evento-nome', evento.name),
@@ -130,7 +137,7 @@ function montarEvento(evento, fuso) {
     el('p', 'evento-local', formatarLocal(evento.venue)),
   );
 
-  const principal = evento.fights.find((luta) => luta.card_section === 'main_event') || evento.fights[0];
+  const principal = lutaPrincipal(evento);
   if (principal) item.append(montarLutaPrincipal(principal));
 
   const detalhes = el('dl', 'evento-detalhes');
@@ -139,6 +146,158 @@ function montarEvento(evento, fuso) {
   item.append(detalhes);
 
   return item;
+}
+
+// Destaque do próximo evento: faixa escura no topo da aba Eventos, com contagem regressiva.
+
+// O destaque ignora o filtro: é sempre o próximo evento agendado ou ao vivo, de qualquer organização.
+// Eventos adiados e cancelados ficam só na lista.
+function escolherDestaque(proximos) {
+  return proximos.find((evento) => evento.status === 'scheduled' || evento.status === 'live') || null;
+}
+
+// Primeira letra do primeiro e do último nome (ex.: "Gabriel Silva" vira "GS").
+function iniciais(nome) {
+  const partes = nome.trim().split(/\s+/);
+  const ultima = partes.length > 1 ? partes[partes.length - 1].charAt(0) : '';
+  return `${partes[0].charAt(0)}${ultima}`.toUpperCase();
+}
+
+function dividirTempo(ms) {
+  const total = Math.max(0, Math.floor(ms / 1000));
+  return {
+    dias: Math.floor(total / 86400),
+    horas: Math.floor((total % 86400) / 3600),
+    minutos: Math.floor((total % 3600) / 60),
+    segundos: total % 60,
+  };
+}
+
+function pluralizar(quantidade, singular, plural) {
+  return `${quantidade} ${quantidade === 1 ? singular : plural}`;
+}
+
+// Os números mudam a cada segundo e ficam escondidos dos leitores de tela. O texto equivalente
+// só muda de minuto em minuto e não tem aria-live, então nada é anunciado sozinho.
+function montarContagem(evento) {
+  const inicio = new Date(evento.starts_at).getTime();
+  const bloco = el('div', 'contagem');
+  const rotulo = el('p', 'contagem-rotulo', 'Começa em');
+
+  const caixas = el('div', 'contagem-caixas');
+  caixas.setAttribute('aria-hidden', 'true');
+  const numeros = {};
+  [['dias', 'Dias'], ['horas', 'Horas'], ['minutos', 'Min'], ['segundos', 'Seg']].forEach(([chave, nome]) => {
+    numeros[chave] = el('span', 'contagem-numero', '00');
+    const caixa = el('div', 'contagem-caixa');
+    caixa.append(numeros[chave], el('span', 'contagem-unidade', nome));
+    caixas.append(caixa);
+  });
+
+  const textoLeitor = el('p', 'so-leitor');
+  const andamento = el('p', 'contagem-andamento', 'Em andamento');
+  andamento.hidden = true;
+  bloco.append(rotulo, caixas, textoLeitor, andamento);
+
+  // Devolve false quando a contagem acabou (o evento já começou ou está ao vivo).
+  function atualizar() {
+    const restante = inicio - Date.now();
+    if (restante <= 0 || evento.status === 'live') {
+      rotulo.hidden = true;
+      caixas.hidden = true;
+      textoLeitor.textContent = '';
+      andamento.hidden = false;
+      return false;
+    }
+    const tempo = dividirTempo(restante);
+    Object.keys(numeros).forEach((chave) => {
+      numeros[chave].textContent = String(tempo[chave]).padStart(2, '0');
+    });
+    const texto = `Começa em ${pluralizar(tempo.dias, 'dia', 'dias')}, ${pluralizar(tempo.horas, 'hora', 'horas')} e ${pluralizar(tempo.minutos, 'minuto', 'minutos')}`;
+    if (textoLeitor.textContent !== texto) textoLeitor.textContent = texto;
+    return true;
+  }
+
+  return { elemento: bloco, atualizar };
+}
+
+// O círculo com as iniciais é só decorativo: o nome do lutador aparece logo abaixo.
+function montarLutadorDestaque(lutador) {
+  const bloco = el('div', 'destaque-lutador');
+  const avatar = el('span', 'destaque-avatar', iniciais(lutador.name));
+  avatar.setAttribute('aria-hidden', 'true');
+  bloco.append(avatar, el('span', 'destaque-lutador-nome', lutador.name));
+  if (lutador.record) bloco.append(el('span', 'destaque-lutador-cartel', formatarCartel(lutador.record)));
+  return bloco;
+}
+
+function montarLutaDestaque(luta) {
+  const painel = el('div', 'destaque-luta');
+  painel.append(el('p', 'luta-rotulo', 'Luta principal'));
+
+  const confronto = el('div', 'destaque-confronto');
+  confronto.append(
+    montarLutadorDestaque(luta.fighters[0]),
+    el('span', 'versus', 'vs'),
+    montarLutadorDestaque(luta.fighters[1]),
+  );
+  painel.append(confronto, el('p', 'luta-categoria', `${luta.weight_class} · até ${luta.weight_limit_lbs} lb`));
+  return painel;
+}
+
+let temporizadorDestaque = null;
+let destaqueAtualId = null;
+let painelAtivo = 'painel-agenda';
+
+function mostrarDestaque(evento, fuso) {
+  clearInterval(temporizadorDestaque);
+  destaqueAtualId = evento ? evento.id : null;
+  const secao = document.getElementById('hero-destaque');
+
+  if (!evento) {
+    secao.replaceChildren();
+    secao.hidden = true;
+    atualizarFaixa();
+    return;
+  }
+
+  const contagem = montarContagem(evento);
+  const info = el('div', 'destaque-info');
+  info.append(
+    el('p', 'destaque-rotulo', 'Próximo evento'),
+    montarEtiquetas(evento),
+    el('h2', 'destaque-nome', evento.name),
+    el('p', 'destaque-data', formatarDataHora(evento.starts_at, fuso)),
+    el('p', 'destaque-local', formatarLocal(evento.venue)),
+    contagem.elemento,
+  );
+
+  const links = el('dl', 'destaque-links');
+  links.append(el('dt', null, 'Onde assistir'), montarOndeAssistir(evento.broadcast));
+  links.append(el('dt', null, 'Fonte oficial'), montarFonte(evento.source_url));
+  info.append(links);
+
+  const partes = [info];
+  const luta = lutaPrincipal(evento);
+  if (luta) partes.push(montarLutaDestaque(luta));
+  secao.replaceChildren(...partes);
+  secao.hidden = false;
+  atualizarFaixa();
+
+  if (contagem.atualizar()) {
+    temporizadorDestaque = setInterval(() => {
+      if (!contagem.atualizar()) clearInterval(temporizadorDestaque);
+    }, 1000);
+  }
+}
+
+// A faixa mostra o destaque na aba Eventos (se houver) e o texto geral no Calendário.
+// Nas abas Sobre e Guia ela não aparece.
+function atualizarFaixa() {
+  const hero = document.getElementById('hero');
+  hero.hidden = painelAtivo === 'painel-sobre' || painelAtivo === 'painel-guia';
+  const temDestaque = !document.getElementById('hero-destaque').hidden;
+  hero.dataset.modo = temDestaque && painelAtivo === 'painel-agenda' ? 'evento' : 'geral';
 }
 
 const ORDEM_ORGANIZACOES = ['UFC', 'PFL', 'ONE'];
@@ -167,6 +326,10 @@ function mostrarAgenda(dados) {
     .filter((evento) => eventoVisivel(evento, agora))
     .sort((a, b) => new Date(a.starts_at) - new Date(b.starts_at));
 
+  // O destaque não muda com o filtro; só é remontado quando o próximo evento passa a ser outro.
+  const destaque = escolherDestaque(proximos);
+  if ((destaque ? destaque.id : null) !== destaqueAtualId) mostrarDestaque(destaque, fuso);
+
   if (proximos.length === 0) {
     lista.replaceChildren();
     status.textContent = 'Nenhum evento futuro na agenda no momento. Volte em breve: a agenda é revisada com frequência.';
@@ -179,18 +342,33 @@ function mostrarAgenda(dados) {
   status.textContent = filtrados.length === 0 ? 'Nenhum evento das organizações selecionadas no momento.' : '';
 }
 
-// Botões: "Todos" e uma opção por organização presente nos dados.
+// Quantos eventos visíveis (os mesmos da agenda) cada organização tem.
+function contarPorOrganizacao(dados) {
+  const agora = Date.now();
+  const contagens = new Map();
+  dados.events.filter((evento) => eventoVisivel(evento, agora)).forEach((evento) => {
+    contagens.set(evento.organization, (contagens.get(evento.organization) || 0) + 1);
+  });
+  return contagens;
+}
+
+function montarBotaoFiltro(nome, chave, quantidade) {
+  const botao = el('button', 'filtro', nome);
+  botao.dataset.organizacao = chave;
+  botao.append(el('span', 'filtro-contagem', String(quantidade)));
+  return botao;
+}
+
+// Botões: "Todos" e uma opção por organização presente nos dados, cada um com a quantidade de eventos.
 function montarBotoesFiltro(dados) {
   const organizacoes = [...new Set(dados.events.map((evento) => evento.organization))]
     .sort((a, b) => posicaoOrganizacao(a) - posicaoOrganizacao(b));
 
-  const todos = el('button', 'filtro', 'Todos');
-  todos.dataset.organizacao = 'todos';
-  const botoes = [todos];
+  const contagens = contarPorOrganizacao(dados);
+  const total = [...contagens.values()].reduce((soma, quantidade) => soma + quantidade, 0);
+  const botoes = [montarBotaoFiltro('Todos', 'todos', total)];
   organizacoes.forEach((organizacao) => {
-    const botao = el('button', 'filtro', organizacao);
-    botao.dataset.organizacao = organizacao;
-    botoes.push(botao);
+    botoes.push(montarBotaoFiltro(organizacao, organizacao, contagens.get(organizacao) || 0));
   });
 
   botoes.forEach((botao) => {
@@ -204,13 +382,12 @@ function montarBotoesFiltro(dados) {
       } else {
         organizacoesMarcadas.add(organizacao);
       }
-      atualizarAgenda(dados);
+      mostrarAgenda(dados);
     });
   });
 
-  const filtros = document.getElementById('filtros');
-  filtros.replaceChildren(...botoes);
-  filtros.hidden = false;
+  document.getElementById('filtros').replaceChildren(...botoes);
+  document.getElementById('filtros-barra').hidden = false;
 }
 
 function atualizarBotoesFiltro() {
@@ -220,14 +397,6 @@ function atualizarBotoesFiltro() {
       : organizacoesMarcadas.has(botao.dataset.organizacao);
     botao.setAttribute('aria-pressed', String(ativo));
   });
-}
-
-// Atualizado em carregarEventos, depois que o calendário é montado.
-let atualizarCalendario = null;
-
-function atualizarAgenda(dados) {
-  mostrarAgenda(dados);
-  if (atualizarCalendario) atualizarCalendario();
 }
 
 async function carregarDoJson() {
@@ -305,7 +474,7 @@ async function carregarEventos() {
     const dados = await carregarDados();
     montarBotoesFiltro(dados);
     mostrarAgenda(dados);
-    atualizarCalendario = montarCalendario(dados).atualizar; // definido em js/calendario.js
+    montarCalendario(dados); // definido em js/calendario.js
   } catch (erro) {
     console.error('Erro ao carregar eventos:', erro);
     const mensagem = 'Não foi possível carregar os eventos. Tente recarregar a página.';
@@ -324,10 +493,12 @@ function configurarAbas() {
       outra.tabIndex = ativa ? 0 : -1;
       document.getElementById(outra.getAttribute('aria-controls')).hidden = !ativa;
     });
-    // O filtro por organização só vale para Eventos e Calendário.
+    // O filtro por campeonato só vale para a aba Eventos.
     const painel = aba.getAttribute('aria-controls');
-    const usaFiltro = painel === 'painel-agenda' || painel === 'painel-calendario';
-    document.getElementById('filtros').classList.toggle('filtros-oculto', !usaFiltro);
+    painelAtivo = painel;
+    atualizarFaixa();
+    const usaFiltro = painel === 'painel-agenda';
+    document.getElementById('filtros-barra').classList.toggle('filtros-oculto', !usaFiltro);
   }
 
   abas.forEach((aba, i) => {
