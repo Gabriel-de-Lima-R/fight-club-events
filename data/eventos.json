@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-11-02",
+  "last_updated": "2026-11-12",
   "display_timezone": "America/Sao_Paulo",
   "events": [
     {
@@ -522,7 +522,7 @@
       "organization": "ONE",
       "name": "ONE Fight Night 49: Gabriel vs. Magomedov",
       "starts_at": "2026-11-07T02:00:00Z",
-      "status": "scheduled",
+      "status": "completed",
       "venue": {
         "name": "Lumpinee Stadium",
         "city": "Bangkok",
@@ -612,12 +612,12 @@
       ]
     },
     {
-      "id": "ufc-fn-2026-11-07-bonfim-brady",
+      "id": "ufc-vegas-124-2026-11-07-cortes-acosta-walker",
       "is_sample": false,
       "organization": "UFC",
-      "name": "UFC Fight Night: Bonfim x Brady",
+      "name": "UFC Vegas 124: Cortes Acosta x Walker",
       "starts_at": "2026-11-08T01:00:00Z",
-      "status": "scheduled",
+      "status": "completed",
       "venue": {
         "name": "Meta APEX",
         "city": "Las Vegas",
@@ -635,30 +635,18 @@
         {
           "order": 1,
           "card_section": "main_event",
-          "weight_class": "Peso Meio-médio",
-          "weight_limit_lbs": 170,
+          "weight_class": "Peso Pesado",
+          "weight_limit_lbs": 265,
           "fighters": [
             {
-              "name": "Gabriel Bonfim",
-              "nationality": "Brasileiro",
-              "record": {
-                "wins": 20,
-                "losses": 1,
-                "draws": 0,
-                "no_contests": null
-              },
-              "reach_in": 72.5
+              "name": "Waldo Cortes Acosta",
+              "nationality": "Dominicano",
+              "record": null
             },
             {
-              "name": "Sean Brady",
-              "nationality": "Estadunidense",
-              "record": {
-                "wins": 19,
-                "losses": 2,
-                "draws": 0,
-                "no_contests": null
-              },
-              "reach_in": 72
+              "name": "Johnny Walker",
+              "nationality": "Brasileiro",
+              "record": null
             }
           ]
         },
@@ -725,36 +713,6 @@
         {
           "order": 4,
           "card_section": "main_card",
-          "weight_class": "Peso Meio-médio",
-          "weight_limit_lbs": 170,
-          "fighters": [
-            {
-              "name": "Seokhyeon Ko",
-              "nationality": "Sul-coreano",
-              "record": {
-                "wins": 13,
-                "losses": 3,
-                "draws": 0,
-                "no_contests": null
-              },
-              "reach_in": 71
-            },
-            {
-              "name": "Wellington Turman",
-              "nationality": "Brasileiro",
-              "record": {
-                "wins": 18,
-                "losses": 8,
-                "draws": 0,
-                "no_contests": null
-              },
-              "reach_in": 72
-            }
-          ]
-        },
-        {
-          "order": 5,
-          "card_section": "main_card",
           "weight_class": "Peso Meio-pesado",
           "weight_limit_lbs": 205,
           "fighters": [
@@ -783,32 +741,32 @@
           ]
         },
         {
-          "order": 6,
-          "card_section": "main_card",
-          "weight_class": "Peso Médio",
-          "weight_limit_lbs": 185,
+          "order": 5,
+          "card_section": "prelims",
+          "weight_class": "Peso Meio-médio",
+          "weight_limit_lbs": 170,
           "fighters": [
             {
-              "name": "Mantas Kondratavičius",
-              "nationality": "Lituano",
+              "name": "Seokhyeon Ko",
+              "nationality": "Sul-coreano",
               "record": {
-                "wins": 9,
-                "losses": 1,
+                "wins": 13,
+                "losses": 3,
                 "draws": 0,
                 "no_contests": null
               },
-              "reach_in": 75.5
+              "reach_in": 71
             },
             {
-              "name": "Wes Schultz",
-              "nationality": "Estadunidense",
+              "name": "Wellington Turman",
+              "nationality": "Brasileiro",
               "record": {
-                "wins": 9,
-                "losses": 4,
+                "wins": 18,
+                "losses": 8,
                 "draws": 0,
                 "no_contests": null
               },
-              "reach_in": 77
+              "reach_in": 72
             }
           ]
         }
@@ -1158,6 +1116,57 @@
       ]
     },
     {
+      "id": "ufc-fn-2026-12-05-adesanya-magomedov",
+      "is_sample": false,
+      "organization": "UFC",
+      "name": "UFC Fight Night: Adesanya x Magomedov",
+      "starts_at": "2026-12-05T18:00:00Z",
+      "status": "scheduled",
+      "venue": {
+        "name": "The Venue",
+        "city": "Riyadh",
+        "country": "Arábia Saudita"
+      },
+      "broadcast": [
+        {
+          "name": "Paramount+",
+          "type": "streaming",
+          "url": null
+        }
+      ],
+      "source_url": "https://www.ufc.com.br/event/ufc-fight-night-december-05-2026",
+      "fights": [
+        {
+          "order": 1,
+          "card_section": "main_event",
+          "weight_class": "Peso Médio",
+          "weight_limit_lbs": 185,
+          "fighters": [
+            {
+              "name": "Israel Adesanya",
+              "nationality": null,
+              "record": {
+                "wins": 24,
+                "losses": 6,
+                "draws": 0,
+                "no_contests": null
+              }
+            },
+            {
+              "name": "Shara Magomedov",
+              "nationality": "Russo",
+              "record": {
+                "wins": 17,
+                "losses": 1,
+                "draws": 0,
+                "no_contests": null
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ufc-335-2026-12-12-oliveira-lopes",
       "is_sample": false,
       "organization": "UFC",
@@ -1205,6 +1214,136 @@
                 "no_contests": null
               },
               "reach_in": 72.5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ufc-336-2027-01-30-van-kape",
+      "is_sample": false,
+      "organization": "UFC",
+      "name": "UFC 336: Van x Kape",
+      "starts_at": "2027-01-31T02:00:00Z",
+      "status": "scheduled",
+      "venue": {
+        "name": "Scotiabank Arena",
+        "city": "Toronto",
+        "country": "Canadá"
+      },
+      "broadcast": [
+        {
+          "name": "Paramount+",
+          "type": "streaming",
+          "url": null
+        }
+      ],
+      "source_url": "https://www.ufc.com.br/event/ufc-336",
+      "fights": [
+        {
+          "order": 1,
+          "card_section": "main_event",
+          "weight_class": "Peso Mosca · disputa de cinturão",
+          "weight_limit_lbs": 125,
+          "fighters": [
+            {
+              "name": "Joshua Van",
+              "nationality": "Birmanês",
+              "record": {
+                "wins": 18,
+                "losses": 2,
+                "draws": 0,
+                "no_contests": null
+              }
+            },
+            {
+              "name": "Manel Kape",
+              "nationality": null,
+              "record": {
+                "wins": 23,
+                "losses": 7,
+                "draws": 0,
+                "no_contests": null
+              }
+            }
+          ]
+        },
+        {
+          "order": 2,
+          "card_section": "co_main",
+          "weight_class": "Peso Meio-médio · disputa de cinturão interino",
+          "weight_limit_lbs": 170,
+          "fighters": [
+            {
+              "name": "Carlos Prates",
+              "nationality": "Brasileiro",
+              "record": {
+                "wins": 24,
+                "losses": 7,
+                "draws": 0,
+                "no_contests": null
+              }
+            },
+            {
+              "name": "Michael Morales",
+              "nationality": "Equatoriano",
+              "record": {
+                "wins": 19,
+                "losses": 0,
+                "draws": 0,
+                "no_contests": null
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ufc-fn-2027-02-06-salkilld-saint-denis",
+      "is_sample": false,
+      "organization": "UFC",
+      "name": "UFC Fight Night: Salkilld x Saint Denis",
+      "starts_at": "2027-02-06T22:00:00Z",
+      "status": "scheduled",
+      "venue": {
+        "name": "Afterpay Arena",
+        "city": "Sydney",
+        "country": "Austrália"
+      },
+      "broadcast": [
+        {
+          "name": "Paramount+",
+          "type": "streaming",
+          "url": null
+        }
+      ],
+      "source_url": "https://www.ufc.com.br/event/ufc-fight-night-february-06-2027",
+      "fights": [
+        {
+          "order": 1,
+          "card_section": "main_event",
+          "weight_class": "Peso Leve",
+          "weight_limit_lbs": 155,
+          "fighters": [
+            {
+              "name": "Quillan Salkilld",
+              "nationality": "Australiano",
+              "record": {
+                "wins": 13,
+                "losses": 1,
+                "draws": 0,
+                "no_contests": null
+              }
+            },
+            {
+              "name": "Benoit Saint Denis",
+              "nationality": "Francês",
+              "record": {
+                "wins": 17,
+                "losses": 4,
+                "draws": 0,
+                "no_contests": null
+              }
             }
           ]
         }
