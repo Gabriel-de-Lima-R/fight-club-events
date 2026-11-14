@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-11-12",
+  "last_updated": "2026-11-14",
   "display_timezone": "America/Sao_Paulo",
   "events": [
     {
@@ -1167,6 +1167,96 @@
       ]
     },
     {
+      "id": "pfl-khobar-2026-12-11-zouad-diani",
+      "is_sample": false,
+      "organization": "PFL",
+      "name": "PFL Khobar",
+      "starts_at": "2026-12-11T15:00:00Z",
+      "status": "scheduled",
+      "venue": {
+        "name": "Dhahran Expo",
+        "city": "Khobar",
+        "country": "Arábia Saudita"
+      },
+      "broadcast": [],
+      "source_url": "https://pflmma.com/event/pflmena-12",
+      "fights": [
+        {
+          "order": 1,
+          "card_section": "main_event",
+          "weight_class": "Peso Meio-médio · final",
+          "weight_limit_lbs": 170,
+          "fighters": [
+            {
+              "name": "Abdelkrim Zouad",
+              "nationality": "Argelino",
+              "record": {
+                "wins": 9,
+                "losses": 2,
+                "draws": 0,
+                "no_contests": null
+              }
+            },
+            {
+              "name": "Badreddine Diani",
+              "nationality": "Marroquino",
+              "record": {
+                "wins": 12,
+                "losses": 4,
+                "draws": 0,
+                "no_contests": null
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pfl-africa-kigali-2026-12-12-esperanca-samuel",
+      "is_sample": false,
+      "organization": "PFL",
+      "name": "PFL Africa: Kigali",
+      "starts_at": "2026-12-12T16:00:00Z",
+      "status": "scheduled",
+      "venue": {
+        "name": "BK Arena",
+        "city": "Kigali",
+        "country": "Ruanda"
+      },
+      "broadcast": [],
+      "source_url": "https://pflmma.com/event/pfl-africa-kigali-2026",
+      "fights": [
+        {
+          "order": 1,
+          "card_section": "main_event",
+          "weight_class": "Peso Meio-médio · final",
+          "weight_limit_lbs": 170,
+          "fighters": [
+            {
+              "name": "Shido Boris Esperança",
+              "nationality": "Angolano",
+              "record": {
+                "wins": 13,
+                "losses": 2,
+                "draws": 0,
+                "no_contests": null
+              }
+            },
+            {
+              "name": "David Samuel",
+              "nationality": "Nigeriano",
+              "record": {
+                "wins": 7,
+                "losses": 0,
+                "draws": 0,
+                "no_contests": null
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ufc-335-2026-12-12-oliveira-lopes",
       "is_sample": false,
       "organization": "UFC",
@@ -1214,6 +1304,86 @@
                 "no_contests": null
               },
               "reach_in": 72.5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "one-fn50-2026-12-18-abevi-dzhabrailov",
+      "is_sample": false,
+      "organization": "ONE",
+      "name": "ONE Fight Night 50",
+      "starts_at": "2026-12-19T02:00:00Z",
+      "status": "scheduled",
+      "venue": {
+        "name": "Lumpinee Stadium",
+        "city": "Bangkok",
+        "country": "Tailândia"
+      },
+      "broadcast": [],
+      "source_url": "https://www.onefc.com/events/onefightnight50/",
+      "fights": [
+        {
+          "order": 1,
+          "card_section": "main_event",
+          "weight_class": "Peso Meio-médio",
+          "weight_limit_lbs": 185,
+          "fighters": [
+            {
+              "name": "Maurice Abevi",
+              "nationality": "Suíço",
+              "record": null
+            },
+            {
+              "name": "Dzhabir Dzhabrailov",
+              "nationality": "Turco",
+              "record": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pfl-lyon-2026-12-19-lapilus-mckee",
+      "is_sample": false,
+      "organization": "PFL",
+      "name": "PFL Lyon",
+      "starts_at": "2026-12-19T20:00:00Z",
+      "status": "scheduled",
+      "venue": {
+        "name": "LDLC Arena",
+        "city": "Lyon",
+        "country": "França"
+      },
+      "broadcast": [],
+      "source_url": "https://pflmma.com/event/pfl-lyon-2026",
+      "fights": [
+        {
+          "order": 1,
+          "card_section": "main_event",
+          "weight_class": "Peso Galo · disputa de cinturão",
+          "weight_limit_lbs": 135,
+          "fighters": [
+            {
+              "name": "Taylor Lapilus",
+              "nationality": "Francês",
+              "record": {
+                "wins": 25,
+                "losses": 4,
+                "draws": 0,
+                "no_contests": null
+              }
+            },
+            {
+              "name": "Mitch McKee",
+              "nationality": "Estadunidense",
+              "record": {
+                "wins": 11,
+                "losses": 0,
+                "draws": 0,
+                "no_contests": null
+              }
             }
           ]
         }
