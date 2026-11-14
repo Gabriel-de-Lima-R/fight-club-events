@@ -1310,6 +1310,41 @@
       ]
     },
     {
+      "id": "one-fn50-2026-12-18-abevi-dzhabrailov",
+      "is_sample": false,
+      "organization": "ONE",
+      "name": "ONE Fight Night 50",
+      "starts_at": "2026-12-19T02:00:00Z",
+      "status": "scheduled",
+      "venue": {
+        "name": "Lumpinee Stadium",
+        "city": "Bangkok",
+        "country": "Tailândia"
+      },
+      "broadcast": [],
+      "source_url": "https://www.onefc.com/events/onefightnight50/",
+      "fights": [
+        {
+          "order": 1,
+          "card_section": "main_event",
+          "weight_class": "Peso Meio-médio",
+          "weight_limit_lbs": 185,
+          "fighters": [
+            {
+              "name": "Maurice Abevi",
+              "nationality": "Suíço",
+              "record": null
+            },
+            {
+              "name": "Dzhabir Dzhabrailov",
+              "nationality": "Turco",
+              "record": null
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "pfl-lyon-2026-12-19-lapilus-mckee",
       "is_sample": false,
       "organization": "PFL",
