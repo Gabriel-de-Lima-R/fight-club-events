@@ -56,21 +56,58 @@ function eventoVisivel(evento, agora) {
   return fim > agora;
 }
 
+// Crédito da foto em uma linha (ex.: "Foto: Fulano, CC BY-SA 4.0").
+function textoCredito(foto) {
+  return `Foto: ${foto.author}, ${foto.license}`;
+}
+
+// Círculo com a foto do lutador ou, sem foto conferida, com as iniciais.
+// As iniciais são decorativas (o nome aparece ao lado); a foto tem texto alternativo e o crédito no title.
+function montarAvatar(lutador, classe) {
+  const avatar = el('span', classe);
+  if (lutador.photo) {
+    avatar.classList.add('com-foto');
+    const imagem = el('img');
+    imagem.src = lutador.photo.path;
+    imagem.alt = `Foto de ${lutador.name}`;
+    imagem.title = textoCredito(lutador.photo);
+    imagem.width = 256;
+    imagem.height = 256;
+    imagem.loading = 'lazy';
+    imagem.decoding = 'async';
+    // Se o arquivo faltar, volta para as iniciais em vez de mostrar imagem quebrada.
+    imagem.addEventListener('error', () => {
+      avatar.classList.remove('com-foto');
+      avatar.replaceChildren(iniciais(lutador.name));
+      avatar.setAttribute('aria-hidden', 'true');
+    });
+    avatar.append(imagem);
+  } else {
+    avatar.textContent = iniciais(lutador.name);
+    avatar.setAttribute('aria-hidden', 'true');
+  }
+  return avatar;
+}
+
 // situacao: 'vencedor', 'perdedor', 'empate' ou null (luta sem resultado para mostrar).
 function montarLutador(lutador, situacao) {
   const bloco = el('div', 'lutador');
   if (situacao === 'vencedor') bloco.classList.add('vencedor');
   if (situacao === 'perdedor') bloco.classList.add('perdedor');
-  bloco.append(el('span', 'lutador-nome', lutador.name));
+
+  const texto = el('div', 'lutador-texto');
+  texto.append(el('span', 'lutador-nome', lutador.name));
   // Sem cartel (record null) quando a fonte oficial não informa o cartel completo.
-  if (lutador.record) bloco.append(el('span', 'lutador-cartel', formatarCartel(lutador.record)));
-  if (situacao === 'vencedor') bloco.append(el('span', 'selo selo-venceu', '🏆 Venceu'));
+  if (lutador.record) texto.append(el('span', 'lutador-cartel', formatarCartel(lutador.record)));
+  if (situacao === 'vencedor') texto.append(el('span', 'selo selo-venceu', '🏆 Venceu'));
   if (situacao === 'perdedor') {
     const selo = el('span', 'selo selo-perdeu');
     selo.append(el('span', 'selo-x', '✖︎'), ' Perdeu');
-    bloco.append(selo);
+    texto.append(selo);
   }
-  if (situacao === 'empate') bloco.append(el('span', 'selo selo-empate', 'Empate'));
+  if (situacao === 'empate') texto.append(el('span', 'selo selo-empate', 'Empate'));
+
+  bloco.append(montarAvatar(lutador, 'lutador-avatar'), texto);
   return bloco;
 }
 
@@ -257,12 +294,9 @@ function montarContagem(evento) {
   return { elemento: bloco, atualizar };
 }
 
-// O círculo com as iniciais é só decorativo: o nome do lutador aparece logo abaixo.
 function montarLutadorDestaque(lutador) {
   const bloco = el('div', 'destaque-lutador');
-  const avatar = el('span', 'destaque-avatar', iniciais(lutador.name));
-  avatar.setAttribute('aria-hidden', 'true');
-  bloco.append(avatar, el('span', 'destaque-lutador-nome', lutador.name));
+  bloco.append(montarAvatar(lutador, 'destaque-avatar'), el('span', 'destaque-lutador-nome', lutador.name));
   if (lutador.record) bloco.append(el('span', 'destaque-lutador-cartel', formatarCartel(lutador.record)));
   return bloco;
 }
@@ -278,7 +312,51 @@ function montarLutaDestaque(luta) {
     montarLutadorDestaque(luta.fighters[1]),
   );
   painel.append(confronto, el('p', 'luta-categoria', `${luta.weight_class} · até ${luta.weight_limit_lbs} lb`));
+
+  // No destaque há espaço para o crédito das fotos à vista, com link para a licença.
+  luta.fighters.filter((lutador) => lutador.photo).forEach((lutador) => {
+    const credito = el('p', 'destaque-credito', `Foto de ${lutador.name}: ${lutador.photo.author}, `);
+    credito.append(montarLinkLicenca(lutador.photo));
+    painel.append(credito);
+  });
   return painel;
+}
+
+// Licença com link quando houver (licenças livres); "Uso autorizado pelo autor" fica só como texto.
+function montarLinkLicenca(foto) {
+  if (!foto.license_url) return document.createTextNode(foto.license);
+  const link = el('a', null, foto.license);
+  link.href = foto.license_url;
+  link.target = '_blank';
+  link.rel = 'noopener';
+  return link;
+}
+
+// Aba Sobre: lista com o crédito de cada foto usada no site (sem repetir lutador).
+function mostrarCreditosFotos(dados) {
+  const vistos = new Map();
+  dados.events.forEach((evento) => evento.fights.forEach((luta) => luta.fighters.forEach((lutador) => {
+    if (lutador.photo && !vistos.has(lutador.photo.path)) vistos.set(lutador.photo.path, lutador);
+  })));
+
+  const lista = document.getElementById('creditos-fotos');
+  const vazio = document.getElementById('creditos-vazio');
+  const itens = [...vistos.values()]
+    .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'))
+    .map((lutador) => {
+      const foto = lutador.photo;
+      const item = el('li');
+      item.append(el('strong', null, lutador.name), `: ${foto.author}, `, montarLinkLicenca(foto), ', ');
+      const fonte = el('a', null, 'fonte');
+      fonte.href = foto.source_url;
+      fonte.target = '_blank';
+      fonte.rel = 'noopener';
+      item.append(fonte);
+      return item;
+    });
+  lista.replaceChildren(...itens);
+  lista.hidden = itens.length === 0;
+  vazio.hidden = itens.length > 0;
 }
 
 let temporizadorDestaque = null;
@@ -441,10 +519,32 @@ function atualizarBotoesFiltro() {
   });
 }
 
+// Foto no formato usado pela tela; null quando o lutador não tem foto conferida.
+function montarFoto(cadastro) {
+  if (!cadastro || !cadastro.photo_path) return null;
+  return {
+    path: cadastro.photo_path,
+    author: cadastro.photo_author,
+    license: cadastro.photo_license,
+    license_url: cadastro.photo_license_url,
+    source_url: cadastro.photo_source_url,
+  };
+}
+
 async function carregarDoJson() {
   const resposta = await fetch('data/eventos.json', { cache: 'no-store' });
   if (!resposta.ok) throw new Error(`HTTP ${resposta.status}`);
-  return resposta.json();
+  const dados = await resposta.json();
+
+  // Sem o cadastro de lutadores, o site segue funcionando só com as iniciais.
+  const cadastro = await fetch('data/lutadores.json', { cache: 'no-store' })
+    .then((r) => (r.ok ? r.json() : { fighters: [] }))
+    .catch(() => ({ fighters: [] }));
+  const fotos = new Map(cadastro.fighters.map((f) => [f.id, f.photo]));
+  dados.events.forEach((evento) => evento.fights.forEach((luta) => luta.fighters.forEach((lutador) => {
+    lutador.photo = (lutador.fighter_id && fotos.get(lutador.fighter_id)) || null;
+  })));
+  return dados;
 }
 
 // O cartel só existe se o banco tiver ao menos V-D-E; senão fica null, como no JSON.
@@ -463,6 +563,7 @@ function converterEvento(linha) {
     result: luta.result_outcome ? { outcome: luta.result_outcome, winner: luta.result_winner } : null,
     fighters: [...luta.fight_fighters].sort((a, b) => a.position - b.position).map((lutador) => ({
       fighter_id: lutador.fighter_id ?? null,
+      photo: montarFoto(lutador.fighters),
       name: lutador.name,
       nationality: lutador.nationality,
       record: montarRecord(lutador),
@@ -486,7 +587,7 @@ function converterEvento(linha) {
 }
 
 async function carregarDoSupabase() {
-  const consulta = 'select=*,event_broadcasts(*),fights(*,fight_fighters(*))&order=starts_at';
+  const consulta = 'select=*,event_broadcasts(*),fights(*,fight_fighters(*,fighters(*)))&order=starts_at';
   const resposta = await fetch(`${SUPABASE_URL}/rest/v1/events?${consulta}`, {
     headers: { apikey: SUPABASE_CHAVE_PUBLICA },
     signal: AbortSignal.timeout(SUPABASE_TIMEOUT_MS),
@@ -519,6 +620,7 @@ async function carregarEventos() {
     montarBotoesFiltro(dados);
     mostrarAgenda(dados);
     montarCalendario(dados); // definido em js/calendario.js
+    mostrarCreditosFotos(dados);
   } catch (erro) {
     console.error('Erro ao carregar eventos:', erro);
     const mensagem = 'Não foi possível carregar os eventos. Tente recarregar a página.';
