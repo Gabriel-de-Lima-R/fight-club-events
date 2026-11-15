@@ -68,16 +68,18 @@ if (transmissoes.length) {
     ''
   );
 }
-partes.push(
-  'insert into public.fights (event_id, "order", card_section, weight_class, weight_limit_lbs) values',
-  lutas.join(',\n') + ';',
-  '',
-  'insert into public.fight_fighters (fight_id, position, name, nationality, wins, losses, draws, no_contests, height_ft, reach_in) values',
-  lutadores.join(',\n') + ';',
-  '',
-  'commit;',
-  ''
-);
+// Eventos sem card anunciado não têm lutas; sem linhas, o insert seria inválido.
+if (lutas.length) {
+  partes.push(
+    'insert into public.fights (event_id, "order", card_section, weight_class, weight_limit_lbs) values',
+    lutas.join(',\n') + ';',
+    '',
+    'insert into public.fight_fighters (fight_id, position, name, nationality, wins, losses, draws, no_contests, height_ft, reach_in) values',
+    lutadores.join(',\n') + ';',
+    ''
+  );
+}
+partes.push('commit;', '');
 
 fs.mkdirSync(path.dirname(saida), { recursive: true });
 fs.writeFileSync(saida, partes.join('\n'));

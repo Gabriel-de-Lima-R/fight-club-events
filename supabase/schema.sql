@@ -6,7 +6,7 @@
 create table if not exists public.events (
   id            text primary key check (id !~ '\s'),
   is_sample     boolean not null default false,
-  organization  text not null check (organization in ('UFC', 'PFL', 'ONE')),
+  organization  text not null check (organization in ('UFC', 'PFL', 'ONE', 'KSW', 'JUNGLE')),
   name          text not null,
   starts_at     timestamptz not null,
   status        text not null check (status in ('scheduled', 'live', 'completed', 'cancelled', 'postponed')),

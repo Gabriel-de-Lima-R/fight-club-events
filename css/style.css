@@ -772,7 +772,7 @@ main.container {
   color: var(--destaque);
 }
 
-/* A primeira etiqueta é a organização (UFC, PFL ou ONE) */
+/* A primeira etiqueta é a organização (UFC, PFL, ONE, KSW ou Jungle Fight) */
 .etiqueta:first-child {
   background: var(--destaque);
   color: var(--sobre-destaque);

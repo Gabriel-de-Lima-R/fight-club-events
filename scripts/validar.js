@@ -10,7 +10,7 @@ const arquivo = process.argv[2] || path.join(__dirname, '..', 'data', 'eventos.j
 const STATUS = ['scheduled', 'live', 'completed', 'cancelled', 'postponed'];
 const CARD_SECTIONS = ['main_event', 'co_main', 'main_card', 'prelims', 'early_prelims'];
 const BROADCAST_TYPES = ['streaming', 'tv'];
-const ORGANIZACOES = ['UFC', 'PFL', 'ONE'];
+const ORGANIZACOES = ['UFC', 'PFL', 'ONE', 'KSW', 'JUNGLE'];
 const CAMPOS_RECORD = ['wins', 'losses', 'draws', 'no_contests'];
 const DIAS_MAXIMOS_SEM_ATUALIZAR = 7;
 
@@ -165,8 +165,9 @@ function validarEvento(evento, posicao, idsVistos, agora) {
     erros.push(`${rotulo}: o campo source_url precisa ser null ou um link http(s)`);
   }
 
-  if (!Array.isArray(evento.fights) || evento.fights.length === 0) {
-    erros.push(`${rotulo}: o evento não tem lutas`);
+  // Lista vazia é válida: o card ainda não foi anunciado (o site mostra "Card a anunciar").
+  if (!Array.isArray(evento.fights)) {
+    erros.push(`${rotulo}: o campo fights precisa ser uma lista (pode ser vazia)`);
     return;
   }
   const ordensVistas = new Set();
