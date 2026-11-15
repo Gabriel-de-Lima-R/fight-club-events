@@ -126,7 +126,7 @@ Objetivo: ampliar a cobertura e o conteúdo do site sem perder as regras dos MVP
 
 ### 1. KSW e Jungle Fight
 - Novos valores de organization: "KSW" (Konfrontacja Sztuk Walki) e "JUNGLE" (Jungle Fight). Atualizar juntos: check do banco (supabase/schema.sql), validador, filtro, etiquetas, cores, rodapé e páginas Sobre/Guia.
-- Fontes oficiais: ksw.com e o site oficial do Jungle Fight.
+- Fontes oficiais: kswmma.com e junglefc.com.br (site oficial do Jungle Fight).
 - Evento com card ainda não anunciado (caso atual do Jungle Fight): fights pode ser uma lista vazia. O validador passa a aceitar isso, e o site mostra "Card a anunciar" no lugar da luta principal. Nunca inventar lutadores.
 
 ### 2. Resultado das lutas

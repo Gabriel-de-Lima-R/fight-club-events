@@ -1081,6 +1081,74 @@
       ]
     },
     {
+      "id": "ksw-123-2026-11-21-mircea-held",
+      "is_sample": false,
+      "organization": "KSW",
+      "name": "KSW 123: Mircea x Held",
+      "starts_at": "2026-11-21T18:00:00Z",
+      "status": "scheduled",
+      "venue": {
+        "name": "Enea Arena",
+        "city": "Szczecin",
+        "country": "Polônia"
+      },
+      "broadcast": [
+        {
+          "name": "KSWTV",
+          "type": "streaming",
+          "url": "https://kswtv.com/"
+        },
+        {
+          "name": "Canal+",
+          "type": "tv",
+          "url": null
+        }
+      ],
+      "source_url": "https://www.kswmma.com/gala/xtb-ksw-123",
+      "fights": [
+        {
+          "order": 1,
+          "card_section": "main_event",
+          "weight_class": "Peso Leve · cinturão",
+          "weight_limit_lbs": 155,
+          "fighters": [
+            {
+              "name": "Valeriu Mircea",
+              "nationality": "Romeno",
+              "record": null
+            },
+            {
+              "name": "Marcin Held",
+              "nationality": "Polonês",
+              "record": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "jungle-fight-157-2026-11-28",
+      "is_sample": false,
+      "organization": "JUNGLE",
+      "name": "Jungle Fight 157",
+      "starts_at": "2026-11-29T00:00:00Z",
+      "status": "scheduled",
+      "venue": {
+        "name": "A confirmar",
+        "city": "Balneário Camboriú",
+        "country": "Brasil"
+      },
+      "broadcast": [
+        {
+          "name": "SporTV",
+          "type": "tv",
+          "url": null
+        }
+      ],
+      "source_url": "https://junglefc.com.br/",
+      "fights": []
+    },
+    {
       "id": "one-samurai-6-2026-12-02-sawada-nikolakakos",
       "is_sample": false,
       "organization": "ONE",
@@ -1338,6 +1406,52 @@
             {
               "name": "Dzhabir Dzhabrailov",
               "nationality": "Turco",
+              "record": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ksw-124-2026-12-19-pawlak-kuberski",
+      "is_sample": false,
+      "organization": "KSW",
+      "name": "KSW 124: Pawlak x Kuberski",
+      "starts_at": "2026-12-19T18:00:00Z",
+      "status": "scheduled",
+      "venue": {
+        "name": "PreZero Arena",
+        "city": "Gliwice",
+        "country": "Polônia"
+      },
+      "broadcast": [
+        {
+          "name": "KSWTV",
+          "type": "streaming",
+          "url": "https://kswtv.com/"
+        },
+        {
+          "name": "Canal+",
+          "type": "tv",
+          "url": null
+        }
+      ],
+      "source_url": "https://www.kswmma.com/gala/xtb-ksw-124",
+      "fights": [
+        {
+          "order": 1,
+          "card_section": "main_event",
+          "weight_class": "Peso Médio · cinturão",
+          "weight_limit_lbs": 185,
+          "fighters": [
+            {
+              "name": "Paweł Pawlak",
+              "nationality": "Polonês",
+              "record": null
+            },
+            {
+              "name": "Piotr Kuberski",
+              "nationality": "Polonês",
               "record": null
             }
           ]
