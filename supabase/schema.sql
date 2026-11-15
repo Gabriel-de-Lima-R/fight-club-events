@@ -54,10 +54,17 @@ create table if not exists public.fighters (
   photo_license     text,
   photo_license_url text,
   photo_source_url  text,
-  -- Com foto, o crédito é obrigatório.
+  -- Com foto, o crédito é obrigatório: licença livre exige autor e origem; permissão por escrito
+  -- ("Uso autorizado pelo autor") dispensa o nome do autor e o link.
   constraint fighters_foto_com_credito check (
     photo_path is null
-    or (photo_author is not null and photo_license is not null and photo_source_url is not null)
+    or (
+      photo_license is not null
+      and (
+        photo_license = 'Uso autorizado pelo autor'
+        or (photo_author is not null and photo_source_url is not null)
+      )
+    )
   )
 );
 

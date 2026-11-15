@@ -57,8 +57,9 @@ function eventoVisivel(evento, agora) {
 }
 
 // Crédito da foto em uma linha (ex.: "Foto: Fulano, CC BY-SA 4.0").
+// Sem nome de autor (permissão por escrito), o crédito é só a licença.
 function textoCredito(foto) {
-  return `Foto: ${foto.author}, ${foto.license}`;
+  return foto.author ? `Foto: ${foto.author}, ${foto.license}` : `Foto: ${foto.license}`;
 }
 
 // Círculo com a foto do lutador ou, sem foto conferida, com as iniciais.
@@ -315,7 +316,8 @@ function montarLutaDestaque(luta) {
 
   // No destaque há espaço para o crédito das fotos à vista, com link para a licença.
   luta.fighters.filter((lutador) => lutador.photo).forEach((lutador) => {
-    const credito = el('p', 'destaque-credito', `Foto de ${lutador.name}: ${lutador.photo.author}, `);
+    const autor = lutador.photo.author ? `${lutador.photo.author}, ` : '';
+    const credito = el('p', 'destaque-credito', `Foto de ${lutador.name}: ${autor}`);
     credito.append(montarLinkLicenca(lutador.photo));
     painel.append(credito);
   });
@@ -346,12 +348,15 @@ function mostrarCreditosFotos(dados) {
     .map((lutador) => {
       const foto = lutador.photo;
       const item = el('li');
-      item.append(el('strong', null, lutador.name), `: ${foto.author}, `, montarLinkLicenca(foto), ', ');
-      const fonte = el('a', null, 'fonte');
-      fonte.href = foto.source_url;
-      fonte.target = '_blank';
-      fonte.rel = 'noopener';
-      item.append(fonte);
+      item.append(el('strong', null, lutador.name), `: ${foto.author ? `${foto.author}, ` : ''}`, montarLinkLicenca(foto));
+      // O link da origem é opcional (foto usada com permissão do autor pode não ter).
+      if (foto.source_url) {
+        const fonte = el('a', null, 'fonte');
+        fonte.href = foto.source_url;
+        fonte.target = '_blank';
+        fonte.rel = 'noopener';
+        item.append(', ', fonte);
+      }
       return item;
     });
   lista.replaceChildren(...itens);

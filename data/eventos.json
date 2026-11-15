@@ -1042,11 +1042,13 @@
           "weight_limit_lbs": 125,
           "fighters": [
             {
+              "fighter_id": "joshua-pacio",
               "name": "Joshua Pacio",
               "nationality": "Filipino",
               "record": null
             },
             {
+              "fighter_id": "keito-yamakita",
               "name": "Keito Yamakita",
               "nationality": "Japonês",
               "record": null

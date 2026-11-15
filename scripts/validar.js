@@ -260,15 +260,23 @@ function validarFoto(foto, onde, id) {
     }
   }
 
-  if (!textoPreenchido(foto.author)) erros.push(`${onde}: o campo photo.author está vazio (o crédito ao autor é obrigatório)`);
-  if (!textoPreenchido(foto.license)) erros.push(`${onde}: o campo photo.license está vazio`);
-  if (!ehLink(foto.source_url)) erros.push(`${onde}: o campo photo.source_url precisa ser o link da origem da foto`);
+  if (!textoPreenchido(foto.license)) {
+    erros.push(`${onde}: o campo photo.license está vazio`);
+    return;
+  }
 
   if (foto.license === LICENCA_PERMISSAO) {
+    // Permissão por escrito: o crédito é a própria licença. Autor e link da origem são opcionais (null).
     if (foto.license_url !== null) erros.push(`${onde}: com "${LICENCA_PERMISSAO}", o campo photo.license_url precisa ser null`);
-  } else if (!ehLink(foto.license_url)) {
-    erros.push(`${onde}: o campo photo.license_url precisa ser o link da licença`);
+    if (foto.author !== null && !textoPreenchido(foto.author)) erros.push(`${onde}: o campo photo.author precisa ser um texto ou null`);
+    if (foto.source_url !== null && !ehLink(foto.source_url)) erros.push(`${onde}: o campo photo.source_url precisa ser um link ou null`);
+    return;
   }
+
+  // Licença livre: autor, link da licença e link da origem são obrigatórios.
+  if (!textoPreenchido(foto.author)) erros.push(`${onde}: o campo photo.author está vazio (o crédito ao autor é obrigatório)`);
+  if (!ehLink(foto.license_url)) erros.push(`${onde}: o campo photo.license_url precisa ser o link da licença`);
+  if (!ehLink(foto.source_url)) erros.push(`${onde}: o campo photo.source_url precisa ser o link da origem da foto`);
 }
 
 function validarLutadores(dadosLutadores) {

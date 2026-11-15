@@ -9,7 +9,9 @@ delete from public.fighters;
 
 insert into public.fighters (id, name, photo_path, photo_author, photo_license, photo_license_url, photo_source_url) values
 ('charles-oliveira', 'Charles Oliveira', null, null, null, null, null),
-('diego-lopes', 'Diego Lopes', null, null, null, null, null);
+('diego-lopes', 'Diego Lopes', null, null, null, null, null),
+('joshua-pacio', 'Joshua Pacio', null, null, null, null, null),
+('keito-yamakita', 'Keito Yamakita', null, null, null, null, null);
 
 insert into public.events (id, is_sample, organization, name, starts_at, status, venue_name, venue_city, venue_country, source_url) values
 ('ufc-edmonton-2026-10-17-buckley-malott', false, 'UFC', 'UFC Edmonton: Buckley x Malott', '2026-10-18T00:00:00Z', 'completed', 'Rogers Place', 'Edmonton', 'Canadá', 'https://www.ufc.com.br/event/ufc-fight-night-october-17-2026'),
@@ -159,8 +161,8 @@ insert into public.fight_fighters (fight_id, fighter_id, position, name, nationa
 ((select id from public.fights where event_id = 'ufc-334-2026-11-14-gane-hokit' and "order" = 4), null, 2, 'Kevin Holland', 'Estadunidense', 29, 15, 0, null, null, 81),
 ((select id from public.fights where event_id = 'ufc-334-2026-11-14-gane-hokit' and "order" = 5), null, 1, 'Bilal Hasan', 'Indonésio', 10, 0, 0, null, null, 70),
 ((select id from public.fights where event_id = 'ufc-334-2026-11-14-gane-hokit' and "order" = 5), null, 2, 'Luis Gurule', 'Estadunidense', 11, 3, 0, null, null, 64),
-((select id from public.fights where event_id = 'one-samurai-5-2026-11-18-pacio-yamakita' and "order" = 1), null, 1, 'Joshua Pacio', 'Filipino', null, null, null, null, null, null),
-((select id from public.fights where event_id = 'one-samurai-5-2026-11-18-pacio-yamakita' and "order" = 1), null, 2, 'Keito Yamakita', 'Japonês', null, null, null, null, null, null),
+((select id from public.fights where event_id = 'one-samurai-5-2026-11-18-pacio-yamakita' and "order" = 1), 'joshua-pacio', 1, 'Joshua Pacio', 'Filipino', null, null, null, null, null, null),
+((select id from public.fights where event_id = 'one-samurai-5-2026-11-18-pacio-yamakita' and "order" = 1), 'keito-yamakita', 2, 'Keito Yamakita', 'Japonês', null, null, null, null, null, null),
 ((select id from public.fights where event_id = 'ufc-fn-2026-11-21-prochazka-stirling' and "order" = 1), null, 1, 'Jiří Procházka', 'Tcheco', 32, 6, 1, null, null, 80),
 ((select id from public.fights where event_id = 'ufc-fn-2026-11-21-prochazka-stirling' and "order" = 1), null, 2, 'Navajo Stirling', 'Neozelandês', 11, 0, 0, null, null, 79),
 ((select id from public.fights where event_id = 'ksw-123-2026-11-21-mircea-held' and "order" = 1), null, 1, 'Valeriu Mircea', 'Romeno', null, null, null, null, null, null),
