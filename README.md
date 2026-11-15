@@ -75,10 +75,9 @@ Feito com HTML, CSS e JavaScript puros, sem framework e sem etapa de build.
 
 Cada lutador tem um identificador fixo (por exemplo, `charles-oliveira`) em `data/lutadores.json`. Para adicionar uma foto:
 
-1. Guarde o original na pasta `fotos-originais/`, que o Git ignora.
-2. Recorte um quadrado de 256 px no rosto e salve em WebP como `images/lutadores/<id>.webp`, com o nome em minúsculas e até 30 KB.
-3. Preencha o campo `photo` do lutador em `data/lutadores.json`: caminho, licença e, quando houver, autor e links. Com permissão por escrito do autor, a licença é "Uso autorizado pelo autor".
-4. Use o `fighter_id` do lutador no `data/eventos.json`, rode o validador e gere o `dados.sql`.
+1. Recorte um quadrado de 256 px no rosto e salve em WebP como `images/lutadores/<id>.webp`, com o nome em minúsculas e até 30 KB. Guarde o original fora da pasta do projeto, se quiser mantê-lo: só o recorte final deve ficar em `images/lutadores/`.
+2. Preencha o campo `photo` do lutador em `data/lutadores.json`: caminho, licença e, quando houver, autor e links. Com permissão por escrito do autor, a licença é "Uso autorizado pelo autor".
+3. Use o `fighter_id` do lutador no `data/eventos.json`, rode o validador e gere o `dados.sql`.
 
 Só entram fotos com licença livre ou com permissão por escrito de quem tem os direitos.
 

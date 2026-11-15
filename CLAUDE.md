@@ -47,7 +47,6 @@ Site estático, gratuito e sem login que reúne a agenda dos próximos eventos d
 - supabase/schema.sql: tabelas e regras de segurança (RLS) do PostgreSQL (MVP2)
 - supabase/dados.sql: gerado, não editar à mão (MVP2)
 - images/lutadores/: fotos dos lutadores, uma por lutador, já recortadas, em WebP e com o nome em minúsculas (MVP3)
-- fotos-originais/: só no computador do mantenedor, fora do Git (.gitignore). Guarda os originais antes do recorte
 - fonts/: fontes Inter e Barlow Condensed (licença SIL OFL), hospedadas no projeto
 - docs/arquitetura.md: diagramas da arquitetura em Mermaid (MVP3)
 - README.md
@@ -147,7 +146,7 @@ Objetivo: ampliar a cobertura e o conteúdo do site sem perder as regras dos MVP
 - As fotos ficam no repositório, em images/lutadores/, publicadas pela Vercel (funcionam mesmo com o Supabase pausado). Formato WebP, quadrado, pequeno (cerca de 256 px e até 30 KB).
 - Para reaproveitar a foto entre eventos, cada lutador ganha um identificador fixo (fighter_id, ex.: "charles-oliveira"). No banco, isso vira uma tabela fighters (nome, foto, autor, licença e links), referenciada pelas lutas.
 - data/lutadores.json espelha a tabela fighters: { "fighters": [ { id, name, photo } ] }. photo é null ou { path, author, license, license_url, source_url }, com path em images/lutadores/ e terminando em .webp. O validador confere os dois arquivos juntos.
-- Fluxo de cada foto nova: salvar o original em fotos-originais/ (fora do Git), recortar um quadrado de 256 px centrado no rosto, converter para WebP em images/lutadores/<fighter_id>.webp (nome em minúsculas, porque a Vercel diferencia maiúsculas de minúsculas), cadastrar em data/lutadores.json, preencher o fighter_id nos eventos, rodar o validador e o gerar-sql, e colar o dados.sql no Supabase. Evitar fotos com marca de casa de apostas visível.
+- Fluxo de cada foto nova: o mantenedor salva a imagem bruta em images/lutadores/ (qualquer nome e formato) e avisa; ela é recortada num quadrado de 256 px centrado no rosto e substituída pelo arquivo final images/lutadores/<fighter_id>.webp (nome em minúsculas, porque a Vercel diferencia maiúsculas de minúsculas). O original não é guardado no projeto, para não pesar nem ser publicado por engano; quem quiser manter os originais guarda fora da pasta do projeto. Depois: cadastrar em data/lutadores.json, preencher o fighter_id nos eventos, rodar o validador e o gerar-sql, e colar o dados.sql no Supabase. Evitar fotos com marca de casa de apostas visível. Nunca commitar foto bruta: o validador avisa sobre qualquer arquivo de images/lutadores/ que não esteja em lutadores.json.
 - Escopo atual: só os lutadores das lutas principais dos próximos eventos. Eventos já encerrados e as demais lutas do card ficam com as iniciais.
 - Posição na tela: no destaque do topo, a foto fica no lugar das iniciais; nos cards da agenda e do calendário, um círculo pequeno ao lado do nome (foto ou iniciais). Créditos completos numa lista na aba Sobre e no title da foto.
 
