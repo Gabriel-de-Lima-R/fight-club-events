@@ -10,6 +10,9 @@ const FUSO_PADRAO = 'America/Sao_Paulo';
 // Um evento continua na agenda por algumas horas depois do início (o card ainda está acontecendo).
 const HORAS_VISIVEL_APOS_INICIO = 6;
 
+// Foto usada com permissão por escrito do autor: o crédito fica no title da foto e na aba Sobre.
+const LICENCA_PERMISSAO = 'Uso autorizado pelo autor';
+
 const NOMES_STATUS = {
   live: 'Ao vivo',
   cancelled: 'Cancelado',
@@ -314,8 +317,9 @@ function montarLutaDestaque(luta) {
   );
   painel.append(confronto, el('p', 'luta-categoria', `${luta.weight_class} · até ${luta.weight_limit_lbs} lb`));
 
-  // No destaque há espaço para o crédito das fotos à vista, com link para a licença.
-  luta.fighters.filter((lutador) => lutador.photo).forEach((lutador) => {
+  // Licença livre (ex.: CC BY) exige o crédito à vista, com link para a licença. Foto autorizada pelo autor
+  // não mostra linha aqui: o crédito fica no title da foto e na aba Sobre.
+  luta.fighters.filter((lutador) => lutador.photo && lutador.photo.license !== LICENCA_PERMISSAO).forEach((lutador) => {
     const autor = lutador.photo.author ? `${lutador.photo.author}, ` : '';
     const credito = el('p', 'destaque-credito', `Foto de ${lutador.name}: ${autor}`);
     credito.append(montarLinkLicenca(lutador.photo));
