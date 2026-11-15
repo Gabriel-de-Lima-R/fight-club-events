@@ -56,26 +56,48 @@ function eventoVisivel(evento, agora) {
   return fim > agora;
 }
 
-function montarLutador(lutador) {
+// situacao: 'vencedor', 'perdedor', 'empate' ou null (luta sem resultado para mostrar).
+function montarLutador(lutador, situacao) {
   const bloco = el('div', 'lutador');
+  if (situacao === 'vencedor') bloco.classList.add('vencedor');
+  if (situacao === 'perdedor') bloco.classList.add('perdedor');
   bloco.append(el('span', 'lutador-nome', lutador.name));
   // Sem cartel (record null) quando a fonte oficial não informa o cartel completo.
   if (lutador.record) bloco.append(el('span', 'lutador-cartel', formatarCartel(lutador.record)));
+  if (situacao === 'vencedor') bloco.append(el('span', 'selo selo-venceu', '🏆 Venceu'));
+  if (situacao === 'perdedor') {
+    const selo = el('span', 'selo selo-perdeu');
+    selo.append(el('span', 'selo-x', '✖︎'), ' Perdeu');
+    bloco.append(selo);
+  }
+  if (situacao === 'empate') bloco.append(el('span', 'selo selo-empate', 'Empate'));
   return bloco;
 }
 
-function montarLutaPrincipal(luta) {
+// Situação de cada lutador da luta, só para evento encerrado: [lutador 1, lutador 2].
+function situacoesDaLuta(luta, evento) {
+  if (evento.status !== 'completed' || !luta.result) return [null, null];
+  if (luta.result.outcome === 'draw') return ['empate', 'empate'];
+  return luta.result.winner === 1 ? ['vencedor', 'perdedor'] : ['perdedor', 'vencedor'];
+}
+
+function montarLutaPrincipal(luta, evento) {
   const bloco = el('div', 'luta-principal');
   bloco.append(el('p', 'luta-rotulo', 'Luta principal'));
 
+  const [situacao1, situacao2] = situacoesDaLuta(luta, evento);
   const confronto = el('div', 'luta-confronto');
   confronto.append(
-    montarLutador(luta.fighters[0]),
+    montarLutador(luta.fighters[0], situacao1),
     el('span', 'versus', 'vs'),
-    montarLutador(luta.fighters[1]),
+    montarLutador(luta.fighters[1], situacao2),
   );
   bloco.append(confronto);
   bloco.append(el('p', 'luta-categoria', `${luta.weight_class} · até ${luta.weight_limit_lbs} lb`));
+  // Evento encerrado sem resultado conferido na fonte oficial.
+  if (evento.status === 'completed' && !luta.result) {
+    bloco.append(el('p', 'luta-pendente', 'Não atualizado'));
+  }
   return bloco;
 }
 
@@ -116,10 +138,24 @@ function montarFonte(sourceUrl) {
 
 function montarEtiquetas(evento) {
   const etiquetas = el('div', 'evento-etiquetas');
-  etiquetas.append(el('span', 'etiqueta', evento.organization));
+  etiquetas.append(el('span', 'etiqueta', nomeOrganizacao(evento.organization)));
   if (NOMES_STATUS[evento.status]) etiquetas.append(el('span', 'etiqueta', NOMES_STATUS[evento.status]));
   if (evento.is_sample) etiquetas.append(el('span', 'etiqueta etiqueta-exemplo', 'Exemplo'));
   return etiquetas;
+}
+
+// O valor guardado em organization (ex.: "JUNGLE") nem sempre é o nome que aparece na tela.
+const NOMES_ORGANIZACAO = { JUNGLE: 'Jungle Fight' };
+
+function nomeOrganizacao(organizacao) {
+  return NOMES_ORGANIZACAO[organizacao] || organizacao;
+}
+
+// Evento com o card ainda não anunciado (fights vazio): no lugar da luta principal.
+function montarCardAnunciar() {
+  const bloco = el('div', 'luta-principal luta-a-anunciar');
+  bloco.append(el('p', 'luta-rotulo', 'Luta principal'), el('p', 'luta-categoria', 'Card a anunciar'));
+  return bloco;
 }
 
 function lutaPrincipal(evento) {
@@ -138,7 +174,7 @@ function montarEvento(evento, fuso) {
   );
 
   const principal = lutaPrincipal(evento);
-  if (principal) item.append(montarLutaPrincipal(principal));
+  item.append(principal ? montarLutaPrincipal(principal, evento) : montarCardAnunciar());
 
   const detalhes = el('dl', 'evento-detalhes');
   detalhes.append(el('dt', null, 'Onde assistir'), montarOndeAssistir(evento.broadcast));
@@ -279,7 +315,13 @@ function mostrarDestaque(evento, fuso) {
 
   const partes = [info];
   const luta = lutaPrincipal(evento);
-  if (luta) partes.push(montarLutaDestaque(luta));
+  if (luta) {
+    partes.push(montarLutaDestaque(luta));
+  } else {
+    const painel = el('div', 'destaque-luta');
+    painel.append(el('p', 'luta-rotulo', 'Luta principal'), el('p', 'luta-categoria', 'Card a anunciar'));
+    partes.push(painel);
+  }
   secao.replaceChildren(...partes);
   secao.hidden = false;
   atualizarFaixa();
@@ -300,7 +342,7 @@ function atualizarFaixa() {
   hero.dataset.modo = temDestaque && painelAtivo === 'painel-agenda' ? 'evento' : 'geral';
 }
 
-const ORDEM_ORGANIZACOES = ['UFC', 'PFL', 'ONE'];
+const ORDEM_ORGANIZACOES = ['UFC', 'PFL', 'ONE', 'KSW', 'JUNGLE'];
 
 // Organizações marcadas no filtro. Vazio = mostra todas.
 const organizacoesMarcadas = new Set();
@@ -368,7 +410,7 @@ function montarBotoesFiltro(dados) {
   const total = [...contagens.values()].reduce((soma, quantidade) => soma + quantidade, 0);
   const botoes = [montarBotaoFiltro('Todos', 'todos', total)];
   organizacoes.forEach((organizacao) => {
-    botoes.push(montarBotaoFiltro(organizacao, organizacao, contagens.get(organizacao) || 0));
+    botoes.push(montarBotaoFiltro(nomeOrganizacao(organizacao), organizacao, contagens.get(organizacao) || 0));
   });
 
   botoes.forEach((botao) => {
@@ -418,6 +460,7 @@ function converterEvento(linha) {
     card_section: luta.card_section,
     weight_class: luta.weight_class,
     weight_limit_lbs: luta.weight_limit_lbs,
+    result: luta.result_outcome ? { outcome: luta.result_outcome, winner: luta.result_winner } : null,
     fighters: [...luta.fight_fighters].sort((a, b) => a.position - b.position).map((lutador) => ({
       name: lutador.name,
       nationality: lutador.nationality,

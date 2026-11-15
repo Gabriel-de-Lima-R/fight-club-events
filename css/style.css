@@ -772,7 +772,7 @@ main.container {
   color: var(--destaque);
 }
 
-/* A primeira etiqueta é a organização (UFC, PFL ou ONE) */
+/* A primeira etiqueta é a organização (UFC, PFL, ONE, KSW ou Jungle Fight) */
 .etiqueta:first-child {
   background: var(--destaque);
   color: var(--sobre-destaque);
@@ -871,6 +871,48 @@ main.container {
   text-transform: uppercase;
   color: #cfc8c0;
   text-align: center;
+}
+
+/* Resultado da luta (eventos encerrados, vistos pelo calendário) */
+.lutador {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.lutador:last-child { align-items: flex-end; }
+
+/* O perdedor esmaece só o nome e o cartel: o selo "Perdeu" continua legível */
+.lutador.perdedor .lutador-nome,
+.lutador.perdedor .lutador-cartel { opacity: 0.42; }
+
+.selo {
+  margin-top: 8px;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-family: var(--fonte-corpo);
+  font-size: 0.68rem;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.selo-venceu { background: #f2c14e; color: #2b1d00; }
+.selo-perdeu { background: var(--vermelho-logo); color: #ffffff; }
+.selo-x { color: #000000; }
+.selo-empate { border: 1px solid rgba(255, 255, 255, 0.55); color: #ffffff; }
+
+.luta-pendente {
+  display: table;
+  margin: 10px auto 0;
+  padding: 3px 10px;
+  border: 1px dashed rgba(255, 255, 255, 0.35);
+  border-radius: 99px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #cfc8c0;
 }
 
 /* Detalhes: onde assistir e fonte */
@@ -1027,8 +1069,6 @@ button.cal-dia {
   letter-spacing: 0.03em;
   text-transform: uppercase;
 }
-
-.evento-passado { opacity: 0.6; }
 
 /* Rodapé */
 .rodape {

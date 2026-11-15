@@ -10,7 +10,7 @@ const arquivo = process.argv[2] || path.join(__dirname, '..', 'data', 'eventos.j
 const STATUS = ['scheduled', 'live', 'completed', 'cancelled', 'postponed'];
 const CARD_SECTIONS = ['main_event', 'co_main', 'main_card', 'prelims', 'early_prelims'];
 const BROADCAST_TYPES = ['streaming', 'tv'];
-const ORGANIZACOES = ['UFC', 'PFL', 'ONE'];
+const ORGANIZACOES = ['UFC', 'PFL', 'ONE', 'KSW', 'JUNGLE'];
 const CAMPOS_RECORD = ['wins', 'losses', 'draws', 'no_contests'];
 const DIAS_MAXIMOS_SEM_ATUALIZAR = 7;
 
@@ -102,6 +102,29 @@ function validarLuta(luta, posicao, ordensVistas, rotuloEvento) {
     return;
   }
   luta.fighters.forEach((lutador, i) => validarLutador(lutador, `${onde}, lutador ${i + 1}`));
+
+  validarResultado(luta.result, onde);
+}
+
+// result pode faltar ou ser null (luta sem resultado conferido). Quando existe, tem só outcome e winner.
+function validarResultado(resultado, onde) {
+  if (resultado === undefined || resultado === null) return;
+  if (!ehObjeto(resultado)) {
+    erros.push(`${onde}: o campo result precisa ser um objeto ou null`);
+    return;
+  }
+  const campos = Object.keys(resultado).filter((campo) => campo !== 'outcome' && campo !== 'winner');
+  if (campos.length > 0) erros.push(`${onde}: o campo result só aceita outcome e winner (encontrado: ${campos.join(', ')})`);
+
+  if (resultado.outcome === 'win') {
+    if (resultado.winner !== 1 && resultado.winner !== 2) {
+      erros.push(`${onde}: em result com outcome win, o campo winner precisa ser 1 ou 2`);
+    }
+  } else if (resultado.outcome === 'draw') {
+    if (resultado.winner !== null) erros.push(`${onde}: em result com outcome draw, o campo winner precisa ser null`);
+  } else {
+    erros.push(`${onde}: o campo result.outcome precisa ser win ou draw`);
+  }
 }
 
 function validarEvento(evento, posicao, idsVistos, agora) {
@@ -165,8 +188,9 @@ function validarEvento(evento, posicao, idsVistos, agora) {
     erros.push(`${rotulo}: o campo source_url precisa ser null ou um link http(s)`);
   }
 
-  if (!Array.isArray(evento.fights) || evento.fights.length === 0) {
-    erros.push(`${rotulo}: o evento não tem lutas`);
+  // Lista vazia é válida: o card ainda não foi anunciado (o site mostra "Card a anunciar").
+  if (!Array.isArray(evento.fights)) {
+    erros.push(`${rotulo}: o campo fights precisa ser uma lista (pode ser vazia)`);
     return;
   }
   const ordensVistas = new Set();
