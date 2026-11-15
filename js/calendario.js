@@ -115,9 +115,7 @@ function montarCalendario(dados) {
 
     const lista = el('ol', 'lista-eventos');
     eventosPorDia.get(estado.selecionado).forEach((evento) => {
-      const cartao = montarEvento(evento, fuso);
-      if (estado.selecionado < hoje) cartao.classList.add('evento-passado');
-      lista.append(cartao);
+      lista.append(montarEvento(evento, fuso));
     });
     elDetalhe.replaceChildren(el('h2', 'cal-detalhe-titulo', nomeDoDia(estado.selecionado)), lista);
   }
