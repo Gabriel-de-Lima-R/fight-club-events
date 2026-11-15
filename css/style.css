@@ -421,6 +421,7 @@ main.container {
 .destaque-avatar {
   display: grid;
   place-items: center;
+  overflow: hidden;
   width: 72px;
   height: 72px;
   border: 2px solid rgba(255, 255, 255, 0.6);
@@ -447,6 +448,14 @@ main.container {
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
+
+.destaque-credito {
+  margin: 8px 0 0;
+  font-size: 0.72rem;
+  color: #cfc8c0;
+  text-align: center;
+}
+.destaque-credito a { color: inherit; }
 
 /* Páginas Sobre o site e Guia do MMA */
 .pagina {
@@ -538,6 +547,40 @@ main.container {
 .cartoes-numerados { counter-reset: passo; }
 .cartoes-numerados .cartao { counter-increment: passo; }
 .cartoes-numerados .cartao-titulo::before { content: counter(passo) ". "; }
+
+/* Créditos das fotos (aba Sobre) */
+.creditos {
+  margin: 0 0 16px;
+  padding: 16px 20px;
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: 12px;
+}
+.creditos-titulo {
+  margin: 0 0 6px;
+  font-family: var(--fonte-titulo);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.creditos-intro,
+.creditos-vazio {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--texto-suave);
+}
+.creditos-vazio { margin-top: 8px; }
+.creditos-lista {
+  display: grid;
+  gap: 6px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.95rem;
+  color: var(--texto-suave);
+}
+.creditos-lista a { color: var(--destaque); }
 
 .aviso,
 .dica {
@@ -830,8 +873,69 @@ main.container {
   gap: 10px;
 }
 
-.lutador { min-width: 0; }
-.lutador:last-child { text-align: right; }
+/* Lutador nos cards: círculo (foto ou iniciais) do lado de fora, nome perto do "vs" */
+.lutador {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.lutador:last-child {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+.lutador-texto {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+.lutador:last-child .lutador-texto { align-items: flex-end; }
+
+.lutador-avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  font-family: var(--fonte-titulo);
+  font-size: 0.95rem;
+  font-style: italic;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+/* Foto dentro do círculo (cards e destaque) */
+.com-foto img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Celular estreito: o círculo vai para cima do nome, para o nome não quebrar no meio */
+@media (max-width: 420px) {
+  .lutador {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .lutador:last-child {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  .lutador-avatar {
+    width: 38px;
+    height: 38px;
+    font-size: 0.85rem;
+  }
+}
 
 .lutador-nome {
   display: block;
@@ -874,16 +978,10 @@ main.container {
 }
 
 /* Resultado da luta (eventos encerrados, vistos pelo calendário) */
-.lutador {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-.lutador:last-child { align-items: flex-end; }
-
-/* O perdedor esmaece só o nome e o cartel: o selo "Perdeu" continua legível */
+/* O perdedor esmaece o nome, o cartel e o círculo: o selo "Perdeu" continua legível */
 .lutador.perdedor .lutador-nome,
-.lutador.perdedor .lutador-cartel { opacity: 0.42; }
+.lutador.perdedor .lutador-cartel,
+.lutador.perdedor .lutador-avatar { opacity: 0.42; }
 
 .selo {
   margin-top: 8px;

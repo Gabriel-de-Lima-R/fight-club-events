@@ -1,11 +1,14 @@
-// Valida data/eventos.json antes de cada commit.
-// Uso: node scripts/validar.js [caminho/do/arquivo.json]
+// Valida data/eventos.json e data/lutadores.json antes de cada commit.
+// Uso: node scripts/validar.js [caminho/do/eventos.json]
+// O lutadores.json é procurado na mesma pasta do eventos.json.
 // Termina com falha (código 1) se houver erro. Avisos não bloqueiam.
 
 const fs = require('fs');
 const path = require('path');
 
 const arquivo = process.argv[2] || path.join(__dirname, '..', 'data', 'eventos.json');
+const arquivoLutadores = path.join(path.dirname(arquivo), 'lutadores.json');
+const raizProjeto = path.join(__dirname, '..');
 
 const STATUS = ['scheduled', 'live', 'completed', 'cancelled', 'postponed'];
 const CARD_SECTIONS = ['main_event', 'co_main', 'main_card', 'prelims', 'early_prelims'];
@@ -13,6 +16,13 @@ const BROADCAST_TYPES = ['streaming', 'tv'];
 const ORGANIZACOES = ['UFC', 'PFL', 'ONE', 'KSW', 'JUNGLE'];
 const CAMPOS_RECORD = ['wins', 'losses', 'draws', 'no_contests'];
 const DIAS_MAXIMOS_SEM_ATUALIZAR = 7;
+// Foto sem licença livre, publicada com permissão por escrito do dono dos direitos.
+const LICENCA_PERMISSAO = 'Uso autorizado pelo autor';
+const TAMANHO_MAXIMO_FOTO = 30 * 1024;
+const FORMATO_ID_LUTADOR = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+
+// fighter_id usados nos eventos, conferidos depois contra o lutadores.json.
+const lutadoresUsados = [];
 
 const erros = [];
 const avisos = [];
@@ -49,6 +59,14 @@ function validarLutador(lutador, onde) {
     return;
   }
   if (!textoPreenchido(lutador.name)) erros.push(`${onde}: o campo name está vazio`);
+  // fighter_id é opcional: ausente ou null para lutador ainda sem cadastro em lutadores.json.
+  if (lutador.fighter_id !== undefined && lutador.fighter_id !== null) {
+    if (typeof lutador.fighter_id !== 'string' || !FORMATO_ID_LUTADOR.test(lutador.fighter_id)) {
+      erros.push(`${onde}: o campo fighter_id precisa ser minúsculo, sem acento, com hífens (ex.: charles-oliveira)`);
+    } else {
+      lutadoresUsados.push({ id: lutador.fighter_id, onde });
+    }
+  }
   // nationality pode ser null quando a fonte oficial não informa.
   if (lutador.nationality !== null && !textoPreenchido(lutador.nationality)) {
     erros.push(`${onde}: o campo nationality precisa ser um texto ou null`);
@@ -223,25 +241,93 @@ function validar(dados) {
   dados.events.forEach((evento, i) => validarEvento(evento, i, idsVistos, agora));
 }
 
-let conteudo;
-try {
-  conteudo = fs.readFileSync(arquivo, 'utf8');
-} catch (e) {
-  console.error(`ERRO: não consegui abrir o arquivo ${arquivo}`);
-  process.exit(1);
+function validarFoto(foto, onde, id) {
+  if (foto === null) return;
+  if (!ehObjeto(foto)) {
+    erros.push(`${onde}: o campo photo precisa ser um objeto ou null`);
+    return;
+  }
+
+  const esperado = `images/lutadores/${id}.webp`;
+  if (foto.path !== esperado) {
+    erros.push(`${onde}: o campo photo.path precisa ser ${esperado}`);
+  } else {
+    const caminho = path.join(raizProjeto, foto.path);
+    if (!fs.existsSync(caminho)) {
+      erros.push(`${onde}: o arquivo ${foto.path} não existe`);
+    } else if (fs.statSync(caminho).size > TAMANHO_MAXIMO_FOTO) {
+      avisos.push(`${onde}: a foto ${foto.path} passa de 30 KB. Reduza antes de publicar`);
+    }
+  }
+
+  if (!textoPreenchido(foto.license)) {
+    erros.push(`${onde}: o campo photo.license está vazio`);
+    return;
+  }
+
+  if (foto.license === LICENCA_PERMISSAO) {
+    // Permissão por escrito: o crédito é a própria licença. Autor e link da origem são opcionais (null).
+    if (foto.license_url !== null) erros.push(`${onde}: com "${LICENCA_PERMISSAO}", o campo photo.license_url precisa ser null`);
+    if (foto.author !== null && !textoPreenchido(foto.author)) erros.push(`${onde}: o campo photo.author precisa ser um texto ou null`);
+    if (foto.source_url !== null && !ehLink(foto.source_url)) erros.push(`${onde}: o campo photo.source_url precisa ser um link ou null`);
+    return;
+  }
+
+  // Licença livre: autor, link da licença e link da origem são obrigatórios.
+  if (!textoPreenchido(foto.author)) erros.push(`${onde}: o campo photo.author está vazio (o crédito ao autor é obrigatório)`);
+  if (!ehLink(foto.license_url)) erros.push(`${onde}: o campo photo.license_url precisa ser o link da licença`);
+  if (!ehLink(foto.source_url)) erros.push(`${onde}: o campo photo.source_url precisa ser o link da origem da foto`);
 }
 
-let dados;
-try {
-  dados = JSON.parse(conteudo.replace(/^﻿/, ''));
-} catch (e) {
-  console.error(`ERRO: o arquivo ${arquivo} não é um JSON válido (${e.message})`);
-  process.exit(1);
+function validarLutadores(dadosLutadores) {
+  if (!ehObjeto(dadosLutadores) || !Array.isArray(dadosLutadores.fighters)) {
+    erros.push('lutadores.json: o arquivo precisa conter um objeto com a lista fighters');
+    return new Set();
+  }
+
+  const ids = new Set();
+  dadosLutadores.fighters.forEach((lutador, i) => {
+    const onde = `Lutador ${textoPreenchido(lutador && lutador.id) ? lutador.id : i + 1}`;
+    if (!ehObjeto(lutador)) {
+      erros.push(`${onde}: o lutador precisa ser um objeto`);
+      return;
+    }
+    if (typeof lutador.id !== 'string' || !FORMATO_ID_LUTADOR.test(lutador.id)) {
+      erros.push(`${onde}: o campo id precisa ser minúsculo, sem acento, com hífens (ex.: charles-oliveira)`);
+      return;
+    }
+    if (ids.has(lutador.id)) erros.push(`${onde}: o campo id está repetido`);
+    ids.add(lutador.id);
+    if (!textoPreenchido(lutador.name)) erros.push(`${onde}: o campo name está vazio`);
+    validarFoto(lutador.photo, onde, lutador.id);
+  });
+  return ids;
 }
 
-validar(dados);
+function lerJson(caminho) {
+  let conteudo;
+  try {
+    conteudo = fs.readFileSync(caminho, 'utf8');
+  } catch (e) {
+    console.error(`ERRO: não consegui abrir o arquivo ${caminho}`);
+    process.exit(1);
+  }
+  try {
+    return JSON.parse(conteudo.replace(/^﻿/, ''));
+  } catch (e) {
+    console.error(`ERRO: o arquivo ${caminho} não é um JSON válido (${e.message})`);
+    process.exit(1);
+  }
+}
 
-console.log(`Validando ${path.relative(process.cwd(), arquivo) || arquivo}`);
+validar(lerJson(arquivo));
+
+const idsLutadores = validarLutadores(lerJson(arquivoLutadores));
+lutadoresUsados.forEach(({ id, onde }) => {
+  if (!idsLutadores.has(id)) erros.push(`${onde}: o fighter_id ${id} não existe em lutadores.json`);
+});
+
+console.log(`Validando ${path.relative(process.cwd(), arquivo) || arquivo} e ${path.relative(process.cwd(), arquivoLutadores)}`);
 
 if (avisos.length > 0) {
   console.log(`\n${avisos.length} aviso(s):`);

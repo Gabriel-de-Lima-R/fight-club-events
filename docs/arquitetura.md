@@ -143,7 +143,7 @@ erDiagram
         text name
         text photo_path "images/lutadores/arquivo.webp (null = iniciais)"
         text photo_author "crédito ao autor"
-        text photo_license "ex.: CC BY-SA 4.0"
+        text photo_license "ex.: CC BY-SA 4.0 ou Uso autorizado pelo autor"
         text photo_license_url
         text photo_source_url "página de origem da foto"
     }
@@ -155,5 +155,5 @@ Decisões de modelagem:
 - **Eventos sem card**: um evento com o card ainda não anunciado existe em `events` sem nenhuma linha em `fights`. O site mostra "Card a anunciar" e o validador aceita `fights` vazio. Nunca se inventam lutadores.
 - **Cartel em `fight_fighters`**: `wins`, `losses` e os demais ficam na linha do lutador porque são o cartel **naquele evento**.
 - **`fight_fighters` mantém `name`**: serve de reserva caso o lutador não tenha registro em `fighters`. `fighter_id` pode ser nulo para lutadores ainda sem cadastro.
-- **Fotos no repositório**: `fighters` guarda só o caminho e o crédito. O arquivo fica em `images/lutadores/`, em WebP, quadrado, com cerca de 256 px e até 30 KB. Lutador sem foto conferida aparece com as iniciais.
+- **Fotos no repositório**: `fighters` guarda só o caminho e o crédito. O arquivo fica em `images/lutadores/`, em WebP, quadrado, com cerca de 256 px e até 30 KB. Lutador sem foto conferida aparece com as iniciais. A foto vem de licença livre (ex.: Wikimedia Commons) ou, sem ela, de permissão por escrito do dono dos direitos; nesse caso a licença fica "Uso autorizado pelo autor" e `photo_license_url` fica nulo.
 - **JSON espelha o banco**: `data/eventos.json` tem `result` nas lutas e `fighter_id` nos lutadores. `data/lutadores.json` tem os dados de `fighters`.

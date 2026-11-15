@@ -1,0 +1,48 @@
+{
+  "fighters": [
+    {
+      "id": "charles-oliveira",
+      "name": "Charles Oliveira",
+      "photo": {
+        "path": "images/lutadores/charles-oliveira.webp",
+        "author": null,
+        "license": "Uso autorizado pelo autor",
+        "license_url": null,
+        "source_url": null
+      }
+    },
+    {
+      "id": "diego-lopes",
+      "name": "Diego Lopes",
+      "photo": {
+        "path": "images/lutadores/diego-lopes.webp",
+        "author": null,
+        "license": "Uso autorizado pelo autor",
+        "license_url": null,
+        "source_url": null
+      }
+    },
+    {
+      "id": "joshua-pacio",
+      "name": "Joshua Pacio",
+      "photo": {
+        "path": "images/lutadores/joshua-pacio.webp",
+        "author": null,
+        "license": "Uso autorizado pelo autor",
+        "license_url": null,
+        "source_url": null
+      }
+    },
+    {
+      "id": "keito-yamakita",
+      "name": "Keito Yamakita",
+      "photo": {
+        "path": "images/lutadores/keito-yamakita.webp",
+        "author": null,
+        "license": "Uso autorizado pelo autor",
+        "license_url": null,
+        "source_url": null
+      }
+    }
+  ]
+}

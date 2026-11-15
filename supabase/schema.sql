@@ -44,9 +44,34 @@ create table if not exists public.fights (
   )
 );
 
+-- Lutador com identificador fixo, para reaproveitar a foto entre eventos.
+-- A foto fica no repositório (images/lutadores/); aqui só o caminho e o crédito.
+create table if not exists public.fighters (
+  id                text primary key check (id ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
+  name              text not null,
+  photo_path        text,
+  photo_author      text,
+  photo_license     text,
+  photo_license_url text,
+  photo_source_url  text,
+  -- Com foto, o crédito é obrigatório: licença livre exige autor e origem; permissão por escrito
+  -- ("Uso autorizado pelo autor") dispensa o nome do autor e o link.
+  constraint fighters_foto_com_credito check (
+    photo_path is null
+    or (
+      photo_license is not null
+      and (
+        photo_license = 'Uso autorizado pelo autor'
+        or (photo_author is not null and photo_source_url is not null)
+      )
+    )
+  )
+);
+
 create table if not exists public.fight_fighters (
   id           bigint generated always as identity primary key,
   fight_id     bigint not null references public.fights (id) on delete cascade,
+  fighter_id   text references public.fighters (id) on delete set null,
   position     smallint not null check (position in (1, 2)),
   name         text not null,
   nationality  text,
@@ -69,13 +94,15 @@ alter table public.events           enable row level security;
 alter table public.event_broadcasts enable row level security;
 alter table public.fights           enable row level security;
 alter table public.fight_fighters   enable row level security;
+alter table public.fighters         enable row level security;
 
 create policy "leitura publica" on public.events           for select to anon, authenticated using (true);
 create policy "leitura publica" on public.event_broadcasts for select to anon, authenticated using (true);
 create policy "leitura publica" on public.fights           for select to anon, authenticated using (true);
 create policy "leitura publica" on public.fight_fighters   for select to anon, authenticated using (true);
+create policy "leitura publica" on public.fighters         for select to anon, authenticated using (true);
 
 -- Como "Automatically expose new tables" ficou desmarcado, é preciso liberar
 -- só a leitura para a API.
 grant usage on schema public to anon, authenticated;
-grant select on public.events, public.event_broadcasts, public.fights, public.fight_fighters to anon, authenticated;
+grant select on public.events, public.event_broadcasts, public.fights, public.fight_fighters, public.fighters to anon, authenticated;

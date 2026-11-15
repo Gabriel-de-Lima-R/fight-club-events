@@ -4,6 +4,6 @@
 node scripts/validar.js
 if [ $? -ne 0 ]; then
   echo ""
-  echo "Commit bloqueado: corrija os erros de data/eventos.json e tente de novo."
+  echo "Commit bloqueado: corrija os erros de data/eventos.json ou data/lutadores.json e tente de novo."
   exit 1
 fi

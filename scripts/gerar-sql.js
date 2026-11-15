@@ -1,4 +1,4 @@
-// Gera supabase/dados.sql (comandos insert) a partir de data/eventos.json.
+// Gera supabase/dados.sql (comandos insert) a partir de data/eventos.json e data/lutadores.json.
 // Uso: node scripts/gerar-sql.js
 // Não se conecta a nada: só lê o JSON e escreve o arquivo .sql.
 // O SQL apaga os dados atuais e reinsere tudo, então pode ser rodado de novo.
@@ -7,6 +7,7 @@ const fs = require('fs');
 const path = require('path');
 
 const entrada = path.join(__dirname, '..', 'data', 'eventos.json');
+const entradaLutadores = path.join(__dirname, '..', 'data', 'lutadores.json');
 const saida = path.join(__dirname, '..', 'supabase', 'dados.sql');
 
 function sql(valor) {
@@ -21,6 +22,11 @@ function linha(valores) {
 }
 
 const dados = JSON.parse(fs.readFileSync(entrada, 'utf8'));
+const dadosLutadores = JSON.parse(fs.readFileSync(entradaLutadores, 'utf8'));
+const cadastro = dadosLutadores.fighters.map((f) => {
+  const foto = f.photo || {};
+  return linha([f.id, f.name, foto.path, foto.author, foto.license, foto.license_url, foto.source_url]);
+});
 const eventos = [];
 const transmissoes = [];
 const lutas = [];
@@ -42,7 +48,7 @@ for (const ev of dados.events) {
       // O id da luta é buscado pelo evento e pela ordem, pois é gerado pelo banco.
       lutadores.push(
         `((select id from public.fights where event_id = ${sql(ev.id)} and "order" = ${luta.order}), ` +
-        [i + 1, l.name, l.nationality, r.wins, r.losses, r.draws, r.no_contests, l.height_ft, l.reach_in]
+        [l.fighter_id, i + 1, l.name, l.nationality, r.wins, r.losses, r.draws, r.no_contests, l.height_ft, l.reach_in]
           .map(sql).join(', ') + ')'
       );
     });
@@ -57,7 +63,13 @@ const partes = [
   '',
   '-- As demais tabelas são apagadas junto (on delete cascade).',
   'delete from public.events;',
+  'delete from public.fighters;',
   '',
+  ...(cadastro.length ? [
+    'insert into public.fighters (id, name, photo_path, photo_author, photo_license, photo_license_url, photo_source_url) values',
+    cadastro.join(',\n') + ';',
+    '',
+  ] : []),
   'insert into public.events (id, is_sample, organization, name, starts_at, status, venue_name, venue_city, venue_country, source_url) values',
   eventos.join(',\n') + ';',
   '',
@@ -75,7 +87,7 @@ if (lutas.length) {
     'insert into public.fights (event_id, "order", card_section, weight_class, weight_limit_lbs, result_outcome, result_winner) values',
     lutas.join(',\n') + ';',
     '',
-    'insert into public.fight_fighters (fight_id, position, name, nationality, wins, losses, draws, no_contests, height_ft, reach_in) values',
+    'insert into public.fight_fighters (fight_id, fighter_id, position, name, nationality, wins, losses, draws, no_contests, height_ft, reach_in) values',
     lutadores.join(',\n') + ';',
     ''
   );
@@ -84,4 +96,4 @@ partes.push('commit;', '');
 
 fs.mkdirSync(path.dirname(saida), { recursive: true });
 fs.writeFileSync(saida, partes.join('\n'));
-console.log(`Gerado ${path.relative(process.cwd(), saida)}: ${eventos.length} eventos, ${transmissoes.length} transmissões, ${lutas.length} lutas, ${lutadores.length} lutadores.`);
+console.log(`Gerado ${path.relative(process.cwd(), saida)}: ${cadastro.length} lutadores cadastrados, ${eventos.length} eventos, ${transmissoes.length} transmissões, ${lutas.length} lutas, ${lutadores.length} lutadores.`);
