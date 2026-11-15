@@ -898,7 +898,8 @@ main.container {
   white-space: nowrap;
 }
 .selo-venceu { background: #f2c14e; color: #2b1d00; }
-.selo-perdeu { border: 1px solid rgba(255, 255, 255, 0.35); color: #e6dfd8; }
+.selo-perdeu { background: var(--vermelho-logo); color: #ffffff; }
+.selo-x { color: #000000; }
 .selo-empate { border: 1px solid rgba(255, 255, 255, 0.55); color: #ffffff; }
 
 .luta-pendente {
