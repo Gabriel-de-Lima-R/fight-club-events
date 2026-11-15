@@ -23,6 +23,8 @@ const FORMATO_ID_LUTADOR = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
 // fighter_id usados nos eventos, conferidos depois contra o lutadores.json.
 const lutadoresUsados = [];
+// Caminhos de foto cadastrados em lutadores.json, para achar arquivos soltos em images/lutadores/.
+const fotosReferenciadas = new Set();
 
 const erros = [];
 const avisos = [];
@@ -248,6 +250,7 @@ function validarFoto(foto, onde, id) {
     return;
   }
 
+  fotosReferenciadas.add(foto.path);
   const esperado = `images/lutadores/${id}.webp`;
   if (foto.path !== esperado) {
     erros.push(`${onde}: o campo photo.path precisa ser ${esperado}`);
@@ -326,6 +329,16 @@ const idsLutadores = validarLutadores(lerJson(arquivoLutadores));
 lutadoresUsados.forEach(({ id, onde }) => {
   if (!idsLutadores.has(id)) erros.push(`${onde}: o fighter_id ${id} não existe em lutadores.json`);
 });
+
+// Arquivo em images/lutadores/ que não está no cadastro: foto bruta esquecida ou nome fora do padrão.
+const pastaFotos = path.join(raizProjeto, 'images', 'lutadores');
+if (fs.existsSync(pastaFotos)) {
+  fs.readdirSync(pastaFotos).forEach((nome) => {
+    if (!fotosReferenciadas.has(`images/lutadores/${nome}`)) {
+      avisos.push(`images/lutadores/${nome} não está em lutadores.json (foto bruta ou nome fora do padrão? só o recorte final, em minúsculas, deve ficar nessa pasta)`);
+    }
+  });
+}
 
 console.log(`Validando ${path.relative(process.cwd(), arquivo) || arquivo} e ${path.relative(process.cwd(), arquivoLutadores)}`);
 

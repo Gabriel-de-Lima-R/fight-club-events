@@ -10,7 +10,7 @@ flowchart LR
     mantenedor(["Mantenedor<br/>(edita os dados à mão)"])
 
     subgraph fc ["Fight Club"]
-        site["Site estático<br/>agenda, calendário e resultados"]
+        site["Site estático<br/>agenda e calendário (com o resultado das lutas passadas)"]
     end
 
     fontes[("Fontes oficiais<br/>UFC, PFL, ONE, KSW e Jungle Fight")]
@@ -33,7 +33,7 @@ flowchart TB
     visitante(["Visitante"])
 
     subgraph vercel ["Vercel (plano gratuito)"]
-        estaticos["Arquivos estáticos<br/>index.html, css/, js/app.js, js/calendario.js"]
+        estaticos["Arquivos estáticos<br/>index.html, css/, js/app.js, js/calendario.js, fonts/"]
         fotos["images/lutadores/<br/>(fotos WebP)"]
         json["data/eventos.json e data/lutadores.json<br/>(fallback)"]
     end
@@ -49,7 +49,6 @@ flowchart TB
         validar["scripts/validar.js<br/>(também roda no pre-commit)"]
         gerar["scripts/gerar-sql.js"]
         dadossql["supabase/dados.sql<br/>(gerado)"]
-        originais["fotos-originais/<br/>(só no computador, fora do Git)"]
     end
 
     github[("GitHub<br/>branches develop e main")]
@@ -60,8 +59,7 @@ flowchart TB
     estaticos -->|"4. exibe as fotos"| fotos
 
     editor -->|"edita"| json
-    originais -->|"recorte quadrado de 256 px em WebP"| editor
-    editor -->|"adiciona"| fotos
+    editor -->|"adiciona o recorte em WebP"| fotos
     json --> validar
     json --> gerar --> dadossql
     dadossql -->|"colado no SQL Editor"| banco
@@ -78,11 +76,11 @@ Como o site carrega os dados ([js/app.js](../js/app.js)):
 
 Como os dados chegam ao banco (fluxo manual, ver CLAUDE.md):
 
-1. Editar `data/eventos.json` e, se houver lutador novo ou foto nova, `data/lutadores.json` e `images/lutadores/`. A foto original fica em `fotos-originais/` (fora do Git); só o recorte de 256 px em WebP, com o nome em minúsculas, vai para `images/lutadores/`.
+1. Editar `data/eventos.json` e, se houver lutador novo ou foto nova, `data/lutadores.json` e `images/lutadores/`. Só o recorte quadrado de 256 px em WebP, com o nome em minúsculas, fica em `images/lutadores/`; o original não é guardado no projeto, e o validador avisa se sobrar algum arquivo que não esteja em `lutadores.json`.
 2. Rodar `node scripts/validar.js` (o pre-commit também roda e bloqueia se houver erro).
 3. Rodar `node scripts/gerar-sql.js`, que cria `supabase/dados.sql`.
 4. Colar o `dados.sql` no SQL Editor do Supabase (ele apaga e reinsere tudo).
-5. Commit com o JSON e o `dados.sql` juntos, e envio para o GitHub.
+5. Commit com os JSON, as fotos novas e o `dados.sql` juntos, e envio para o GitHub.
 
 Segurança: a chave publicável do Supabase fica no código. A RLS só permite leitura para o acesso anônimo. A senha do banco e a chave service_role nunca entram no repositório.
 
@@ -95,7 +93,7 @@ erDiagram
     events ||--o{ event_broadcasts : "tem"
     events ||--o{ fights : "tem"
     fights ||--|{ fight_fighters : "tem 2"
-    fighters ||--o{ fight_fighters : "aparece em"
+    fighters |o--o{ fight_fighters : "aparece em"
 
     events {
         text id PK
@@ -156,6 +154,6 @@ Decisões de modelagem:
 - **Resultado dentro de `fights`**: como cada luta tem no máximo um resultado, colunas na própria tabela evitam um JOIN a mais. `result_outcome` nulo significa "ainda sem resultado conferido" (o site mostra o selo "Não atualizado"). Só se guarda quem venceu ou se empatou: sem método, round nem tempo. Luta cancelada e luta sem resultado (no contest) ficam sem resultado.
 - **Eventos sem card**: um evento com o card ainda não anunciado existe em `events` sem nenhuma linha em `fights`. O site mostra "Card a anunciar" e o validador aceita `fights` vazio. Nunca se inventam lutadores.
 - **Cartel em `fight_fighters`**: `wins`, `losses` e os demais ficam na linha do lutador porque são o cartel **naquele evento**.
-- **`fight_fighters` mantém `name`**: serve de reserva caso o lutador não tenha registro em `fighters`. `fighter_id` pode ser nulo para lutadores ainda sem cadastro.
-- **Fotos no repositório**: `fighters` guarda só o caminho e o crédito. O arquivo fica em `images/lutadores/`, em WebP, quadrado, com cerca de 256 px e até 30 KB. Lutador sem foto conferida aparece com as iniciais. A foto vem de licença livre (ex.: Wikimedia Commons) ou, sem ela, de permissão por escrito do dono dos direitos; nesse caso a licença fica "Uso autorizado pelo autor" e `photo_license_url`, `photo_author` e `photo_source_url` podem ficar nulos. Por enquanto, só as lutas principais dos próximos eventos têm foto. O crédito aparece no `title` da foto, na lista da aba Sobre e, para licença livre, também no destaque do topo.
+- **`fight_fighters` mantém `name`**: serve de reserva caso o lutador não tenha registro em `fighters`. `fighter_id` pode ser nulo para lutadores ainda sem cadastro (por isso a relação com `fighters` é opcional no diagrama).
+- **Fotos no repositório**: `fighters` guarda só o caminho e o crédito. O arquivo fica em `images/lutadores/`, em WebP, quadrado, com cerca de 256 px e até 30 KB. Lutador sem foto conferida aparece com as iniciais. A foto vem de licença livre (ex.: Wikimedia Commons) ou, sem ela, de permissão por escrito do dono dos direitos; nesse caso a licença fica "Uso autorizado pelo autor" e `photo_license_url`, `photo_author` e `photo_source_url` podem ficar nulos. Por enquanto, só as lutas principais dos próximos eventos têm foto. O banco recusa foto sem crédito (regra `fighters_foto_com_credito`). O crédito aparece no `title` da foto, na lista da aba Sobre e, para licença livre, também no destaque do topo.
 - **JSON espelha o banco**: `data/eventos.json` tem `result` nas lutas e `fighter_id` nos lutadores. `data/lutadores.json` tem os dados de `fighters`.
