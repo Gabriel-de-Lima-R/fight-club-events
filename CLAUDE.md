@@ -160,6 +160,10 @@ Objetivo: ampliar a cobertura e o conteúdo do site sem perder as regras dos MVP
 - Fase 3: resultados (esboço visual, dados, selos no card do calendário).
 - Fase 4: fotos dos lutadores (identificador fixo, tabela fighters, fotos das lutas principais dos próximos eventos, com crédito).
 
+## MVP4: enriquecer a arquitetura
+
+Objetivo: enriquecer a arquitetura (ideias: subir um serviço na nuvem ou um servidor próprio). Escopo ainda não definido: descrever e aprovar antes de qualquer implementação, e dizer explicitamente quais restrições do projeto (como "100% gratuito" e "sem backend") mudariam.
+
 ## Fora dos MVPs (não implementar sem pedido)
 
 Atualização automática de dados, card completo detalhado, resultados ao vivo (durante o evento), favoritos, lembretes, notícias, busca por lutador.
