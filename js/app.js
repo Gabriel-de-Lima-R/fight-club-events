@@ -65,6 +65,7 @@ function montarLutador(lutador, situacao) {
   // Sem cartel (record null) quando a fonte oficial não informa o cartel completo.
   if (lutador.record) bloco.append(el('span', 'lutador-cartel', formatarCartel(lutador.record)));
   if (situacao === 'vencedor') bloco.append(el('span', 'selo selo-venceu', '🏆 Venceu'));
+  if (situacao === 'perdedor') bloco.append(el('span', 'selo selo-perdeu', '❌ Perdeu'));
   if (situacao === 'empate') bloco.append(el('span', 'selo selo-empate', 'Empate'));
   return bloco;
 }
