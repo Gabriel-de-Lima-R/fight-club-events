@@ -14,7 +14,7 @@ flowchart LR
     end
 
     fontes[("Fontes oficiais<br/>UFC, PFL, ONE, KSW e Jungle Fight")]
-    fotos[("Fotos com licença livre<br/>(ex.: Wikimedia Commons)")]
+    fotos[("Fotos com licença livre<br/>(ex.: Wikimedia Commons)<br/>ou autorizadas pelo autor")]
 
     visitante -->|"abre o site"| site
     mantenedor -->|"confere os dados e os resultados"| fontes
@@ -24,7 +24,7 @@ flowchart LR
 
 - O site não tem login, não tem backend próprio e não cobra nada de ninguém.
 - As fontes oficiais não são consultadas pelo site. Quem as confere é o mantenedor, e só depois os dados entram no projeto.
-- Só entram fotos de lutadores com licença livre, sempre com crédito ao autor. Fotos oficiais das organizações não são usadas.
+- Só entram fotos de lutadores com licença livre ou com permissão por escrito do dono dos direitos, sempre com crédito. A prova da permissão fica com o mantenedor, fora do repositório.
 
 ## 2. Contêineres: as peças do sistema
 
@@ -49,6 +49,7 @@ flowchart TB
         validar["scripts/validar.js<br/>(também roda no pre-commit)"]
         gerar["scripts/gerar-sql.js"]
         dadossql["supabase/dados.sql<br/>(gerado)"]
+        originais["fotos-originais/<br/>(só no computador, fora do Git)"]
     end
 
     github[("GitHub<br/>branches develop e main")]
@@ -59,6 +60,7 @@ flowchart TB
     estaticos -->|"4. exibe as fotos"| fotos
 
     editor -->|"edita"| json
+    originais -->|"recorte quadrado de 256 px em WebP"| editor
     editor -->|"adiciona"| fotos
     json --> validar
     json --> gerar --> dadossql
@@ -76,7 +78,7 @@ Como o site carrega os dados ([js/app.js](../js/app.js)):
 
 Como os dados chegam ao banco (fluxo manual, ver CLAUDE.md):
 
-1. Editar `data/eventos.json` e, se houver lutador novo ou foto nova, `data/lutadores.json` e `images/lutadores/`.
+1. Editar `data/eventos.json` e, se houver lutador novo ou foto nova, `data/lutadores.json` e `images/lutadores/`. A foto original fica em `fotos-originais/` (fora do Git); só o recorte de 256 px em WebP, com o nome em minúsculas, vai para `images/lutadores/`.
 2. Rodar `node scripts/validar.js` (o pre-commit também roda e bloqueia se houver erro).
 3. Rodar `node scripts/gerar-sql.js`, que cria `supabase/dados.sql`.
 4. Colar o `dados.sql` no SQL Editor do Supabase (ele apaga e reinsere tudo).
@@ -142,10 +144,10 @@ erDiagram
         text id PK "ex.: charles-oliveira"
         text name
         text photo_path "images/lutadores/arquivo.webp (null = iniciais)"
-        text photo_author "crédito ao autor"
+        text photo_author "nome do autor (null quando só há permissão)"
         text photo_license "ex.: CC BY-SA 4.0 ou Uso autorizado pelo autor"
         text photo_license_url
-        text photo_source_url "página de origem da foto"
+        text photo_source_url "origem da foto (null quando só há permissão)"
     }
 ```
 
@@ -155,5 +157,5 @@ Decisões de modelagem:
 - **Eventos sem card**: um evento com o card ainda não anunciado existe em `events` sem nenhuma linha em `fights`. O site mostra "Card a anunciar" e o validador aceita `fights` vazio. Nunca se inventam lutadores.
 - **Cartel em `fight_fighters`**: `wins`, `losses` e os demais ficam na linha do lutador porque são o cartel **naquele evento**.
 - **`fight_fighters` mantém `name`**: serve de reserva caso o lutador não tenha registro em `fighters`. `fighter_id` pode ser nulo para lutadores ainda sem cadastro.
-- **Fotos no repositório**: `fighters` guarda só o caminho e o crédito. O arquivo fica em `images/lutadores/`, em WebP, quadrado, com cerca de 256 px e até 30 KB. Lutador sem foto conferida aparece com as iniciais. A foto vem de licença livre (ex.: Wikimedia Commons) ou, sem ela, de permissão por escrito do dono dos direitos; nesse caso a licença fica "Uso autorizado pelo autor" e `photo_license_url` fica nulo.
+- **Fotos no repositório**: `fighters` guarda só o caminho e o crédito. O arquivo fica em `images/lutadores/`, em WebP, quadrado, com cerca de 256 px e até 30 KB. Lutador sem foto conferida aparece com as iniciais. A foto vem de licença livre (ex.: Wikimedia Commons) ou, sem ela, de permissão por escrito do dono dos direitos; nesse caso a licença fica "Uso autorizado pelo autor" e `photo_license_url`, `photo_author` e `photo_source_url` podem ficar nulos. Por enquanto, só as lutas principais dos próximos eventos têm foto. O crédito aparece no `title` da foto, na lista da aba Sobre e, para licença livre, também no destaque do topo.
 - **JSON espelha o banco**: `data/eventos.json` tem `result` nas lutas e `fighter_id` nos lutadores. `data/lutadores.json` tem os dados de `fighters`.
