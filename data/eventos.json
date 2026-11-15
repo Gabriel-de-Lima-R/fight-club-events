@@ -1085,6 +1085,7 @@
           "weight_limit_lbs": 205,
           "fighters": [
             {
+              "fighter_id": "jiri-prochazka",
               "name": "Jiří Procházka",
               "nationality": "Tcheco",
               "record": {
@@ -1096,6 +1097,7 @@
               "reach_in": 80
             },
             {
+              "fighter_id": "navajo-stirling",
               "name": "Navajo Stirling",
               "nationality": "Neozelandês",
               "record": {
@@ -1143,11 +1145,13 @@
           "weight_limit_lbs": 155,
           "fighters": [
             {
+              "fighter_id": "valeriu-mircea",
               "name": "Valeriu Mircea",
               "nationality": "Romeno",
               "record": null
             },
             {
+              "fighter_id": "marcin-held",
               "name": "Marcin Held",
               "nationality": "Polonês",
               "record": null
@@ -1200,11 +1204,13 @@
           "weight_limit_lbs": 115,
           "fighters": [
             {
+              "fighter_id": "chihiro-sawada",
               "name": "Chihiro Sawada",
               "nationality": "Japonesa",
               "record": null
             },
             {
+              "fighter_id": "anastasia-nikolakakos",
               "name": "Anastasia Nikolakakos",
               "nationality": "Canadense",
               "record": null
@@ -1241,6 +1247,7 @@
           "weight_limit_lbs": 185,
           "fighters": [
             {
+              "fighter_id": "israel-adesanya",
               "name": "Israel Adesanya",
               "nationality": null,
               "record": {
@@ -1251,6 +1258,7 @@
               }
             },
             {
+              "fighter_id": "shara-magomedov",
               "name": "Shara Magomedov",
               "nationality": "Russo",
               "record": {
@@ -1286,6 +1294,7 @@
           "weight_limit_lbs": 170,
           "fighters": [
             {
+              "fighter_id": "abdelkrim-zouad",
               "name": "Abdelkrim Zouad",
               "nationality": "Argelino",
               "record": {
@@ -1296,6 +1305,7 @@
               }
             },
             {
+              "fighter_id": "badreddine-diani",
               "name": "Badreddine Diani",
               "nationality": "Marroquino",
               "record": {
@@ -1331,6 +1341,7 @@
           "weight_limit_lbs": 170,
           "fighters": [
             {
+              "fighter_id": "shido-boris-esperanca",
               "name": "Shido Boris Esperança",
               "nationality": "Angolano",
               "record": {
@@ -1341,6 +1352,7 @@
               }
             },
             {
+              "fighter_id": "david-samuel",
               "name": "David Samuel",
               "nationality": "Nigeriano",
               "record": {
@@ -1431,11 +1443,13 @@
           "weight_limit_lbs": 185,
           "fighters": [
             {
+              "fighter_id": "maurice-abevi",
               "name": "Maurice Abevi",
               "nationality": "Suíço",
               "record": null
             },
             {
+              "fighter_id": "dzhabir-dzhabrailov",
               "name": "Dzhabir Dzhabrailov",
               "nationality": "Turco",
               "record": null
@@ -1477,11 +1491,13 @@
           "weight_limit_lbs": 185,
           "fighters": [
             {
+              "fighter_id": "pawel-pawlak",
               "name": "Paweł Pawlak",
               "nationality": "Polonês",
               "record": null
             },
             {
+              "fighter_id": "piotr-kuberski",
               "name": "Piotr Kuberski",
               "nationality": "Polonês",
               "record": null
@@ -1512,6 +1528,7 @@
           "weight_limit_lbs": 135,
           "fighters": [
             {
+              "fighter_id": "taylor-lapilus",
               "name": "Taylor Lapilus",
               "nationality": "Francês",
               "record": {
@@ -1522,6 +1539,7 @@
               }
             },
             {
+              "fighter_id": "mitch-mckee",
               "name": "Mitch McKee",
               "nationality": "Estadunidense",
               "record": {
@@ -1563,6 +1581,7 @@
           "weight_limit_lbs": 125,
           "fighters": [
             {
+              "fighter_id": "joshua-van",
               "name": "Joshua Van",
               "nationality": "Birmanês",
               "record": {
@@ -1573,6 +1592,7 @@
               }
             },
             {
+              "fighter_id": "manel-kape",
               "name": "Manel Kape",
               "nationality": null,
               "record": {
@@ -1642,6 +1662,7 @@
           "weight_limit_lbs": 155,
           "fighters": [
             {
+              "fighter_id": "quillan-salkilld",
               "name": "Quillan Salkilld",
               "nationality": "Australiano",
               "record": {
@@ -1652,6 +1673,7 @@
               }
             },
             {
+              "fighter_id": "benoit-saint-denis",
               "name": "Benoit Saint Denis",
               "nationality": "Francês",
               "record": {

@@ -37,3 +37,6 @@ desktop.ini
 
 # Configurações locais do Claude Code
 .claude/settings.local.json
+
+# Fotos originais dos lutadores (antes do recorte). Só o recorte em images/lutadores/ vai ao ar.
+fotos-originais/

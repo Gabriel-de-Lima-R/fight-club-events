@@ -43,6 +43,248 @@
         "license_url": null,
         "source_url": null
       }
+    },
+    {
+      "id": "anastasia-nikolakakos",
+      "name": "Anastasia Nikolakakos",
+      "photo": {
+        "path": "images/lutadores/anastasia-nikolakakos.webp",
+        "author": null,
+        "license": "Uso autorizado pelo autor",
+        "license_url": null,
+        "source_url": null
+      }
+    },
+    {
+      "id": "chihiro-sawada",
+      "name": "Chihiro Sawada",
+      "photo": {
+        "path": "images/lutadores/chihiro-sawada.webp",
+        "author": null,
+        "license": "Uso autorizado pelo autor",
+        "license_url": null,
+        "source_url": null
+      }
+    },
+    {
+      "id": "israel-adesanya",
+      "name": "Israel Adesanya",
+      "photo": {
+        "path": "images/lutadores/israel-adesanya.webp",
+        "author": null,
+        "license": "Uso autorizado pelo autor",
+        "license_url": null,
+        "source_url": null
+      }
+    },
+    {
+      "id": "jiri-prochazka",
+      "name": "Jiří Procházka",
+      "photo": {
+        "path": "images/lutadores/jiri-prochazka.webp",
+        "author": null,
+        "license": "Uso autorizado pelo autor",
+        "license_url": null,
+        "source_url": null
+      }
+    },
+    {
+      "id": "marcin-held",
+      "name": "Marcin Held",
+      "photo": {
+        "path": "images/lutadores/marcin-held.webp",
+        "author": null,
+        "license": "Uso autorizado pelo autor",
+        "license_url": null,
+        "source_url": null
+      }
+    },
+    {
+      "id": "navajo-stirling",
+      "name": "Navajo Stirling",
+      "photo": {
+        "path": "images/lutadores/navajo-stirling.webp",
+        "author": null,
+        "license": "Uso autorizado pelo autor",
+        "license_url": null,
+        "source_url": null
+      }
+    },
+    {
+      "id": "shara-magomedov",
+      "name": "Shara Magomedov",
+      "photo": {
+        "path": "images/lutadores/shara-magomedov.webp",
+        "author": null,
+        "license": "Uso autorizado pelo autor",
+        "license_url": null,
+        "source_url": null
+      }
+    },
+    {
+      "id": "valeriu-mircea",
+      "name": "Valeriu Mircea",
+      "photo": {
+        "path": "images/lutadores/valeriu-mircea.webp",
+        "author": null,
+        "license": "Uso autorizado pelo autor",
+        "license_url": null,
+        "source_url": null
+      }
+    },
+    {
+      "id": "abdelkrim-zouad",
+      "name": "Abdelkrim Zouad",
+      "photo": {
+        "path": "images/lutadores/abdelkrim-zouad.webp",
+        "author": null,
+        "license": "Uso autorizado pelo autor",
+        "license_url": null,
+        "source_url": null
+      }
+    },
+    {
+      "id": "badreddine-diani",
+      "name": "Badreddine Diani",
+      "photo": {
+        "path": "images/lutadores/badreddine-diani.webp",
+        "author": null,
+        "license": "Uso autorizado pelo autor",
+        "license_url": null,
+        "source_url": null
+      }
+    },
+    {
+      "id": "david-samuel",
+      "name": "David Samuel",
+      "photo": {
+        "path": "images/lutadores/david-samuel.webp",
+        "author": null,
+        "license": "Uso autorizado pelo autor",
+        "license_url": null,
+        "source_url": null
+      }
+    },
+    {
+      "id": "dzhabir-dzhabrailov",
+      "name": "Dzhabir Dzhabrailov",
+      "photo": {
+        "path": "images/lutadores/dzhabir-dzhabrailov.webp",
+        "author": null,
+        "license": "Uso autorizado pelo autor",
+        "license_url": null,
+        "source_url": null
+      }
+    },
+    {
+      "id": "maurice-abevi",
+      "name": "Maurice Abevi",
+      "photo": {
+        "path": "images/lutadores/maurice-abevi.webp",
+        "author": null,
+        "license": "Uso autorizado pelo autor",
+        "license_url": null,
+        "source_url": null
+      }
+    },
+    {
+      "id": "mitch-mckee",
+      "name": "Mitch McKee",
+      "photo": {
+        "path": "images/lutadores/mitch-mckee.webp",
+        "author": null,
+        "license": "Uso autorizado pelo autor",
+        "license_url": null,
+        "source_url": null
+      }
+    },
+    {
+      "id": "pawel-pawlak",
+      "name": "Paweł Pawlak",
+      "photo": {
+        "path": "images/lutadores/pawel-pawlak.webp",
+        "author": null,
+        "license": "Uso autorizado pelo autor",
+        "license_url": null,
+        "source_url": null
+      }
+    },
+    {
+      "id": "piotr-kuberski",
+      "name": "Piotr Kuberski",
+      "photo": {
+        "path": "images/lutadores/piotr-kuberski.webp",
+        "author": null,
+        "license": "Uso autorizado pelo autor",
+        "license_url": null,
+        "source_url": null
+      }
+    },
+    {
+      "id": "shido-boris-esperanca",
+      "name": "Shido Boris Esperança",
+      "photo": {
+        "path": "images/lutadores/shido-boris-esperanca.webp",
+        "author": null,
+        "license": "Uso autorizado pelo autor",
+        "license_url": null,
+        "source_url": null
+      }
+    },
+    {
+      "id": "taylor-lapilus",
+      "name": "Taylor Lapilus",
+      "photo": {
+        "path": "images/lutadores/taylor-lapilus.webp",
+        "author": null,
+        "license": "Uso autorizado pelo autor",
+        "license_url": null,
+        "source_url": null
+      }
+    },
+    {
+      "id": "joshua-van",
+      "name": "Joshua Van",
+      "photo": {
+        "path": "images/lutadores/joshua-van.webp",
+        "author": null,
+        "license": "Uso autorizado pelo autor",
+        "license_url": null,
+        "source_url": null
+      }
+    },
+    {
+      "id": "manel-kape",
+      "name": "Manel Kape",
+      "photo": {
+        "path": "images/lutadores/manel-kape.webp",
+        "author": null,
+        "license": "Uso autorizado pelo autor",
+        "license_url": null,
+        "source_url": null
+      }
+    },
+    {
+      "id": "quillan-salkilld",
+      "name": "Quillan Salkilld",
+      "photo": {
+        "path": "images/lutadores/quillan-salkilld.webp",
+        "author": null,
+        "license": "Uso autorizado pelo autor",
+        "license_url": null,
+        "source_url": null
+      }
+    },
+    {
+      "id": "benoit-saint-denis",
+      "name": "Benoit Saint Denis",
+      "photo": {
+        "path": "images/lutadores/benoit-saint-denis.webp",
+        "author": null,
+        "license": "Uso autorizado pelo autor",
+        "license_url": null,
+        "source_url": null
+      }
     }
   ]
 }
