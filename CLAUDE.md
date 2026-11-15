@@ -1,6 +1,6 @@
 # Fight Club
 
-Site estático, gratuito e sem login que reúne a agenda dos próximos eventos de MMA (UFC, PFL e ONE Championship). Projeto independente, sem afiliação com o UFC, a PFL nem a ONE Championship.
+Site estático, gratuito e sem login que reúne a agenda dos próximos eventos de MMA (UFC, PFL e ONE Championship; KSW e Jungle Fight entram no MVP3). Projeto independente, sem afiliação com nenhuma dessas organizações.
 
 ## Como trabalhar comigo
 
@@ -24,8 +24,8 @@ Site estático, gratuito e sem login que reúne a agenda dos próximos eventos d
 - 100% gratuito: hospedagem (Vercel, plano gratuito) e qualquer serviço futuro precisam ter plano gratuito. Não pagar nenhum plano, nem no Supabase. O GitHub Pages não é mais usado.
 - Sem login, sem banco de dados e sem backend no MVP1. O banco de dados (Supabase) entra no MVP2, veja a seção "MVP2".
 - Sem apostas, odds ou links de casas de apostas.
-- Sem logos, fotos de lutadores ou imagens de terceiros. Usar apenas texto e cores próprias.
-- Rodapé com aviso: site independente, não afiliado ao UFC, PFL nem ONE Championship, e data da última atualização dos dados.
+- Sem logos nem imagens de terceiros. Usar texto e cores próprias. Exceção a partir do MVP3: fotos de lutadores com licença livre e crédito ao autor (veja a seção "MVP3"). Fotos oficiais das organizações (UFC, PFL, ONE, KSW, Jungle Fight) não podem ser usadas.
+- Rodapé com aviso: site independente, não afiliado a nenhuma das organizações listadas, e data da última atualização dos dados.
 
 ## Tecnologia (MVP1)
 
@@ -45,6 +45,8 @@ Site estático, gratuito e sem login que reúne a agenda dos próximos eventos d
 - scripts/gerar-sql.js: gera supabase/dados.sql a partir do JSON (MVP2)
 - supabase/schema.sql: tabelas e regras de segurança (RLS) do PostgreSQL (MVP2)
 - supabase/dados.sql: gerado, não editar à mão (MVP2)
+- images/lutadores/: fotos dos lutadores, uma por lutador (MVP3)
+- docs/arquitetura.md: diagramas da arquitetura em Mermaid (MVP3)
 - README.md
 
 ## Formato dos dados (data/eventos.json)
@@ -54,7 +56,7 @@ O arquivo tem last_updated (data da última revisão, AAAA-MM-DD), display_timez
 Cada evento:
 - id: texto único, sem espaços
 - is_sample: true para dados de teste/exemplo, false para eventos reais conferidos
-- organization: "UFC", "PFL" ou "ONE"
+- organization: "UFC", "PFL" ou "ONE" (no MVP3 entram "KSW" e "JUNGLE")
 - name: nome do evento
 - starts_at: data e hora em UTC, formato ISO 8601 terminando em Z (ex.: 2026-10-18T00:00:00Z)
 - status: scheduled, live, completed, cancelled ou postponed
@@ -118,6 +120,37 @@ Objetivo: deixar de usar o JSON como fonte da verdade e passar a usar PostgreSQL
 - No plano gratuito o projeto pausa após cerca de 1 semana sem atividade. A pausa não apaga os dados: o projeto fica adormecido e é reativado pelo painel (Restore). O botão de restauração fica disponível por 90 dias após a pausa; depois disso só dá para baixar o backup. Enquanto estiver pausado, o site continua funcionando pelo JSON.
 - Etapas: (1) esquema e importação dos dados (feito); (2) site lendo do Supabase com fallback para o JSON; (3) definir como os dados passam a ser editados no banco e o que acontece com o validador.
 
-## Fora do MVP1 e do MVP2 (não implementar sem pedido)
+## MVP3: novas organizações, resultados, fotos e arquitetura
 
-Atualização automática de dados, card completo detalhado, resultados ao vivo, favoritos, lembretes, notícias, busca por lutador.
+Objetivo: ampliar a cobertura e o conteúdo do site sem perder as regras dos MVPs anteriores (gratuito, sem login, sem backend próprio, JSON como fallback igual ao banco).
+
+### 1. KSW e Jungle Fight
+- Novos valores de organization: "KSW" (Konfrontacja Sztuk Walki) e "JUNGLE" (Jungle Fight). Atualizar juntos: check do banco (supabase/schema.sql), validador, filtro, etiquetas, cores, rodapé e páginas Sobre/Guia.
+- Fontes oficiais: ksw.com e o site oficial do Jungle Fight.
+- Evento com card ainda não anunciado (caso atual do Jungle Fight): fights pode ser uma lista vazia. O validador passa a aceitar isso, e o site mostra "Card a anunciar" no lugar da luta principal. Nunca inventar lutadores.
+
+### 2. Resultado das lutas
+- Cada luta ganha o campo result, null enquanto a luta não aconteceu ou o resultado não foi conferido na fonte oficial.
+- result tem: outcome (win, draw ou no_contest), winner (1 ou 2, posição do vencedor em fighters; null em draw e no_contest), method (ko_tko, submission, decision_unanimous, decision_split, decision_majority, dq ou outro; null quando não se aplica), round e time ("M:SS"), ambos podendo ser null.
+- Cenários que o card de luta passada precisa mostrar: vitória por nocaute, por finalização, por decisão (unânime, dividida, majoritária), por desqualificação, empate (unânime, dividido, majoritário), luta sem resultado (no contest) e luta com resultado ainda não informado. Luta cancelada é tratada à parte (não tem resultado).
+- Visual: vencedor em destaque com selo "Venceu", perdedor esmaecido, método/round/tempo abaixo; empate e no contest com os dois lutadores neutros e o selo correspondente. O esboço visual é aprovado antes de escrever código.
+- Eventos passados deixam de ficar ocultos: passam a aparecer numa área própria (ex.: "Resultados"), sem misturar com a agenda de próximos eventos.
+
+### 3. Fotos dos lutadores
+- Só fotos com licença livre (ex.: Wikimedia Commons com CC BY, CC BY-SA ou domínio público), sempre com crédito ao autor e link da licença. Sem foto conferida, o site continua mostrando as iniciais.
+- As fotos ficam no repositório, em images/lutadores/, publicadas pela Vercel (funcionam mesmo com o Supabase pausado). Formato WebP, quadrado, pequeno (cerca de 256 px e até 30 KB).
+- Para reaproveitar a foto entre eventos, cada lutador ganha um identificador fixo (fighter_id, ex.: "charles-oliveira"). No banco, isso vira uma tabela fighters (nome, nacionalidade, foto, autor, licença e link da fonte), referenciada pelas lutas.
+
+### 4. Arquitetura
+- docs/arquitetura.md com diagramas em Mermaid (o GitHub mostra direto): contexto (C4 nível 1), contêineres (C4 nível 2: navegador, Vercel, Supabase, JSON de fallback, scripts) e o modelo de dados (diagrama ER).
+- Atualizar os diagramas sempre que uma fase do MVP3 mudar o esquema ou o fluxo dos dados.
+
+### Ordem das fases do MVP3
+- Fase 1: arquitetura atual e modelo de dados planejado (base para as fases seguintes).
+- Fase 2: KSW e Jungle Fight.
+- Fase 3: resultados (esboço visual, dados, tela).
+- Fase 4: fotos dos lutadores (identificador fixo, tabela fighters, primeiras fotos com crédito).
+
+## Fora dos MVPs (não implementar sem pedido)
+
+Atualização automática de dados, card completo detalhado, resultados ao vivo (durante o evento), favoritos, lembretes, notícias, busca por lutador.
