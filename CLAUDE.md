@@ -130,10 +130,10 @@ Objetivo: ampliar a cobertura e o conteúdo do site sem perder as regras dos MVP
 - Evento com card ainda não anunciado (caso atual do Jungle Fight): fights pode ser uma lista vazia. O validador passa a aceitar isso, e o site mostra "Card a anunciar" no lugar da luta principal. Nunca inventar lutadores.
 
 ### 2. Resultado das lutas
-- Cada luta ganha o campo result, null enquanto a luta não aconteceu ou o resultado não foi conferido na fonte oficial.
-- result tem: outcome (win, draw ou no_contest), winner (1 ou 2, posição do vencedor em fighters; null em draw e no_contest), method (ko_tko, submission, decision_unanimous, decision_split, decision_majority, dq ou outro; null quando não se aplica), round e time ("M:SS"), ambos podendo ser null.
-- Cenários que o card de luta passada precisa mostrar: vitória por nocaute, por finalização, por decisão (unânime, dividida, majoritária), por desqualificação, empate (unânime, dividido, majoritário), luta sem resultado (no contest) e luta com resultado ainda não informado. Luta cancelada é tratada à parte (não tem resultado).
-- Visual: vencedor em destaque com selo "Venceu", perdedor esmaecido, método/round/tempo abaixo; empate e no contest com os dois lutadores neutros e o selo correspondente. O esboço visual é aprovado antes de escrever código.
+- Cada luta ganha o campo result, null (ou ausente) enquanto a luta não aconteceu ou o resultado não foi conferido na fonte oficial.
+- result tem só dois campos: outcome (win ou draw) e winner (1 ou 2, posição do vencedor em fighters; null em draw). Não guardamos método, round nem tempo, e no contest fica sem resultado (result null).
+- Cenários que o card de luta passada mostra: vitória, empate e resultado não conferido. Luta cancelada é tratada à parte (não tem resultado).
+- Visual (esboço aprovado): vencedor em destaque com o selo "Venceu" e perdedor esmaecido; empate com os dois lutadores neutros e o selo "Empate"; sem resultado conferido, o card fica como o de hoje com o selo "Não atualizado".
 - Eventos passados deixam de ficar ocultos: passam a aparecer numa área própria (ex.: "Resultados"), sem misturar com a agenda de próximos eventos.
 
 ### 3. Fotos dos lutadores

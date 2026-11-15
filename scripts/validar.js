@@ -102,6 +102,29 @@ function validarLuta(luta, posicao, ordensVistas, rotuloEvento) {
     return;
   }
   luta.fighters.forEach((lutador, i) => validarLutador(lutador, `${onde}, lutador ${i + 1}`));
+
+  validarResultado(luta.result, onde);
+}
+
+// result pode faltar ou ser null (luta sem resultado conferido). Quando existe, tem só outcome e winner.
+function validarResultado(resultado, onde) {
+  if (resultado === undefined || resultado === null) return;
+  if (!ehObjeto(resultado)) {
+    erros.push(`${onde}: o campo result precisa ser um objeto ou null`);
+    return;
+  }
+  const campos = Object.keys(resultado).filter((campo) => campo !== 'outcome' && campo !== 'winner');
+  if (campos.length > 0) erros.push(`${onde}: o campo result só aceita outcome e winner (encontrado: ${campos.join(', ')})`);
+
+  if (resultado.outcome === 'win') {
+    if (resultado.winner !== 1 && resultado.winner !== 2) {
+      erros.push(`${onde}: em result com outcome win, o campo winner precisa ser 1 ou 2`);
+    }
+  } else if (resultado.outcome === 'draw') {
+    if (resultado.winner !== null) erros.push(`${onde}: em result com outcome draw, o campo winner precisa ser null`);
+  } else {
+    erros.push(`${onde}: o campo result.outcome precisa ser win ou draw`);
+  }
 }
 
 function validarEvento(evento, posicao, idsVistos, agora) {

@@ -35,7 +35,8 @@ for (const ev of dados.events) {
     transmissoes.push(linha([ev.id, b.name, b.type, b.url]));
   }
   for (const luta of ev.fights) {
-    lutas.push(linha([ev.id, luta.order, luta.card_section, luta.weight_class, luta.weight_limit_lbs]));
+    const res = luta.result || {};
+    lutas.push(linha([ev.id, luta.order, luta.card_section, luta.weight_class, luta.weight_limit_lbs, res.outcome, res.winner]));
     luta.fighters.forEach((l, i) => {
       const r = l.record || {};
       // O id da luta é buscado pelo evento e pela ordem, pois é gerado pelo banco.
@@ -71,7 +72,7 @@ if (transmissoes.length) {
 // Eventos sem card anunciado não têm lutas; sem linhas, o insert seria inválido.
 if (lutas.length) {
   partes.push(
-    'insert into public.fights (event_id, "order", card_section, weight_class, weight_limit_lbs) values',
+    'insert into public.fights (event_id, "order", card_section, weight_class, weight_limit_lbs, result_outcome, result_winner) values',
     lutas.join(',\n') + ';',
     '',
     'insert into public.fight_fighters (fight_id, position, name, nationality, wins, losses, draws, no_contests, height_ft, reach_in) values',

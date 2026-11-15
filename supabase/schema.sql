@@ -33,7 +33,15 @@ create table if not exists public.fights (
   card_section     text not null check (card_section in ('main_event', 'co_main', 'main_card', 'prelims', 'early_prelims')),
   weight_class     text not null,
   weight_limit_lbs integer,
-  unique (event_id, "order")
+  -- Resultado: os dois ficam null enquanto a luta não tem resultado conferido.
+  result_outcome   text check (result_outcome in ('win', 'draw')),
+  result_winner    smallint check (result_winner in (1, 2)),
+  unique (event_id, "order"),
+  constraint fights_resultado_coerente check (
+    (result_outcome is null and result_winner is null)
+    or (result_outcome = 'win' and result_winner is not null)
+    or (result_outcome = 'draw' and result_winner is null)
+  )
 );
 
 create table if not exists public.fight_fighters (

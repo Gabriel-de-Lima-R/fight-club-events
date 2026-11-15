@@ -121,11 +121,8 @@ erDiagram
         text card_section
         text weight_class
         int weight_limit_lbs
-        text result_outcome "win, draw ou no_contest (null = sem resultado)"
-        smallint result_winner "1 ou 2 (null em draw e no_contest)"
-        text result_method "ko_tko, submission, decision_*, dq ou outro"
-        smallint result_round
-        text result_time "M:SS"
+        text result_outcome "win ou draw (null = sem resultado conferido)"
+        smallint result_winner "1 ou 2 (null no empate)"
     }
     fight_fighters {
         bigint id PK
@@ -154,7 +151,7 @@ erDiagram
 
 Decisões de modelagem:
 
-- **Resultado dentro de `fights`**: como cada luta tem no máximo um resultado, colunas na própria tabela evitam um JOIN a mais. `result_outcome` nulo significa "ainda sem resultado conferido". Luta cancelada não tem resultado.
+- **Resultado dentro de `fights`**: como cada luta tem no máximo um resultado, colunas na própria tabela evitam um JOIN a mais. `result_outcome` nulo significa "ainda sem resultado conferido" (o site mostra o selo "Não atualizado"). Só se guarda quem venceu ou se empatou: sem método, round nem tempo. Luta cancelada e luta sem resultado (no contest) ficam sem resultado.
 - **Eventos sem card**: um evento com o card ainda não anunciado existe em `events` sem nenhuma linha em `fights`. O site mostra "Card a anunciar" e o validador aceita `fights` vazio. Nunca se inventam lutadores.
 - **Cartel em `fight_fighters`**: `wins`, `losses` e os demais ficam na linha do lutador porque são o cartel **naquele evento**.
 - **`fight_fighters` mantém `name`**: serve de reserva caso o lutador não tenha registro em `fighters`. `fighter_id` pode ser nulo para lutadores ainda sem cadastro.
