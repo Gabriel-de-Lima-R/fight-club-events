@@ -28,6 +28,10 @@
           "card_section": "main_event",
           "weight_class": "Peso Meio-médio",
           "weight_limit_lbs": 170,
+          "result": {
+            "outcome": "win",
+            "winner": 2
+          },
           "fighters": [
             {
               "name": "Joaquin Buckley",
@@ -231,6 +235,10 @@
           "card_section": "main_event",
           "weight_class": "Peso Pena · disputa de cinturão",
           "weight_limit_lbs": 145,
+          "result": {
+            "outcome": "win",
+            "winner": 1
+          },
           "fighters": [
             {
               "name": "Alexander Volkanovski",
@@ -404,6 +412,10 @@
           "card_section": "main_event",
           "weight_class": "Peso Leve",
           "weight_limit_lbs": 155,
+          "result": {
+            "outcome": "win",
+            "winner": 2
+          },
           "fighters": [
             {
               "name": "Renato Moicano",
@@ -542,6 +554,10 @@
           "card_section": "main_event",
           "weight_class": "Peso Leve",
           "weight_limit_lbs": 170,
+          "result": {
+            "outcome": "win",
+            "winner": 2
+          },
           "fighters": [
             {
               "name": "Lucas Gabriel",
@@ -637,6 +653,10 @@
           "card_section": "main_event",
           "weight_class": "Peso Pesado",
           "weight_limit_lbs": 265,
+          "result": {
+            "outcome": "win",
+            "winner": 2
+          },
           "fighters": [
             {
               "name": "Waldo Cortes Acosta",
@@ -792,6 +812,10 @@
           "card_section": "main_event",
           "weight_class": "Peso Pesado · disputa de cinturão",
           "weight_limit_lbs": 265,
+          "result": {
+            "outcome": "win",
+            "winner": 2
+          },
           "fighters": [
             {
               "name": "Vadim Nemkov",
@@ -845,6 +869,10 @@
           "card_section": "main_event",
           "weight_class": "Peso Pesado · disputa de cinturão",
           "weight_limit_lbs": 265,
+          "result": {
+            "outcome": "win",
+            "winner": 1
+          },
           "fighters": [
             {
               "name": "Ciryl Gane",

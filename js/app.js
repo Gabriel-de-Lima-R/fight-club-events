@@ -56,26 +56,43 @@ function eventoVisivel(evento, agora) {
   return fim > agora;
 }
 
-function montarLutador(lutador) {
+// situacao: 'vencedor', 'perdedor', 'empate' ou null (luta sem resultado para mostrar).
+function montarLutador(lutador, situacao) {
   const bloco = el('div', 'lutador');
+  if (situacao === 'vencedor') bloco.classList.add('vencedor');
+  if (situacao === 'perdedor') bloco.classList.add('perdedor');
   bloco.append(el('span', 'lutador-nome', lutador.name));
   // Sem cartel (record null) quando a fonte oficial não informa o cartel completo.
   if (lutador.record) bloco.append(el('span', 'lutador-cartel', formatarCartel(lutador.record)));
+  if (situacao === 'vencedor') bloco.append(el('span', 'selo selo-venceu', 'Venceu'));
+  if (situacao === 'empate') bloco.append(el('span', 'selo selo-empate', 'Empate'));
   return bloco;
 }
 
-function montarLutaPrincipal(luta) {
+// Situação de cada lutador da luta, só para evento encerrado: [lutador 1, lutador 2].
+function situacoesDaLuta(luta, evento) {
+  if (evento.status !== 'completed' || !luta.result) return [null, null];
+  if (luta.result.outcome === 'draw') return ['empate', 'empate'];
+  return luta.result.winner === 1 ? ['vencedor', 'perdedor'] : ['perdedor', 'vencedor'];
+}
+
+function montarLutaPrincipal(luta, evento) {
   const bloco = el('div', 'luta-principal');
   bloco.append(el('p', 'luta-rotulo', 'Luta principal'));
 
+  const [situacao1, situacao2] = situacoesDaLuta(luta, evento);
   const confronto = el('div', 'luta-confronto');
   confronto.append(
-    montarLutador(luta.fighters[0]),
+    montarLutador(luta.fighters[0], situacao1),
     el('span', 'versus', 'vs'),
-    montarLutador(luta.fighters[1]),
+    montarLutador(luta.fighters[1], situacao2),
   );
   bloco.append(confronto);
   bloco.append(el('p', 'luta-categoria', `${luta.weight_class} · até ${luta.weight_limit_lbs} lb`));
+  // Evento encerrado sem resultado conferido na fonte oficial.
+  if (evento.status === 'completed' && !luta.result) {
+    bloco.append(el('p', 'luta-pendente', 'Não atualizado'));
+  }
   return bloco;
 }
 
@@ -152,7 +169,7 @@ function montarEvento(evento, fuso) {
   );
 
   const principal = lutaPrincipal(evento);
-  item.append(principal ? montarLutaPrincipal(principal) : montarCardAnunciar());
+  item.append(principal ? montarLutaPrincipal(principal, evento) : montarCardAnunciar());
 
   const detalhes = el('dl', 'evento-detalhes');
   detalhes.append(el('dt', null, 'Onde assistir'), montarOndeAssistir(evento.broadcast));

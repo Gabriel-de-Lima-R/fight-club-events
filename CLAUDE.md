@@ -134,7 +134,7 @@ Objetivo: ampliar a cobertura e o conteúdo do site sem perder as regras dos MVP
 - result tem só dois campos: outcome (win ou draw) e winner (1 ou 2, posição do vencedor em fighters; null em draw). Não guardamos método, round nem tempo, e no contest fica sem resultado (result null).
 - Cenários que o card de luta passada mostra: vitória, empate e resultado não conferido. Luta cancelada é tratada à parte (não tem resultado).
 - Visual (esboço aprovado): vencedor em destaque com o selo "Venceu" e perdedor esmaecido; empate com os dois lutadores neutros e o selo "Empate"; sem resultado conferido, o card fica como o de hoje com o selo "Não atualizado".
-- Eventos passados deixam de ficar ocultos: passam a aparecer numa área própria (ex.: "Resultados"), sem misturar com a agenda de próximos eventos.
+- Os eventos passados continuam fora da agenda e só aparecem no calendário, ao clicar num dia antigo; o card deles mostra o resultado. Uma área própria de "Resultados" fica para um MVP futuro: por enquanto o resultado só entra na base de dados.
 
 ### 3. Fotos dos lutadores
 - Só fotos com licença livre (ex.: Wikimedia Commons com CC BY, CC BY-SA ou domínio público), sempre com crédito ao autor e link da licença. Sem foto conferida, o site continua mostrando as iniciais.
@@ -148,7 +148,7 @@ Objetivo: ampliar a cobertura e o conteúdo do site sem perder as regras dos MVP
 ### Ordem das fases do MVP3
 - Fase 1: arquitetura atual e modelo de dados planejado (base para as fases seguintes).
 - Fase 2: KSW e Jungle Fight.
-- Fase 3: resultados (esboço visual, dados, tela).
+- Fase 3: resultados (esboço visual, dados, selos no card do calendário).
 - Fase 4: fotos dos lutadores (identificador fixo, tabela fighters, primeiras fotos com crédito).
 
 ## Fora dos MVPs (não implementar sem pedido)

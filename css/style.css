@@ -873,6 +873,44 @@ main.container {
   text-align: center;
 }
 
+/* Resultado da luta (eventos encerrados, vistos pelo calendário) */
+.lutador {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.lutador:last-child { align-items: flex-end; }
+
+.lutador.perdedor { opacity: 0.42; }
+
+.selo {
+  margin-top: 8px;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-family: var(--fonte-corpo);
+  font-size: 0.68rem;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.selo-venceu { background: #f2c14e; color: #2b1d00; }
+.selo-empate { border: 1px solid rgba(255, 255, 255, 0.55); color: #ffffff; }
+
+.luta-pendente {
+  display: table;
+  margin: 10px auto 0;
+  padding: 3px 10px;
+  border: 1px dashed rgba(255, 255, 255, 0.35);
+  border-radius: 99px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #cfc8c0;
+}
+
 /* Detalhes: onde assistir e fonte */
 .evento-detalhes {
   margin: auto 0 0;
