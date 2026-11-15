@@ -8,10 +8,10 @@ delete from public.events;
 delete from public.fighters;
 
 insert into public.fighters (id, name, photo_path, photo_author, photo_license, photo_license_url, photo_source_url) values
-('charles-oliveira', 'Charles Oliveira', null, null, null, null, null),
-('diego-lopes', 'Diego Lopes', null, null, null, null, null),
-('joshua-pacio', 'Joshua Pacio', null, null, null, null, null),
-('keito-yamakita', 'Keito Yamakita', null, null, null, null, null);
+('charles-oliveira', 'Charles Oliveira', 'images/lutadores/charles-oliveira.webp', null, 'Uso autorizado pelo autor', null, null),
+('diego-lopes', 'Diego Lopes', 'images/lutadores/diego-lopes.webp', null, 'Uso autorizado pelo autor', null, null),
+('joshua-pacio', 'Joshua Pacio', 'images/lutadores/joshua-pacio.webp', null, 'Uso autorizado pelo autor', null, null),
+('keito-yamakita', 'Keito Yamakita', 'images/lutadores/keito-yamakita.webp', null, 'Uso autorizado pelo autor', null, null);
 
 insert into public.events (id, is_sample, organization, name, starts_at, status, venue_name, venue_city, venue_country, source_url) values
 ('ufc-edmonton-2026-10-17-buckley-malott', false, 'UFC', 'UFC Edmonton: Buckley x Malott', '2026-10-18T00:00:00Z', 'completed', 'Rogers Place', 'Edmonton', 'Canadá', 'https://www.ufc.com.br/event/ufc-fight-night-october-17-2026'),
