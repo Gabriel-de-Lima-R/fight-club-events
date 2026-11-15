@@ -462,6 +462,7 @@ function converterEvento(linha) {
     weight_limit_lbs: luta.weight_limit_lbs,
     result: luta.result_outcome ? { outcome: luta.result_outcome, winner: luta.result_winner } : null,
     fighters: [...luta.fight_fighters].sort((a, b) => a.position - b.position).map((lutador) => ({
+      fighter_id: lutador.fighter_id ?? null,
       name: lutador.name,
       nationality: lutador.nationality,
       record: montarRecord(lutador),

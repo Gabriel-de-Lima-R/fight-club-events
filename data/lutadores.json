@@ -1,0 +1,14 @@
+{
+  "fighters": [
+    {
+      "id": "charles-oliveira",
+      "name": "Charles Oliveira",
+      "photo": null
+    },
+    {
+      "id": "diego-lopes",
+      "name": "Diego Lopes",
+      "photo": null
+    }
+  ]
+}

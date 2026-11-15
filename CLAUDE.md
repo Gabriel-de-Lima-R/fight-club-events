@@ -24,7 +24,7 @@ Site estático, gratuito e sem login que reúne a agenda dos próximos eventos d
 - 100% gratuito: hospedagem (Vercel, plano gratuito) e qualquer serviço futuro precisam ter plano gratuito. Não pagar nenhum plano, nem no Supabase. O GitHub Pages não é mais usado.
 - Sem login, sem banco de dados e sem backend no MVP1. O banco de dados (Supabase) entra no MVP2, veja a seção "MVP2".
 - Sem apostas, odds ou links de casas de apostas.
-- Sem logos nem imagens de terceiros. Usar texto e cores próprias. Exceção a partir do MVP3: fotos de lutadores com licença livre e crédito ao autor (veja a seção "MVP3"). Fotos oficiais das organizações (UFC, PFL, ONE, KSW, Jungle Fight) não podem ser usadas.
+- Sem logos nem imagens de terceiros. Usar texto e cores próprias. Exceção a partir do MVP3: fotos de lutadores com licença livre ou com permissão por escrito do dono dos direitos, sempre com crédito ao autor (veja a seção "MVP3"). Fotos oficiais das organizações (UFC, PFL, ONE, KSW, Jungle Fight) só com permissão por escrito delas.
 - Rodapé com aviso: site independente, não afiliado a nenhuma das organizações listadas, e data da última atualização dos dados.
 
 ## Tecnologia (MVP1)
@@ -80,6 +80,7 @@ Cada lutador:
 - nationality: nacionalidade, em português (ex.: "Brasileiro", "Canadense"); null quando a fonte oficial não informar
 - record: wins, losses, draws, no_contests (números inteiros, 0 ou mais; no_contests pode ser null, pois o site oficial mostra só V-D-E). O record inteiro pode ser null quando a fonte oficial não mostra o cartel completo (ex.: ONE)
 - height_ft e reach_in: opcionais, podem ser null
+- fighter_id: opcional (ausente ou null). Quando existe, é o identificador fixo do lutador em data/lutadores.json (ex.: "charles-oliveira")
 
 Regras dos dados:
 - Não guardar idade (muda com o tempo). Se necessário, guardar a data de nascimento.
@@ -137,9 +138,13 @@ Objetivo: ampliar a cobertura e o conteúdo do site sem perder as regras dos MVP
 - Os eventos passados continuam fora da agenda e só aparecem no calendário, ao clicar num dia antigo; o card deles mostra o resultado. Uma área própria de "Resultados" fica para um MVP futuro: por enquanto o resultado só entra na base de dados.
 
 ### 3. Fotos dos lutadores
-- Só fotos com licença livre (ex.: Wikimedia Commons com CC BY, CC BY-SA ou domínio público), sempre com crédito ao autor e link da licença. Sem foto conferida, o site continua mostrando as iniciais.
+- Primeira opção: foto com licença livre (ex.: Wikimedia Commons com CC BY, CC BY-SA ou domínio público), com crédito ao autor e link da licença.
+- Sem foto livre, só com permissão por escrito do dono dos direitos (fotógrafo, lutador ou organização). O mantenedor guarda a prova da permissão fora do repositório. Nos dados, a licença fica "Uso autorizado pelo autor", license_url fica null e source_url aponta para a origem da foto. Crédito ao autor sempre.
+- Sem foto conferida, o site continua mostrando as iniciais.
 - As fotos ficam no repositório, em images/lutadores/, publicadas pela Vercel (funcionam mesmo com o Supabase pausado). Formato WebP, quadrado, pequeno (cerca de 256 px e até 30 KB).
-- Para reaproveitar a foto entre eventos, cada lutador ganha um identificador fixo (fighter_id, ex.: "charles-oliveira"). No banco, isso vira uma tabela fighters (nome, nacionalidade, foto, autor, licença e link da fonte), referenciada pelas lutas.
+- Para reaproveitar a foto entre eventos, cada lutador ganha um identificador fixo (fighter_id, ex.: "charles-oliveira"). No banco, isso vira uma tabela fighters (nome, foto, autor, licença e links), referenciada pelas lutas.
+- data/lutadores.json espelha a tabela fighters: { "fighters": [ { id, name, photo } ] }. photo é null ou { path, author, license, license_url, source_url }, com path em images/lutadores/ e terminando em .webp. O validador confere os dois arquivos juntos.
+- Posição na tela: no destaque do topo, a foto fica no lugar das iniciais; nos cards da agenda e do calendário, um círculo pequeno ao lado do nome (foto ou iniciais). Créditos completos numa lista na aba Sobre e no title da foto.
 
 ### 4. Arquitetura
 - docs/arquitetura.md com diagramas em Mermaid (o GitHub mostra direto): contexto (C4 nível 1), contêineres (C4 nível 2: navegador, Vercel, Supabase, JSON de fallback, scripts) e o modelo de dados (diagrama ER).

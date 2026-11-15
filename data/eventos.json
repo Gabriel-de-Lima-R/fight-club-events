@@ -1380,6 +1380,7 @@
           "weight_limit_lbs": 155,
           "fighters": [
             {
+              "fighter_id": "charles-oliveira",
               "name": "Charles Oliveira",
               "nationality": "Brasileiro",
               "record": {
@@ -1391,6 +1392,7 @@
               "reach_in": 74
             },
             {
+              "fighter_id": "diego-lopes",
               "name": "Diego Lopes",
               "nationality": "Brasileiro",
               "record": {
