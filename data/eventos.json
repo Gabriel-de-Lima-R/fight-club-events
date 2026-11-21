@@ -1168,7 +1168,7 @@
       "starts_at": "2026-11-28T23:00:00Z",
       "status": "scheduled",
       "venue": {
-        "name": "A confirmar",
+        "name": "SEST SENAT",
         "city": "Itajaí",
         "country": "Brasil"
       },
@@ -1188,11 +1188,13 @@
           "weight_limit_lbs": 155,
           "fighters": [
             {
+              "fighter_id": "marcelo-medeiros",
               "name": "Marcelo Medeiros",
               "nationality": "Brasileiro",
               "record": null
             },
             {
+              "fighter_id": "agy-sardari",
               "name": "Agy Sardari",
               "nationality": "Holandês",
               "record": null
