@@ -180,7 +180,8 @@ Decisões já tomadas:
 Estado atual:
 - Feito: scripts/coletor/ufc.js (relatório de diferenças e rascunho de eventos novos da UFC, testado ao vivo e aprovado pelo validador) e scripts/coletor/aplicar-rascunho.js.
 - .github/workflows/coletor-ufc.yml está na main, mas DESATIVADO manualmente (gh workflow disable "Coletor da UFC"). Nunca rodou. Remover o arquivo (chore:) quando a Azure estiver funcionando.
-- Os 3 eventos novos da UFC de jan/fev de 2027 (Rodriguez x Garcia, Bonfim x Brady, Pyfer x Nickal) NÃO foram cadastrados no eventos.json de propósito: ficam para o fluxo automático.
+- LEMBRETE: os 3 eventos novos da UFC de jan/fev de 2027 (Rodriguez x Garcia, Bonfim x Brady, Pyfer x Nickal) NÃO foram cadastrados no eventos.json de propósito. Decisão do mantenedor (2026-11-21): cadastrar só quando o coletor rodar na Azure, usando-os como primeiro teste real do fluxo automático. Não cadastrar à mão antes disso.
+- Jungle Fight 157 (28/11/2026): card anunciado e cadastrado à mão em 2026-11-21, só com a luta principal informada pelo mantenedor (Marcelo Medeiros x Agy Sardari, peso leve, disputa de cinturão). A fonte oficial (junglefc.com.br) ainda não mostrava o evento nessa data; o source_url continua sendo a home. Pendentes: nacionalidade do Medeiros, cartéis, local exato e fotos dos lutadores (o mantenedor entrega as fotos em seguida).
 
 Perguntas em aberto (responder antes da próxima fase):
 1. A Function pode gravar direto no Supabase, com a chave no Key Vault (mudando a regra do service_role)?
