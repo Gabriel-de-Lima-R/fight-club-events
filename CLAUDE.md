@@ -44,6 +44,9 @@ Site estático, gratuito e sem login que reúne a agenda dos próximos eventos d
 - data/lutadores.json: cadastro dos lutadores (id, nome e foto), espelha a tabela fighters (MVP3)
 - scripts/validar.js: confere eventos.json e lutadores.json antes de cada commit
 - scripts/gerar-sql.js: gera supabase/dados.sql a partir dos JSON (MVP2)
+- scripts/coletor/ufc.js: coletor da UFC (MVP4). Lê a agenda oficial, compara com o eventos.json e, com --rascunho, gera rascunho dos eventos novos em scripts/coletor/saida/ (ignorada pelo Git)
+- scripts/coletor/aplicar-rascunho.js: aplica o rascunho no eventos.json e escreve o texto do Pull Request (MVP4)
+- .github/workflows/coletor-ufc.yml: GitHub Actions semanal que roda o coletor e abre um Pull Request na develop (MVP4). O arquivo precisa estar na main para o agendamento funcionar; o job trabalha sobre a develop
 - supabase/schema.sql: tabelas e regras de segurança (RLS) do PostgreSQL (MVP2)
 - supabase/dados.sql: gerado, não editar à mão (MVP2)
 - images/lutadores/: fotos dos lutadores, uma por lutador, já recortadas, em WebP e com o nome em minúsculas (MVP3)
