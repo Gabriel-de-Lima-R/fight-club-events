@@ -4,9 +4,13 @@
 // Uso:
 //   node scripts/coletor/ufc.js                      busca https://www.ufc.com.br/events
 //   node scripts/coletor/ufc.js --arquivo lista.html  usa um HTML já baixado (teste offline)
+//   node scripts/coletor/ufc.js --rascunho            além do relatório, gera um rascunho de cada evento
+//                                                     novo em scripts/coletor/saida/rascunho-ufc.json
+//                                                     (use --saida caminho.json para outro destino)
 //
 // Código de saída: 0 = relatório gerado; 2 = falha ao buscar ou o layout do site mudou.
-// O robots.txt da UFC pede crawl-delay de 15 s: este script faz uma única requisição por execução.
+// O robots.txt da UFC pede crawl-delay de 15 s: o relatório usa uma única requisição; o --rascunho
+// faz 3 por evento novo (evento + 2 lutadores) e espera 15 s entre elas.
 
 const fs = require('fs');
 const path = require('path');
@@ -168,6 +172,202 @@ function comparar(coletados, dados, agora = new Date()) {
   return { novos, divergentes, ausentes, limite };
 }
 
+// ---------- rascunho de evento novo (páginas do evento e dos lutadores) ----------
+
+const ESPERA_ENTRE_REQUISICOES_MS = 15000; // crawl-delay do robots.txt da UFC
+const ARQUIVO_LUTADORES = path.join(__dirname, '..', '..', 'data', 'lutadores.json');
+const SAIDA_PADRAO = path.join(__dirname, 'saida', 'rascunho-ufc.json');
+
+// Categorias da UFC: chave sem acento e sem hífen -> nome no nosso padrão e limite em libras.
+const CATEGORIAS = [
+  ['peso meio pesado', 'Peso Meio-pesado', 205],
+  ['peso meio medio', 'Peso Meio-médio', 170],
+  ['peso pesado', 'Peso Pesado', 265],
+  ['peso medio', 'Peso Médio', 185],
+  ['peso leve', 'Peso Leve', 155],
+  ['peso pena', 'Peso Pena', 145],
+  ['peso galo', 'Peso Galo', 135],
+  ['peso mosca', 'Peso Mosca', 125],
+  ['peso palha', 'Peso Palha', 115],
+  ['peso atomo', 'Peso Átomo', 115],
+];
+
+const PAISES = {
+  'United States': 'Estados Unidos', Canada: 'Canadá', 'United Arab Emirates': 'Emirados Árabes Unidos',
+  Qatar: 'Catar', 'Saudi Arabia': 'Arábia Saudita', Australia: 'Austrália', Brazil: 'Brasil', Mexico: 'México',
+  'United Kingdom': 'Reino Unido', China: 'China', Japan: 'Japão', France: 'França', Germany: 'Alemanha',
+  Spain: 'Espanha', Poland: 'Polônia', Singapore: 'Singapura', Azerbaijan: 'Azerbaijão', Russia: 'Rússia',
+  Thailand: 'Tailândia', 'South Korea': 'Coreia do Sul', Argentina: 'Argentina', Chile: 'Chile',
+};
+
+const esperar = (ms) => new Promise((r) => setTimeout(r, ms));
+
+function sanitizarChave(texto) {
+  return semAcento(texto).replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+// "Peso-pena Luta" -> { weight_class: "Peso Pena", weight_limit_lbs: 145, extra: "" }
+function interpretarCategoria(texto) {
+  const chave = sanitizarChave(texto);
+  const achada = CATEGORIAS.find(([k]) => chave.startsWith(k));
+  if (!achada) return { weight_class: limparTexto(texto), weight_limit_lbs: null, extra: texto };
+  let resto = chave.slice(achada[0].length).trim();
+  let nome = achada[1];
+  if (resto.startsWith('feminino')) {
+    nome += ' feminino';
+    resto = resto.slice('feminino'.length).trim();
+  }
+  resto = resto.replace(/^luta\b/, '').trim(); // "Luta" é só o rótulo da UFC
+  return { weight_class: nome, weight_limit_lbs: achada[2], extra: resto };
+}
+
+function slugTexto(texto) {
+  return semAcento(texto).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
+function dataEmBrasilia(iso) {
+  const p = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(iso));
+  return p; // AAAA-MM-DD
+}
+
+// Página do evento: nome, transmissão e a luta principal (primeiro bloco de luta da página).
+function extrairDetalhe(html) {
+  const limpo = html
+    .replace(/<svg[\s\S]*?<\/svg>/g, '')
+    .replace(/<style[\s\S]*?<\/style>/g, '')
+    .replace(/<script[\s\S]*?<\/script>/g, '')
+    .replace(/\s+/g, ' ');
+
+  const titulo = limpo.match(/<title>([\s\S]*?)<\/title>/);
+  const nome = titulo ? limparTexto(titulo[1]).split(' | ')[0].replace(/\s+vs\.?\s+/i, ' x ') : null;
+
+  const inicio = limpo.indexOf('<div class="c-listing-fight" ');
+  const proximo = inicio === -1 ? -1 : limpo.indexOf('<div class="c-listing-fight" ', inicio + 10);
+  const bloco = inicio === -1 ? '' : limpo.slice(inicio, proximo === -1 ? undefined : proximo);
+
+  const classe = bloco.match(/c-listing-fight__class-text">([^<]*)</);
+  const lutadores = [];
+  const re = /c-listing-fight__corner-name--(?:red|blue)"> ?<a href="[^"]*\/athlete\/([^"]+)"> ?<span class="c-listing-fight__corner-given-name">([^<]*)<\/span> ?<span class="c-listing-fight__corner-family-name">([^<]*)<\/span>/g;
+  let m;
+  while ((m = re.exec(bloco))) {
+    lutadores.push({ slug: m[1], nome: [limparTexto(m[2]), limparTexto(m[3])].filter(Boolean).join(' '), sobrenome: limparTexto(m[3]) });
+  }
+
+  return {
+    nome,
+    transmissao_paramount: /Assista no Paramount\+/.test(limpo),
+    categoria: classe ? limparTexto(classe[1]) : null,
+    lutadores,
+  };
+}
+
+// Página do lutador: cartel (V-D-E) e envergadura. Nacionalidade não existe na fonte, só a cidade natal.
+function extrairAtleta(html) {
+  const limpo = html
+    .replace(/<svg[\s\S]*?<\/svg>/g, '')
+    .replace(/<style[\s\S]*?<\/style>/g, '')
+    .replace(/<script[\s\S]*?<\/script>/g, '')
+    .replace(/\s+/g, ' ');
+  const cartel = limpo.match(/hero-profile__division-body">([^<]*)</);
+  const m = cartel && cartel[1].match(/(\d+)-(\d+)-(\d+)/);
+  const bio = {};
+  for (const b of limpo.matchAll(/c-bio__label">([^<]*)<\/div> ?<div class="c-bio__text">([^<]*)</g)) bio[limparTexto(b[1])] = limparTexto(b[2]);
+  const envergadura = parseFloat(bio['Envergadura']);
+  return {
+    texto_cartel: cartel ? limparTexto(cartel[1]) : null,
+    record: m ? { wins: +m[1], losses: +m[2], draws: +m[3], no_contests: null } : null,
+    nc: cartel ? (cartel[1].match(/(\d+)\s*NC/i) || [])[1] || null : null,
+    reach_in: envergadura > 0 ? envergadura : null,
+    cidade_natal: bio['Cidade natal'] || null,
+  };
+}
+
+// Junta lista + página do evento + páginas dos lutadores num evento no formato do eventos.json.
+// Devolve também "revisar": o que o coletor não conseguiu preencher ou que merece conferência humana.
+function montarRascunho(site, detalhe, atletas, idsCadastrados) {
+  const revisar = [];
+  const numerado = site.slug.match(/^ufc-(\d+)$/);
+  const nomeEvento = detalhe.nome || `UFC: ${site.luta_principal.replace(/\s+vs\.?\s+/i, ' x ')}`;
+  if (!detalhe.nome) revisar.push('nome do evento não encontrado na página: nome montado a partir da luta principal');
+
+  if (detalhe.lutadores.length !== 2) revisar.push(`a página trouxe ${detalhe.lutadores.length} lutadores na luta principal (esperado: 2)`);
+  const principalConfere = detalhe.lutadores.length === 2 &&
+    detalhe.lutadores.every((l) => semAcento(site.luta_principal).includes(semAcento(l.sobrenome).split(' ').pop()));
+  if (!principalConfere) revisar.push(`luta principal da página difere da lista ("${site.luta_principal}")`);
+
+  const cat = detalhe.categoria ? interpretarCategoria(detalhe.categoria) : { weight_class: '', weight_limit_lbs: null, extra: 'categoria não encontrada' };
+  if (cat.weight_limit_lbs === null) revisar.push(`categoria "${detalhe.categoria}" não reconhecida: preencher weight_class e weight_limit_lbs`);
+  if (cat.extra && cat.weight_limit_lbs !== null) revisar.push(`categoria com detalhe extra ("${detalhe.categoria}"): conferir se é disputa de cinturão`);
+
+  const pais = PAISES[site.country] || site.country;
+  if (site.country && !PAISES[site.country]) revisar.push(`país "${site.country}" sem tradução cadastrada: traduzir para português`);
+
+  const lutadores = detalhe.lutadores.map((l) => {
+    const a = atletas[l.slug] || {};
+    if (!a.record) revisar.push(`${l.nome}: cartel não encontrado`);
+    if (a.nc) revisar.push(`${l.nome}: tem ${a.nc} no contest(s) na fonte; no_contests ficou null, ajustar se quiser`);
+    revisar.push(`${l.nome}: nationality ficou null (a UFC só mostra a cidade natal${a.cidade_natal ? `: ${a.cidade_natal}` : ''})`);
+    const lutador = {};
+    if (idsCadastrados.has(l.slug)) lutador.fighter_id = l.slug;
+    lutador.name = l.nome;
+    lutador.nationality = null;
+    lutador.record = a.record || null;
+    if (a.reach_in) lutador.reach_in = a.reach_in;
+    return lutador;
+  });
+
+  const familias = detalhe.lutadores.map((l) => slugTexto(l.sobrenome));
+  const id = [numerado ? site.slug : 'ufc-fn', dataEmBrasilia(site.starts_at), ...familias].join('-');
+  revisar.push('broadcast: url ficou null (padrão do projeto para o Paramount+)');
+
+  const evento = {
+    id,
+    is_sample: false,
+    organization: 'UFC',
+    name: nomeEvento,
+    starts_at: site.starts_at,
+    status: 'scheduled',
+    venue: { name: site.venue, city: site.city, country: pais },
+    broadcast: detalhe.transmissao_paramount ? [{ name: 'Paramount+', type: 'streaming', url: null }] : [],
+    source_url: site.url,
+    fights: [{ order: 1, card_section: 'main_event', weight_class: cat.weight_class, weight_limit_lbs: cat.weight_limit_lbs, fighters: lutadores }],
+  };
+  if (!detalhe.transmissao_paramount) revisar.push('transmissão: Paramount+ não aparece na página, broadcast ficou vazio');
+  return { evento, revisar };
+}
+
+async function gerarRascunhos(novos, arquivoSaida) {
+  const idsCadastrados = new Set(JSON.parse(fs.readFileSync(ARQUIVO_LUTADORES, 'utf8')).fighters.map((f) => f.id));
+  const rascunhos = [];
+  let primeira = true;
+  const pegar = async (url) => {
+    if (!primeira) await esperar(ESPERA_ENTRE_REQUISICOES_MS);
+    primeira = false;
+    return baixar(url);
+  };
+
+  for (const site of novos) {
+    console.log(`Lendo ${site.url} ...`);
+    const detalhe = extrairDetalhe(await pegar(site.url));
+    const atletas = {};
+    for (const l of detalhe.lutadores) {
+      console.log(`  lutador: ${l.nome}`);
+      atletas[l.slug] = extrairAtleta(await pegar(`https://www.ufc.com.br/athlete/${l.slug}`));
+    }
+    rascunhos.push(montarRascunho(site, detalhe, atletas, idsCadastrados));
+  }
+
+  fs.mkdirSync(path.dirname(arquivoSaida), { recursive: true });
+  const saida = {
+    aviso: 'RASCUNHO gerado automaticamente. Conferir cada item na fonte oficial (source_url) antes de copiar para data/eventos.json.',
+    gerado_em: new Date().toISOString(),
+    eventos: rascunhos.map((r) => r.evento),
+    revisar: rascunhos.map((r) => ({ id: r.evento.id, itens: r.revisar })),
+  };
+  fs.writeFileSync(arquivoSaida, JSON.stringify(saida, null, 2) + '\n');
+  console.log(`\n${rascunhos.length} rascunho(s) salvo(s) em ${path.relative(process.cwd(), arquivoSaida)} (fora de data/).`);
+}
+
 // ---------- relatório ----------
 
 function emBrasilia(iso) {
@@ -220,7 +420,14 @@ async function main() {
   }
 
   const dados = JSON.parse(fs.readFileSync(ARQUIVO_EVENTOS, 'utf8'));
-  imprimirRelatorio(eventos, comparar(eventos, dados));
+  const resultado = comparar(eventos, dados);
+  imprimirRelatorio(eventos, resultado);
+
+  if (process.argv.includes('--rascunho') && resultado.novos.length) {
+    const s = process.argv.indexOf('--saida');
+    console.log('');
+    await gerarRascunhos(resultado.novos, s !== -1 ? process.argv[s + 1] : SAIDA_PADRAO);
+  }
 }
 
 if (require.main === module) {
@@ -230,4 +437,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { extrairEventos, comparar };
+module.exports = { extrairEventos, comparar, extrairDetalhe, extrairAtleta, montarRascunho, interpretarCategoria };
