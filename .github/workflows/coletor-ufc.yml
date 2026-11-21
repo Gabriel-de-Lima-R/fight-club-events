@@ -1,0 +1,105 @@
+name: Coletor da UFC
+
+# Toda segunda-feira busca eventos novos da UFC e, se achar, abre um Pull Request na develop
+# para revisão humana. Nunca grava direto na develop nem na main.
+# Também pode ser rodado à mão: aba Actions > "Coletor da UFC" > Run workflow.
+
+on:
+  schedule:
+    - cron: '0 11 * * 1' # segundas, 11:00 UTC = 08:00 em Brasília
+  workflow_dispatch:
+
+permissions:
+  contents: write # criar a branch coletor/ufc
+  pull-requests: write # abrir e atualizar o PR
+
+concurrency:
+  group: coletor-ufc
+  cancel-in-progress: false
+
+jobs:
+  coletar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RASCUNHO: /tmp/rascunho-ufc.json
+      CORPO: /tmp/corpo-pr.md
+      CORPO_FINAL: /tmp/corpo-final.md
+      VALIDACAO: /tmp/validacao.txt
+      BRANCH: coletor/ufc
+    steps:
+      # O workflow vive na main (exigência do GitHub para agendar), mas os dados são os da develop.
+      - uses: actions/checkout@v4
+        with:
+          ref: develop
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Coletar eventos novos da UFC
+        run: node scripts/coletor/ufc.js --rascunho --saida "$RASCUNHO"
+
+      - name: Aplicar o rascunho no eventos.json e regenerar o dados.sql
+        run: |
+          if [ ! -f "$RASCUNHO" ]; then
+            echo "Nenhum evento novo."
+            exit 0
+          fi
+          node scripts/coletor/aplicar-rascunho.js "$RASCUNHO" --corpo "$CORPO"
+          node scripts/gerar-sql.js
+
+      - name: Validar os dados
+        id: validar
+        run: |
+          set +e
+          node scripts/validar.js > "$VALIDACAO" 2>&1
+          codigo=$?
+          cat "$VALIDACAO"
+          echo "codigo=$codigo" >> "$GITHUB_OUTPUT"
+          exit 0 # a falha de validação não derruba o job: vira um PR em rascunho, para você ver o erro
+
+      - name: Abrir ou atualizar o Pull Request
+        run: |
+          if git diff --quiet; then
+            echo "Nada a propor."
+            exit 0
+          fi
+
+          # Monta o texto do PR: resultado do validador no topo, depois a lista do que conferir.
+          {
+            if [ "${{ steps.validar.outputs.codigo }}" != "0" ]; then
+              echo "> [!WARNING]"
+              echo "> **O validador reprovou estes dados.** Este PR está em rascunho e não deve ser mergeado antes da correção."
+              echo ""
+              echo '```'
+              cat "$VALIDACAO"
+              echo '```'
+              echo ""
+            else
+              echo "Validador (\`scripts/validar.js\`): **passou**."
+              echo ""
+            fi
+            cat "$CORPO"
+          } > "$CORPO_FINAL"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$BRANCH"
+          git add data/eventos.json supabase/dados.sql
+          git commit -m "feat: adiciona eventos novos da UFC (coletor automático)"
+          git push --force origin "$BRANCH" # branch exclusiva do robô, recriada a cada execução
+
+          numero=$(gh pr list --head "$BRANCH" --base develop --state open --json number --jq '.[0].number')
+          if [ -z "$numero" ]; then
+            rascunho=""
+            if [ "${{ steps.validar.outputs.codigo }}" != "0" ]; then rascunho="--draft"; fi
+            gh pr create --base develop --head "$BRANCH" $rascunho \
+              --title "feat: eventos novos da UFC (coletor automático)" \
+              --body-file "$CORPO_FINAL"
+          else
+            gh pr edit "$numero" --body-file "$CORPO_FINAL"
+            if [ "${{ steps.validar.outputs.codigo }}" = "0" ]; then gh pr ready "$numero" || true; else gh pr ready "$numero" --undo || true; fi
+            echo "PR #$numero atualizado."
+          fi

@@ -35,5 +35,8 @@ desktop.ini
 .idea/
 *.swp
 
+# Saída local dos coletores (rascunhos para revisão, não são dados oficiais)
+scripts/coletor/saida/
+
 # Configurações locais do Claude Code
 .claude/settings.local.json

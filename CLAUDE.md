@@ -22,7 +22,7 @@ Site estático, gratuito e sem login que reúne a agenda dos próximos eventos d
 ## Restrições do projeto
 
 - 100% gratuito: hospedagem (Vercel, plano gratuito) e qualquer serviço futuro precisam ter plano gratuito. Não pagar nenhum plano, nem no Supabase. O GitHub Pages não é mais usado.
-- Sem login, sem banco de dados e sem backend no MVP1. O banco de dados (Supabase) entra no MVP2, veja a seção "MVP2".
+- Sem login, sem banco de dados e sem backend no MVP1. O banco de dados (Supabase) entra no MVP2, veja a seção "MVP2". A partir do MVP4 a restrição de "sem backend" não vale mais: o projeto pode ter backend, desde que continue gratuito (veja a seção "MVP4").
 - Sem apostas, odds ou links de casas de apostas.
 - Sem logos nem imagens de terceiros. Usar texto e cores próprias. Exceção a partir do MVP3: fotos de lutadores com licença livre ou com permissão por escrito do dono dos direitos, sempre com crédito (o nome do autor ou, quando ele não pedir nome, "Uso autorizado pelo autor"; veja a seção "MVP3"). Fotos oficiais das organizações (UFC, PFL, ONE, KSW, Jungle Fight) só com permissão por escrito delas.
 - Rodapé com aviso: site independente, não afiliado a nenhuma das organizações listadas, e data da última atualização dos dados.
@@ -44,6 +44,9 @@ Site estático, gratuito e sem login que reúne a agenda dos próximos eventos d
 - data/lutadores.json: cadastro dos lutadores (id, nome e foto), espelha a tabela fighters (MVP3)
 - scripts/validar.js: confere eventos.json e lutadores.json antes de cada commit
 - scripts/gerar-sql.js: gera supabase/dados.sql a partir dos JSON (MVP2)
+- scripts/coletor/ufc.js: coletor da UFC (MVP4). Lê a agenda oficial, compara com o eventos.json e, com --rascunho, gera rascunho dos eventos novos em scripts/coletor/saida/ (ignorada pelo Git)
+- scripts/coletor/aplicar-rascunho.js: aplica o rascunho no eventos.json e escreve o texto do Pull Request (MVP4)
+- .github/workflows/coletor-ufc.yml: GitHub Actions semanal que roda o coletor e abre um Pull Request na develop (MVP4). O arquivo precisa estar na main para o agendamento funcionar; o job trabalha sobre a develop
 - supabase/schema.sql: tabelas e regras de segurança (RLS) do PostgreSQL (MVP2)
 - supabase/dados.sql: gerado, não editar à mão (MVP2)
 - images/lutadores/: fotos dos lutadores, uma por lutador, já recortadas, em WebP e com o nome em minúsculas (MVP3)
@@ -162,8 +165,14 @@ Objetivo: ampliar a cobertura e o conteúdo do site sem perder as regras dos MVP
 
 ## MVP4: enriquecer a arquitetura
 
-Objetivo: enriquecer a arquitetura (ideias: subir um serviço na nuvem ou um servidor próprio). Escopo ainda não definido: descrever e aprovar antes de qualquer implementação, e dizer explicitamente quais restrições do projeto (como "100% gratuito" e "sem backend") mudariam.
+Objetivo: enriquecer a arquitetura e automatizar a atualização dos dados. Escopo detalhado ainda em definição: descrever e aprovar cada etapa antes de qualquer implementação.
+
+Decisões já tomadas:
+- A restrição "sem backend" foi removida: o projeto pode crescer e ganhar um backend. A restrição "100% gratuito" continua valendo (qualquer custo novo precisa de aprovação explícita antes).
+- Ponto de partida: job semanal que busca novos eventos das 5 organizações (UFC, PFL, ONE, KSW, Jungle Fight) e, se funcionar, um segundo job diário que busca o resultado das lutas já realizadas. Começar com GitHub Actions.
+- O job não publica direto: abre um Pull Request na develop com as mudanças, o validador roda no CI e o mantenedor revisa e aprova. Dado novo nunca é inventado e todo evento real precisa de source_url oficial conferida. Melhoria futura: reduzir a intervenção humana (ex.: auto-merge em casos de baixo risco).
+- Evolução prevista: migrar os jobs para a nuvem (Azure, do provedor que o mantenedor já usa), mantendo o código do coletor portátil.
 
 ## Fora dos MVPs (não implementar sem pedido)
 
-Atualização automática de dados, card completo detalhado, resultados ao vivo (durante o evento), favoritos, lembretes, notícias, busca por lutador.
+Card completo detalhado, resultados ao vivo (durante o evento), favoritos, lembretes, notícias, busca por lutador.
