@@ -285,6 +285,28 @@
         "license_url": null,
         "source_url": null
       }
+    },
+    {
+      "id": "marcelo-medeiros",
+      "name": "Marcelo Medeiros",
+      "photo": {
+        "path": "images/lutadores/marcelo-medeiros.webp",
+        "author": null,
+        "license": "Uso autorizado pelo autor",
+        "license_url": null,
+        "source_url": null
+      }
+    },
+    {
+      "id": "agy-sardari",
+      "name": "Agy Sardari",
+      "photo": {
+        "path": "images/lutadores/agy-sardari.webp",
+        "author": null,
+        "license": "Uso autorizado pelo autor",
+        "license_url": null,
+        "source_url": null
+      }
     }
   ]
 }

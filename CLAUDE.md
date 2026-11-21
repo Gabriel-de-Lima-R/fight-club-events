@@ -46,7 +46,7 @@ Site estático, gratuito e sem login que reúne a agenda dos próximos eventos d
 - scripts/gerar-sql.js: gera supabase/dados.sql a partir dos JSON (MVP2)
 - scripts/coletor/ufc.js: coletor da UFC (MVP4). Lê a agenda oficial, compara com o eventos.json e, com --rascunho, gera rascunho dos eventos novos em scripts/coletor/saida/ (ignorada pelo Git)
 - scripts/coletor/aplicar-rascunho.js: aplica o rascunho no eventos.json e escreve o texto do Pull Request (MVP4)
-- .github/workflows/coletor-ufc.yml: GitHub Actions semanal que roda o coletor e abre um Pull Request na develop (MVP4). O arquivo precisa estar na main para o agendamento funcionar; o job trabalha sobre a develop
+- .github/workflows/coletor-ufc.yml: GitHub Actions do coletor (MVP4). DESATIVADO e a ser removido: o stakeholder pediu Azure no lugar do Actions (veja a seção "MVP4")
 - supabase/schema.sql: tabelas e regras de segurança (RLS) do PostgreSQL (MVP2)
 - supabase/dados.sql: gerado, não editar à mão (MVP2)
 - images/lutadores/: fotos dos lutadores, uma por lutador, já recortadas, em WebP e com o nome em minúsculas (MVP3)
@@ -169,9 +169,24 @@ Objetivo: enriquecer a arquitetura e automatizar a atualização dos dados. Esco
 
 Decisões já tomadas:
 - A restrição "sem backend" foi removida: o projeto pode crescer e ganhar um backend. A restrição "100% gratuito" continua valendo (qualquer custo novo precisa de aprovação explícita antes).
-- Ponto de partida: job semanal que busca novos eventos das 5 organizações (UFC, PFL, ONE, KSW, Jungle Fight) e, se funcionar, um segundo job diário que busca o resultado das lutas já realizadas. Começar com GitHub Actions.
-- O job não publica direto: abre um Pull Request na develop com as mudanças, o validador roda no CI e o mantenedor revisa e aprova. Dado novo nunca é inventado e todo evento real precisa de source_url oficial conferida. Melhoria futura: reduzir a intervenção humana (ex.: auto-merge em casos de baixo risco).
-- Evolução prevista: migrar os jobs para a nuvem (Azure, do provedor que o mantenedor já usa), mantendo o código do coletor portátil.
+- Ponto de partida: job semanal que busca novos eventos das 5 organizações (UFC, PFL, ONE, KSW, Jungle Fight) e, se funcionar, um segundo job diário que busca o resultado das lutas já realizadas.
+- Requisito de negócio (stakeholder, 2026-11-21): usar produtos da Azure e rodar de forma automática, sem intervenção humana. O stakeholder recusou o GitHub Actions. Esse requisito substitui o plano anterior (Actions com Pull Request revisado pelo mantenedor).
+- Plano proposto, ainda NÃO aprovado: Azure Functions com Timer Trigger (job semanal de eventos e job diário de resultados), reaproveitando scripts/coletor/ufc.js; gravação direta no Supabase, com a chave de escrita (service_role) guardada no Azure Key Vault ou nas configurações da Function, nunca no repositório nem no chat; deploy sem GitHub Actions (linha de comando ou VS Code); login do az pelo navegador.
+- Sem revisão humana, as proteções passam a ser: o validador vira trava (reprovou, nada é gravado), registro do que mudou para poder desfazer, alerta por e-mail se o job falhar e um jeito de pausar o job. Dado novo nunca é inventado e todo evento real precisa de source_url oficial.
+- Regras do projeto que esse plano muda e dependem de aprovação explícita do mantenedor: (1) a chave service_role poder existir no Key Vault (hoje é proibida); (2) o eventos.json deixar de ser sempre igual ao banco, ou a Function também atualizá-lo no repositório.
+- Custo: a Function tem franquia gratuita, mas exige uma conta de armazenamento que pode custar centavos. Conferir os preços atuais e se a assinatura Azure do mantenedor está no tier gratuito antes de criar qualquer recurso. Azure OpenAI/AI Foundry só se não houver alternativa gratuita.
+- Investigação das fontes (2026-11-21): UFC é a mais viável (lista, card e resultado em HTML); PFL tem JSON-LD por evento; ONE e KSW têm lista legível, card a confirmar; Jungle Fight só tem posts de notícia (API WordPress), dados em texto livre. Resultados só foram confirmados na UFC. Os termos de uso das organizações ainda precisam ser lidos pelo mantenedor antes de automatizar de verdade (o robots.txt da UFC pede crawl-delay de 15 s; o do KSW bloqueia /apiksw, que não deve ser usado).
+
+Estado atual:
+- Feito: scripts/coletor/ufc.js (relatório de diferenças e rascunho de eventos novos da UFC, testado ao vivo e aprovado pelo validador) e scripts/coletor/aplicar-rascunho.js.
+- .github/workflows/coletor-ufc.yml está na main, mas DESATIVADO manualmente (gh workflow disable "Coletor da UFC"). Nunca rodou. Remover o arquivo (chore:) quando a Azure estiver funcionando.
+- LEMBRETE: os 3 eventos novos da UFC de jan/fev de 2027 (Rodriguez x Garcia, Bonfim x Brady, Pyfer x Nickal) NÃO foram cadastrados no eventos.json de propósito. Decisão do mantenedor (2026-11-21): cadastrar só quando o coletor rodar na Azure, usando-os como primeiro teste real do fluxo automático. Não cadastrar à mão antes disso.
+- Jungle Fight 157 (28/11/2026): card anunciado e cadastrado à mão em 2026-11-21, só com a luta principal informada pelo mantenedor (Marcelo Medeiros x Agy Sardari, peso leve, disputa de cinturão). A fonte oficial (junglefc.com.br) ainda não mostrava o evento nessa data; o source_url continua sendo a home. Completado no mesmo dia: local (SEST SENAT, Itajaí), nacionalidade do Medeiros (Brasileiro) e fotos dos dois lutadores (uso autorizado). Os cartéis não existem na fonte e ficam null. Decisão do mantenedor: o source_url do Jungle Fight 157 não será atualizado, porque o site oficial não monta páginas dedicadas por evento; fica a home (junglefc.com.br). O dados.sql já foi colado no Supabase.
+
+Perguntas em aberto (responder antes da próxima fase):
+1. A Function pode gravar direto no Supabase, com a chave no Key Vault (mudando a regra do service_role)?
+2. O que fazer com o eventos.json como fallback: a Function atualiza o arquivo no repositório ou ele deixa de ser a fonte?
+3. A assinatura Azure já existe e está no tier gratuito?
 
 ## Fora dos MVPs (não implementar sem pedido)
 
