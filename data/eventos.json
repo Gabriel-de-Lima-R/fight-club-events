@@ -1169,7 +1169,7 @@
       "status": "scheduled",
       "venue": {
         "name": "A confirmar",
-        "city": "Balneário Camboriú",
+        "city": "Itajaí",
         "country": "Brasil"
       },
       "broadcast": [
@@ -1189,7 +1189,7 @@
           "fighters": [
             {
               "name": "Marcelo Medeiros",
-              "nationality": null,
+              "nationality": "Brasileiro",
               "record": null
             },
             {
