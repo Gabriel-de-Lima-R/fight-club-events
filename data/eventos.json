@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-11-15",
+  "last_updated": "2026-11-21",
   "display_timezone": "America/Sao_Paulo",
   "events": [
     {
@@ -1180,7 +1180,26 @@
         }
       ],
       "source_url": "https://junglefc.com.br/",
-      "fights": []
+      "fights": [
+        {
+          "order": 1,
+          "card_section": "main_event",
+          "weight_class": "Peso Leve · disputa de cinturão",
+          "weight_limit_lbs": 155,
+          "fighters": [
+            {
+              "name": "Marcelo Medeiros",
+              "nationality": null,
+              "record": null
+            },
+            {
+              "name": "Agy Sardari",
+              "nationality": "Holandês",
+              "record": null
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "one-samurai-6-2026-12-02-sawada-nikolakakos",
